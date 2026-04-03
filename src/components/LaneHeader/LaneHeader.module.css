@@ -1,0 +1,63 @@
+.laneHeader {
+  position: sticky;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  z-index: 1;
+}
+
+.nameInput {
+  border: 1px solid transparent;
+  background: transparent;
+  font: inherit;
+  padding: 2px 4px;
+  border-radius: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.nameInput:hover,
+.nameInput:focus {
+  border-color: rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
+.colorInput {
+  border: 1px solid transparent;
+  background: transparent;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.colorInput:hover,
+.colorInput:focus {
+  border-color: rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
+.removeButton {
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 1.2em;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: inherit;
+}
+
+.removeButton:hover:not(:disabled),
+.removeButton:focus:not(:disabled) {
+  border-color: rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
+.removeButton:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
