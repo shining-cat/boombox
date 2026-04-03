@@ -11,8 +11,8 @@ interface MeasureHeaderProps {
   canRemove: boolean
 }
 
-const BEAT_OPTIONS = [2, 3, 4, 5, 6]
-const SUBDIVISION_OPTIONS = [2, 3, 4, 6]
+const BEAT_OPTIONS = [2, 3, 4, 6]
+const SUBDIVISION_OPTIONS = [2, 3, 4, 6, 8]
 
 export function MeasureHeader({
   measureNumber,
