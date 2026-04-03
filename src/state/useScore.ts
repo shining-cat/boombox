@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import type { Cell, CellSymbol, Score, TimeSignature } from '../model/types'
+import type { Cell, CellSymbol, Measure, Score, TimeSignature } from '../model/types'
 import { SYMBOL_CYCLE } from '../model/types'
 import { createCell, createLane, createMeasure, createScore } from '../model/factory'
 
@@ -7,6 +7,22 @@ const PASTEL_COLORS = [
   '#FFB3BA', '#BAFFC9', '#BAE1FF', '#FFFFBA',
   '#E8BAFF', '#FFD9BA', '#BAFFF5', '#FFC9DE',
 ]
+
+function mapLine(
+  lines: Measure[][],
+  lineIndex: number,
+  mapper: (measures: Measure[]) => Measure[],
+): Measure[][] {
+  return lines.map((line, li) => (li !== lineIndex ? line : mapper(line)))
+}
+
+function mapMeasuresInLine(
+  lines: Measure[][],
+  lineIndex: number,
+  mapper: (m: Measure) => Measure,
+): Measure[][] {
+  return mapLine(lines, lineIndex, (line) => line.map(mapper))
+}
 
 export function useScore() {
   const [score, setScore] = useState<Score>(() => createScore())
@@ -21,17 +37,19 @@ export function useScore() {
     dirtyUpdate((prev) => {
       const colorIndex = prev.lanes.length % PASTEL_COLORS.length
       const lane = createLane(name, PASTEL_COLORS[colorIndex])
-      const measures = prev.measures.map((m) => ({
-        ...m,
-        cells: {
-          ...m.cells,
-          [lane.id]: Array.from(
-            { length: m.timeSignature.beats * m.timeSignature.subdivision },
-            () => createCell(),
-          ),
-        },
-      }))
-      return { ...prev, lanes: [...prev.lanes, lane], measures }
+      const lines = prev.lines.map((line) =>
+        line.map((m) => ({
+          ...m,
+          cells: {
+            ...m.cells,
+            [lane.id]: Array.from(
+              { length: m.timeSignature.beats * m.timeSignature.subdivision },
+              () => createCell(),
+            ),
+          },
+        })),
+      )
+      return { ...prev, lanes: [...prev.lanes, lane], lines }
     })
   }, [dirtyUpdate])
 
@@ -39,51 +57,79 @@ export function useScore() {
     dirtyUpdate((prev) => {
       if (prev.lanes.length <= 1) return prev
       const lanes = prev.lanes.filter((l) => l.id !== laneId)
-      const measures = prev.measures.map((m) => {
-        const { [laneId]: _, ...rest } = m.cells
-        const tripletBeats = m.tripletBeats
-          ? (() => { const { [laneId]: __, ...tb } = m.tripletBeats!; return Object.keys(tb).length ? tb : undefined })()
-          : undefined
-        return { ...m, cells: rest, tripletBeats }
-      })
-      return { ...prev, lanes, measures }
+      const lines = prev.lines.map((line) =>
+        line.map((m) => {
+          const { [laneId]: _, ...rest } = m.cells
+          const tripletBeats = m.tripletBeats
+            ? (() => { const { [laneId]: __, ...tb } = m.tripletBeats!; return Object.keys(tb).length ? tb : undefined })()
+            : undefined
+          return { ...m, cells: rest, tripletBeats }
+        }),
+      )
+      return { ...prev, lanes, lines }
     })
   }, [dirtyUpdate])
 
-  const addMeasure = useCallback(() => {
+  const addMeasure = useCallback((lineIndex: number) => {
     dirtyUpdate((prev) => {
-      const lastMeasure = prev.measures[prev.measures.length - 1]
+      const line = prev.lines[lineIndex]
+      const lastMeasure = line[line.length - 1]
       const ts = lastMeasure.timeSignature
       const laneIds = prev.lanes.map((l) => l.id)
       const measure = createMeasure(laneIds, ts)
-      return { ...prev, measures: [...prev.measures, measure] }
+      return { ...prev, lines: mapLine(prev.lines, lineIndex, (l) => [...l, measure]) }
     })
   }, [dirtyUpdate])
 
-  const insertMeasure = useCallback((index: number) => {
+  const insertMeasure = useCallback((lineIndex: number, index: number) => {
     dirtyUpdate((prev) => {
-      const refMeasure = prev.measures[index] ?? prev.measures[prev.measures.length - 1]
+      const line = prev.lines[lineIndex]
+      const refMeasure = line[index] ?? line[line.length - 1]
       const ts = refMeasure.timeSignature
       const laneIds = prev.lanes.map((l) => l.id)
       const measure = createMeasure(laneIds, ts)
-      const measures = [...prev.measures]
-      measures.splice(index, 0, measure)
-      return { ...prev, measures }
+      return {
+        ...prev,
+        lines: mapLine(prev.lines, lineIndex, (l) => {
+          const newLine = [...l]
+          newLine.splice(index, 0, measure)
+          return newLine
+        }),
+      }
     })
   }, [dirtyUpdate])
 
-  const removeMeasure = useCallback((measureId: string) => {
+  const removeMeasure = useCallback((lineIndex: number, measureId: string) => {
     dirtyUpdate((prev) => {
-      if (prev.measures.length <= 1) return prev
-      return { ...prev, measures: prev.measures.filter((m) => m.id !== measureId) }
+      const line = prev.lines[lineIndex]
+      if (line.length <= 1) {
+        // Last measure in line: remove the line (unless it's the only line)
+        if (prev.lines.length <= 1) return prev
+        return { ...prev, lines: prev.lines.filter((_, li) => li !== lineIndex) }
+      }
+      return {
+        ...prev,
+        lines: mapLine(prev.lines, lineIndex, (l) => l.filter((m) => m.id !== measureId)),
+      }
+    })
+  }, [dirtyUpdate])
+
+  const addLine = useCallback(() => {
+    dirtyUpdate((prev) => {
+      const lastLine = prev.lines[prev.lines.length - 1]
+      const lastMeasure = lastLine[lastLine.length - 1]
+      const ts = lastMeasure.timeSignature
+      const laneIds = prev.lanes.map((l) => l.id)
+      const measure = createMeasure(laneIds, ts)
+      return { ...prev, lines: [...prev.lines, [measure]] }
     })
   }, [dirtyUpdate])
 
   const updateCells = useCallback(
-    (measureId: string, laneId: string, updater: (cells: Cell[]) => Cell[]) => {
+    (lineIndex: number, measureId: string, laneId: string, updater: (cells: Cell[]) => Cell[]) => {
       dirtyUpdate((prev) => ({
         ...prev,
-        measures: prev.measures.map((m) =>
+        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) =>
           m.id !== measureId
             ? m
             : {
@@ -100,8 +146,8 @@ export function useScore() {
   )
 
   const cycleCell = useCallback(
-    (measureId: string, laneId: string, cellIndex: number) => {
-      updateCells(measureId, laneId, (cells) => {
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number) => {
+      updateCells(lineIndex, measureId, laneId, (cells) => {
         const current = cells[cellIndex].symbol
         const idx = SYMBOL_CYCLE.indexOf(current)
         const next = SYMBOL_CYCLE[(idx + 1) % SYMBOL_CYCLE.length]
@@ -113,8 +159,8 @@ export function useScore() {
   )
 
   const setCellSymbol = useCallback(
-    (measureId: string, laneId: string, cellIndex: number, symbol: CellSymbol) => {
-      updateCells(measureId, laneId, (cells) => {
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number, symbol: CellSymbol) => {
+      updateCells(lineIndex, measureId, laneId, (cells) => {
         cells[cellIndex] = { ...cells[cellIndex], symbol }
         return cells
       })
@@ -123,8 +169,8 @@ export function useScore() {
   )
 
   const setCellLabel = useCallback(
-    (measureId: string, laneId: string, cellIndex: number, label: string) => {
-      updateCells(measureId, laneId, (cells) => {
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number, label: string) => {
+      updateCells(lineIndex, measureId, laneId, (cells) => {
         cells[cellIndex] = { ...cells[cellIndex], label }
         return cells
       })
@@ -133,10 +179,10 @@ export function useScore() {
   )
 
   const setTriplet = useCallback(
-    (measureId: string, laneId: string, beatIndex: number) => {
+    (lineIndex: number, measureId: string, laneId: string, beatIndex: number) => {
       dirtyUpdate((prev) => ({
         ...prev,
-        measures: prev.measures.map((m) => {
+        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) => {
           if (m.id !== measureId) return m
           const { subdivision, beats } = m.timeSignature
           if (beatIndex < 0 || beatIndex >= beats) return m
@@ -147,7 +193,6 @@ export function useScore() {
             ? laneTriplets.filter((b) => b !== beatIndex)
             : [...laneTriplets, beatIndex]
 
-          // Rebuild cells array for this lane with new beat size
           const oldCells = m.cells[laneId] ?? []
           const newCells: Cell[] = []
           let oldOffset = 0
@@ -155,11 +200,9 @@ export function useScore() {
             const wasThisBeatTriplet = laneTriplets.includes(b)
             const oldBeatSize = wasThisBeatTriplet ? 3 : subdivision
             if (b === beatIndex) {
-              // Toggled beat: reset its cells
               const newBeatSize = wasTriplet ? subdivision : 3
               for (let i = 0; i < newBeatSize; i++) newCells.push(createCell())
             } else {
-              // Copy existing cells
               for (let i = 0; i < oldBeatSize; i++) {
                 newCells.push(oldCells[oldOffset + i] ?? createCell())
               }
@@ -179,8 +222,8 @@ export function useScore() {
   )
 
   const setRoll = useCallback(
-    (measureId: string, laneId: string, cellIndex: number, length: number) => {
-      updateCells(measureId, laneId, (cells) => {
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number, length: number) => {
+      updateCells(lineIndex, measureId, laneId, (cells) => {
         cells[cellIndex] = { ...cells[cellIndex], roll: { length } }
         return cells
       })
@@ -189,10 +232,10 @@ export function useScore() {
   )
 
   const setSectionLabel = useCallback(
-    (measureId: string, label: string) => {
+    (lineIndex: number, measureId: string, label: string) => {
       dirtyUpdate((prev) => ({
         ...prev,
-        measures: prev.measures.map((m) =>
+        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) =>
           m.id !== measureId ? m : { ...m, sectionLabel: label || undefined },
         ),
       }))
@@ -201,10 +244,10 @@ export function useScore() {
   )
 
   const setSectionLength = useCallback(
-    (measureId: string, length: number) => {
+    (lineIndex: number, measureId: string, length: number) => {
       dirtyUpdate((prev) => ({
         ...prev,
-        measures: prev.measures.map((m) =>
+        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) =>
           m.id !== measureId ? m : { ...m, sectionLength: length },
         ),
       }))
@@ -213,10 +256,10 @@ export function useScore() {
   )
 
   const setRepeat = useCallback(
-    (measureId: string, times: number) => {
+    (lineIndex: number, measureId: string, times: number) => {
       dirtyUpdate((prev) => ({
         ...prev,
-        measures: prev.measures.map((m) =>
+        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) =>
           m.id !== measureId ? m : { ...m, repeat: { times } },
         ),
       }))
@@ -225,10 +268,10 @@ export function useScore() {
   )
 
   const setTimeSignature = useCallback(
-    (measureId: string, ts: TimeSignature) => {
+    (lineIndex: number, measureId: string, ts: TimeSignature) => {
       dirtyUpdate((prev) => ({
         ...prev,
-        measures: prev.measures.map((m) => {
+        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) => {
           if (m.id !== measureId) return m
           const laneIds = prev.lanes.map((l) => l.id)
           const totalCells = ts.beats * ts.subdivision
@@ -279,6 +322,7 @@ export function useScore() {
     addMeasure,
     insertMeasure,
     removeMeasure,
+    addLine,
     cycleCell,
     setCellSymbol,
     setCellLabel,

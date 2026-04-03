@@ -39,6 +39,6 @@ export function createScore(): Score {
     author: '',
     tempo: 120,
     lanes: [lane],
-    measures: [measure],
+    lines: [[measure]],
   }
 }

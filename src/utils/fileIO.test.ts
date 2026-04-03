@@ -19,8 +19,8 @@ describe('deserializeScore', () => {
     const restored = deserializeScore(json)
     expect(restored.title).toBe(score.title)
     expect(restored.lanes).toHaveLength(score.lanes.length)
-    expect(restored.measures).toHaveLength(score.measures.length)
-    expect(restored.measures[0].cells[restored.lanes[0].id]).toHaveLength(16)
+    expect(restored.lines[0]).toHaveLength(score.lines[0].length)
+    expect(restored.lines[0][0].cells[restored.lanes[0].id]).toHaveLength(16)
   })
 
   it('throws on invalid JSON', () => {

@@ -6,7 +6,12 @@ export function serializeScore(score: Score): string {
 
 export function deserializeScore(json: string): Score {
   const parsed = JSON.parse(json)
-  if (!parsed.title || !parsed.lanes || !parsed.measures) {
+  // Migrate old format: measures -> lines
+  if (parsed.measures && !parsed.lines) {
+    parsed.lines = [parsed.measures]
+    delete parsed.measures
+  }
+  if (!parsed.title || !parsed.lanes || !parsed.lines) {
     throw new Error('Invalid score file: missing required fields')
   }
   return parsed as Score

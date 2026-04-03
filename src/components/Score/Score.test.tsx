@@ -20,6 +20,7 @@ function renderScore() {
       onRemoveMeasure={vi.fn()}
       onInsertMeasure={vi.fn()}
       onAddMeasure={vi.fn()}
+      onAddLine={vi.fn()}
     />
   )
 }

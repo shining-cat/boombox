@@ -34,5 +34,5 @@ export interface Score {
   author: string
   tempo: number
   lanes: Lane[]
-  measures: Measure[]
+  lines: Measure[][]
 }

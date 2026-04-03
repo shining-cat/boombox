@@ -12,6 +12,7 @@ import './App.css'
 interface ContextMenuState {
   x: number
   y: number
+  lineIndex: number
   measureId: string
   laneId: string
   cellIndex: number
@@ -26,6 +27,7 @@ function App() {
     addMeasure,
     insertMeasure,
     removeMeasure,
+    addLine,
     cycleCell,
     setCellSymbol,
     setCellLabel,
@@ -77,9 +79,9 @@ function App() {
   }, [])
 
   const handleCellContextMenu = useCallback(
-    (measureId: string, laneId: string, cellIndex: number, event: React.MouseEvent) => {
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number, event: React.MouseEvent) => {
       event.preventDefault()
-      setContextMenu({ x: event.clientX, y: event.clientY, measureId, laneId, cellIndex })
+      setContextMenu({ x: event.clientX, y: event.clientY, lineIndex, measureId, laneId, cellIndex })
     },
     [],
   )
@@ -87,7 +89,7 @@ function App() {
   const handleSetSymbol = useCallback(
     (symbol: CellSymbol) => {
       if (!contextMenu) return
-      setCellSymbol(contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, symbol)
+      setCellSymbol(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, symbol)
       setContextMenu(null)
     },
     [contextMenu, setCellSymbol],
@@ -97,18 +99,17 @@ function App() {
     if (!contextMenu) return
     const label = window.prompt('Cell label:')
     if (label !== null) {
-      setCellLabel(contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, label)
+      setCellLabel(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, label)
     }
     setContextMenu(null)
   }, [contextMenu, setCellLabel])
 
   const handleSetTriplet = useCallback(() => {
     if (!contextMenu) return
-    const measure = score.measures.find((m) => m.id === contextMenu.measureId)
+    const measure = score.lines[contextMenu.lineIndex].find((m) => m.id === contextMenu.measureId)
     if (!measure) return
     const { subdivision, beats } = measure.timeSignature
     const laneTriplets = measure.tripletBeats?.[contextMenu.laneId] ?? []
-    // Find which beat this cell index falls in (variable-length beats)
     let pos = 0
     let beatIndex = 0
     for (let b = 0; b < beats; b++) {
@@ -116,9 +117,9 @@ function App() {
       if (pos + beatSize > contextMenu.cellIndex) { beatIndex = b; break }
       pos += beatSize
     }
-    setTriplet(contextMenu.measureId, contextMenu.laneId, beatIndex)
+    setTriplet(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, beatIndex)
     setContextMenu(null)
-  }, [contextMenu, score.measures, setTriplet])
+  }, [contextMenu, score.lines, setTriplet])
 
   const handleSetRoll = useCallback(() => {
     if (!contextMenu) return
@@ -126,15 +127,15 @@ function App() {
     if (lengthStr !== null) {
       const length = parseInt(lengthStr, 10)
       if (!isNaN(length) && length > 0) {
-        setRoll(contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, length)
+        setRoll(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, length)
       }
     }
     setContextMenu(null)
   }, [contextMenu, setRoll])
 
   const handleRepeatChange = useCallback(
-    (measureId: string, times: number | null) => {
-      setRepeat(measureId, times ?? 0)
+    (lineIndex: number, measureId: string, times: number | null) => {
+      setRepeat(lineIndex, measureId, times ?? 0)
     },
     [setRepeat],
   )
@@ -166,6 +167,7 @@ function App() {
         onRemoveMeasure={removeMeasure}
         onInsertMeasure={insertMeasure}
         onAddMeasure={addMeasure}
+        onAddLine={addLine}
       />
       {contextMenu && (
         <ContextMenu
