@@ -14,27 +14,29 @@ interface CellProps {
   label?: string
   isBeatStart?: boolean
   isRoll?: boolean
-  isTripletStart?: boolean
+  width?: number
   backgroundColor?: string
   onClick: () => void
   onContextMenu: (e: React.MouseEvent) => void
 }
 
-export function Cell({ symbol, label, isBeatStart, isRoll, isTripletStart, backgroundColor, onClick, onContextMenu }: CellProps) {
+export function Cell({ symbol, label, isBeatStart, isRoll, width, backgroundColor, onClick, onContextMenu }: CellProps) {
   const classNames = [
     styles.cell,
     isBeatStart ? styles.beatStart : '',
-    isTripletStart ? styles.tripletStart : '',
   ].filter(Boolean).join(' ')
+
+  const style: React.CSSProperties = {}
+  if (backgroundColor) style.backgroundColor = backgroundColor
+  if (width) style.width = `${width}px`
 
   return (
     <div
       className={classNames}
-      style={backgroundColor ? { backgroundColor } : undefined}
+      style={style}
       onClick={onClick}
       onContextMenu={onContextMenu}
     >
-      {isTripletStart && <span className={styles.tripletTag}>TRI</span>}
       {isRoll ? (
         <span className={styles.roll}>〰</span>
       ) : symbol ? (

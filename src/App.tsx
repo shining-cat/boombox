@@ -106,7 +106,16 @@ function App() {
     if (!contextMenu) return
     const measure = score.measures.find((m) => m.id === contextMenu.measureId)
     if (!measure) return
-    const beatIndex = Math.floor(contextMenu.cellIndex / measure.timeSignature.subdivision)
+    const { subdivision, beats } = measure.timeSignature
+    const laneTriplets = measure.tripletBeats?.[contextMenu.laneId] ?? []
+    // Find which beat this cell index falls in (variable-length beats)
+    let pos = 0
+    let beatIndex = 0
+    for (let b = 0; b < beats; b++) {
+      const beatSize = laneTriplets.includes(b) ? 3 : subdivision
+      if (pos + beatSize > contextMenu.cellIndex) { beatIndex = b; break }
+      pos += beatSize
+    }
     setTriplet(contextMenu.measureId, contextMenu.laneId, beatIndex)
     setContextMenu(null)
   }, [contextMenu, score.measures, setTriplet])

@@ -41,7 +41,10 @@ export function useScore() {
       const lanes = prev.lanes.filter((l) => l.id !== laneId)
       const measures = prev.measures.map((m) => {
         const { [laneId]: _, ...rest } = m.cells
-        return { ...m, cells: rest }
+        const tripletBeats = m.tripletBeats
+          ? (() => { const { [laneId]: __, ...tb } = m.tripletBeats!; return Object.keys(tb).length ? tb : undefined })()
+          : undefined
+        return { ...m, cells: rest, tripletBeats }
       })
       return { ...prev, lanes, measures }
     })
@@ -135,10 +138,40 @@ export function useScore() {
         ...prev,
         measures: prev.measures.map((m) => {
           if (m.id !== measureId) return m
-          const cellIndex = beatIndex * m.timeSignature.subdivision
-          const cells = [...m.cells[laneId]]
-          cells[cellIndex] = { ...cells[cellIndex], triplet: true }
-          return { ...m, cells: { ...m.cells, [laneId]: cells } }
+          const { subdivision, beats } = m.timeSignature
+          if (beatIndex < 0 || beatIndex >= beats) return m
+
+          const laneTriplets = m.tripletBeats?.[laneId] ?? []
+          const wasTriplet = laneTriplets.includes(beatIndex)
+          const newTriplets = wasTriplet
+            ? laneTriplets.filter((b) => b !== beatIndex)
+            : [...laneTriplets, beatIndex]
+
+          // Rebuild cells array for this lane with new beat size
+          const oldCells = m.cells[laneId] ?? []
+          const newCells: Cell[] = []
+          let oldOffset = 0
+          for (let b = 0; b < beats; b++) {
+            const wasThisBeatTriplet = laneTriplets.includes(b)
+            const oldBeatSize = wasThisBeatTriplet ? 3 : subdivision
+            if (b === beatIndex) {
+              // Toggled beat: reset its cells
+              const newBeatSize = wasTriplet ? subdivision : 3
+              for (let i = 0; i < newBeatSize; i++) newCells.push(createCell())
+            } else {
+              // Copy existing cells
+              for (let i = 0; i < oldBeatSize; i++) {
+                newCells.push(oldCells[oldOffset + i] ?? createCell())
+              }
+            }
+            oldOffset += oldBeatSize
+          }
+
+          return {
+            ...m,
+            cells: { ...m.cells, [laneId]: newCells },
+            tripletBeats: { ...(m.tripletBeats ?? {}), [laneId]: newTriplets },
+          }
         }),
       }))
     },
@@ -203,7 +236,7 @@ export function useScore() {
           for (const laneId of laneIds) {
             cells[laneId] = Array.from({ length: totalCells }, () => createCell())
           }
-          return { ...m, timeSignature: ts, cells }
+          return { ...m, timeSignature: ts, cells, tripletBeats: undefined }
         }),
       }))
     },

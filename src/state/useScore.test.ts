@@ -208,14 +208,23 @@ describe('useScore', () => {
     expect(result.current.isDirty).toBe(false)
   })
 
-  it('setTriplet marks cell at beatIndex * subdivision as triplet', () => {
+  it('setTriplet toggles triplet on a beat and resizes cells', () => {
     const { result } = renderHook(() => useScore())
     const measureId = result.current.score.measures[0].id
     const laneId = result.current.score.lanes[0].id
 
-    // beatIndex 1 with subdivision 4 => cellIndex 4
+    // Default: 4 beats × 4 subdivision = 16 cells
+    expect(result.current.score.measures[0].cells[laneId]).toHaveLength(16)
+
+    // Mark beat 1 as triplet: 4 + 3 + 4 + 4 = 15 cells
     act(() => result.current.setTriplet(measureId, laneId, 1))
-    expect(result.current.score.measures[0].cells[laneId][4].triplet).toBe(true)
+    expect(result.current.score.measures[0].cells[laneId]).toHaveLength(15)
+    expect(result.current.score.measures[0].tripletBeats?.[laneId]).toContain(1)
+
+    // Toggle beat 1 off: back to 16 cells
+    act(() => result.current.setTriplet(measureId, laneId, 1))
+    expect(result.current.score.measures[0].cells[laneId]).toHaveLength(16)
+    expect(result.current.score.measures[0].tripletBeats?.[laneId]).not.toContain(1)
   })
 
   it('setRoll sets roll on a cell', () => {

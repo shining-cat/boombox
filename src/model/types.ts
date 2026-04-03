@@ -5,7 +5,6 @@ export const SYMBOL_CYCLE: CellSymbol[] = [null, 'cross', 'empty-round', 'full-r
 export interface Cell {
   symbol: CellSymbol
   label?: string
-  triplet?: boolean
   roll?: { length: number }
 }
 
@@ -21,6 +20,7 @@ export interface Measure {
   sectionLength?: number
   repeat?: { times: number }
   cells: Record<string, Cell[]>
+  tripletBeats?: Record<string, number[]>
 }
 
 export interface Lane {

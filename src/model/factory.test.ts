@@ -6,7 +6,6 @@ describe('createCell', () => {
     const cell = createCell()
     expect(cell.symbol).toBeNull()
     expect(cell.label).toBeUndefined()
-    expect(cell.triplet).toBeUndefined()
     expect(cell.roll).toBeUndefined()
   })
 })
