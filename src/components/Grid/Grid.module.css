@@ -1,2 +1,28 @@
-.grid { display: flex; flex-direction: column; }
-.laneRow { display: flex; flex-direction: row; }
+.grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.laneRow {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.tripletMarker {
+  position: absolute;
+  top: -12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  color: #c60;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.tripletBracket {
+  border-bottom: 1px solid #c60;
+  height: 4px;
+}

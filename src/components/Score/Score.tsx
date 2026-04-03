@@ -35,6 +35,29 @@ export function Score({
 }: ScoreProps) {
   const canRemoveLane = score.lanes.length > 1
   const canRemoveMeasure = score.measures.length > 1
+  const totalMeasures = score.measures.length
+
+  const handleRepeatClick = (measureId: string, repeat: { times: number } | undefined) => {
+    if (repeat) {
+      const input = window.prompt('Repeat count (0 to remove):', String(repeat.times))
+      if (input !== null) {
+        const times = parseInt(input, 10)
+        onRepeatChange(measureId, times > 0 ? times : null)
+      }
+    } else {
+      const input = window.prompt('Repeat count:', '2')
+      if (input !== null) {
+        const times = parseInt(input, 10)
+        if (times > 0) onRepeatChange(measureId, times)
+      }
+    }
+  }
+
+  const handleRemoveMeasure = (measureId: string, measureNumber: number) => {
+    if (window.confirm(`Delete measure ${measureNumber}, confirm?`)) {
+      onRemoveMeasure(measureId)
+    }
+  }
 
   return (
     <div className={styles.scoreWrapper}>
@@ -57,6 +80,8 @@ export function Score({
       <div className={styles.measuresArea}>
         {score.measures.map((measure, index) => {
           const cellCount = measure.timeSignature.beats * measure.timeSignature.subdivision
+          const prevSection = index > 0 ? score.measures[index - 1].sectionLabel : undefined
+          const isContinuation = !!(measure.sectionLabel && prevSection === measure.sectionLabel)
 
           return (
             <div key={measure.id} style={{ display: 'flex' }}>
@@ -72,42 +97,28 @@ export function Score({
               <div className={styles.measureColumn}>
                 <div className={styles.sectionRow}>
                   <input
-                    className={styles.sectionInput}
+                    className={`${styles.sectionInput} ${isContinuation ? styles.sectionContinuation : ''}`}
                     type="text"
                     value={measure.sectionLabel ?? ''}
-                    placeholder="section"
+                    placeholder={isContinuation ? '' : 'section'}
                     onChange={e => onSectionLabelChange(measure.id, e.target.value)}
                     style={{ width: `${Math.max(cellCount * 28, 80)}px` }}
                   />
-                  {measure.sectionLabel && (
-                    <button
-                      className={styles.repeatBtn}
-                      onClick={() => {
-                        if (measure.repeat) {
-                          const input = window.prompt('Repeat count (0 to remove):', String(measure.repeat.times))
-                          if (input !== null) {
-                            const times = parseInt(input, 10)
-                            onRepeatChange(measure.id, times > 0 ? times : null)
-                          }
-                        } else {
-                          const input = window.prompt('Repeat count:', '2')
-                          if (input !== null) {
-                            const times = parseInt(input, 10)
-                            if (times > 0) onRepeatChange(measure.id, times)
-                          }
-                        }
-                      }}
-                      title="Set repeat for this section"
-                    >
-                      {measure.repeat ? `×${measure.repeat.times}` : '🔁'}
-                    </button>
-                  )}
+                  <button
+                    className={styles.repeatBtn}
+                    onClick={() => handleRepeatClick(measure.id, measure.repeat)}
+                    title="Set repeat"
+                  >
+                    {measure.repeat ? `×${measure.repeat.times}` : '🔁'}
+                  </button>
                 </div>
                 <MeasureHeader
+                  measureNumber={index + 1}
+                  totalMeasures={totalMeasures}
                   beats={measure.timeSignature.beats}
                   subdivision={measure.timeSignature.subdivision}
                   onTimeSignatureChange={ts => onTimeSignatureChange(measure.id, ts)}
-                  onRemove={() => onRemoveMeasure(measure.id)}
+                  onRemove={() => handleRemoveMeasure(measure.id, index + 1)}
                   canRemove={canRemoveMeasure}
                 />
                 <Grid

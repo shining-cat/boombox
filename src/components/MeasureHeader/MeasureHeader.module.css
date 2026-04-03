@@ -8,6 +8,13 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
+.measureNum {
+  font-size: 10px;
+  color: #999;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .fieldGroup {
   display: flex;
   flex-direction: column;

@@ -2,6 +2,8 @@ import type { TimeSignature } from '../../model/types'
 import styles from './MeasureHeader.module.css'
 
 interface MeasureHeaderProps {
+  measureNumber: number
+  totalMeasures: number
   beats: number
   subdivision: number
   onTimeSignatureChange: (ts: TimeSignature) => void
@@ -10,6 +12,8 @@ interface MeasureHeaderProps {
 }
 
 export function MeasureHeader({
+  measureNumber,
+  totalMeasures,
   beats,
   subdivision,
   onTimeSignatureChange,
@@ -18,6 +22,8 @@ export function MeasureHeader({
 }: MeasureHeaderProps) {
   return (
     <div className={styles.header}>
+      <span className={styles.measureNum}>{measureNumber}/{totalMeasures}</span>
+
       <label className={styles.fieldGroup}>
         <span className={styles.fieldLabel}>Pulses</span>
         <select

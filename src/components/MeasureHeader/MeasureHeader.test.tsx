@@ -3,6 +3,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { MeasureHeader } from './MeasureHeader'
 
 const defaultProps = {
+  measureNumber: 1,
+  totalMeasures: 3,
   beats: 4,
   subdivision: 4,
   onTimeSignatureChange: vi.fn(),
@@ -11,6 +13,11 @@ const defaultProps = {
 }
 
 describe('MeasureHeader', () => {
+  it('displays measure number', () => {
+    render(<MeasureHeader {...defaultProps} />)
+    expect(screen.getByText('1/3')).toBeInTheDocument()
+  })
+
   it('displays summary of cells', () => {
     render(<MeasureHeader {...defaultProps} />)
     expect(screen.getByText('4×4=16')).toBeInTheDocument()
