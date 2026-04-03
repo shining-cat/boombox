@@ -15,6 +15,7 @@ function renderScore() {
       onRemoveLane={vi.fn()}
       onTimeSignatureChange={vi.fn()}
       onSectionLabelChange={vi.fn()}
+      onSectionLengthChange={vi.fn()}
       onRepeatChange={vi.fn()}
       onRemoveMeasure={vi.fn()}
       onInsertMeasure={vi.fn()}

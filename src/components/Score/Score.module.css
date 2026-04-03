@@ -22,47 +22,60 @@
 
 .measuresArea {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
 }
 
-.measureColumn {
+/* Section banner row — sits above measure columns */
+.sectionBannerRow {
   display: flex;
-  flex-direction: column;
-  border-right: 1px solid #ccc;
+  flex-direction: row;
+  align-items: stretch;
+  height: 28px;
 }
 
-.sectionRow {
+.sectionBanner {
   display: flex;
   align-items: center;
-  height: 28px;
   gap: 4px;
-  padding: 0 2px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 0 4px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 11px;
+  box-sizing: border-box;
 }
 
-.sectionInput {
-  border: 1px solid transparent;
-  background: transparent;
-  font-size: 11px;
+.sectionLabel {
   font-weight: 700;
   text-transform: uppercase;
+  cursor: pointer;
   padding: 2px 4px;
   border-radius: 3px;
-  min-width: 0;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sectionInput:hover,
-.sectionInput:focus {
-  border-color: #ccc;
-  background: white;
-  outline: none;
+.sectionLabel:hover {
+  background: #ddd;
 }
 
-.sectionContinuation {
-  border-top: 2px solid #999;
-  border-radius: 0;
+.sectionLenBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: #666;
+}
+
+.sectionLenBtn:hover {
+  background: #ddd;
 }
 
 .repeatBtn {
@@ -75,7 +88,51 @@
 }
 
 .repeatBtn:hover {
-  background: #eee;
+  background: #ddd;
+}
+
+.sectionEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.sectionHint {
+  font-size: 10px;
+  color: #bbb;
+  white-space: nowrap;
+}
+
+.sectionEmpty:hover .sectionHint {
+  color: #888;
+}
+
+/* Measure columns row */
+.measureColumnsRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.measureColumn {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #ccc;
+}
+
+/* Section border indicators on measure columns */
+.inSection {
+  border-top: 2px solid #999;
+}
+
+.sectionStart {
+  border-left: 2px solid #999;
+}
+
+.sectionEnd {
+  border-right: 2px solid #999;
 }
 
 .insertBtn {

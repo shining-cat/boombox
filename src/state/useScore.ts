@@ -160,7 +160,19 @@ export function useScore() {
       dirtyUpdate((prev) => ({
         ...prev,
         measures: prev.measures.map((m) =>
-          m.id !== measureId ? m : { ...m, sectionLabel: label },
+          m.id !== measureId ? m : { ...m, sectionLabel: label || undefined },
+        ),
+      }))
+    },
+    [dirtyUpdate],
+  )
+
+  const setSectionLength = useCallback(
+    (measureId: string, length: number) => {
+      dirtyUpdate((prev) => ({
+        ...prev,
+        measures: prev.measures.map((m) =>
+          m.id !== measureId ? m : { ...m, sectionLength: length },
         ),
       }))
     },
@@ -240,6 +252,7 @@ export function useScore() {
     setTriplet,
     setRoll,
     setSectionLabel,
+    setSectionLength,
     setRepeat,
     setTimeSignature,
     updateLane,

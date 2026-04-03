@@ -18,6 +18,7 @@ export interface Measure {
   id: string
   timeSignature: TimeSignature
   sectionLabel?: string
+  sectionLength?: number
   repeat?: { times: number }
   cells: Record<string, Cell[]>
 }

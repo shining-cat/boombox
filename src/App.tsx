@@ -32,6 +32,7 @@ function App() {
     setTriplet,
     setRoll,
     setSectionLabel,
+    setSectionLength,
     setRepeat,
     setTimeSignature,
     updateLane,
@@ -151,6 +152,7 @@ function App() {
         onRemoveLane={removeLane}
         onTimeSignatureChange={setTimeSignature}
         onSectionLabelChange={setSectionLabel}
+        onSectionLengthChange={setSectionLength}
         onRepeatChange={handleRepeatChange}
         onRemoveMeasure={removeMeasure}
         onInsertMeasure={insertMeasure}

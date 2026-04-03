@@ -17,3 +17,19 @@
 .symbol { color: #333; }
 .label { font-size: 7px; color: #666; white-space: nowrap; line-height: 1; }
 .roll { font-size: 10px; color: #333; letter-spacing: -2px; }
+
+.tripletStart {
+  border-top: 2px solid #c60;
+}
+
+.tripletTag {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  font-weight: 700;
+  color: #c60;
+  line-height: 1;
+  pointer-events: none;
+}

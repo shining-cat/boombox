@@ -11,33 +11,13 @@ interface GridProps {
 
 export function Grid({ measure, lanes, onCycleCell, onCellContextMenu }: GridProps) {
   const { subdivision } = measure.timeSignature
-  const cellWidth = 28
 
   return (
     <div className={styles.grid}>
-      {lanes.map((lane, laneIndex) => {
+      {lanes.map(lane => {
         const cells = measure.cells[lane.id] ?? []
-        const tripletBeats: number[] = []
-        cells.forEach((cell, i) => {
-          if (cell.triplet && i % subdivision === 0) {
-            tripletBeats.push(i)
-          }
-        })
-
         return (
           <div key={lane.id} className={styles.laneRow}>
-            {laneIndex === 0 && tripletBeats.map(startIdx => (
-              <div
-                key={`tri-${startIdx}`}
-                className={styles.tripletMarker}
-                style={{
-                  left: startIdx * cellWidth,
-                  width: subdivision * cellWidth,
-                }}
-              >
-                TRI
-              </div>
-            ))}
             {cells.map((cell, i) => {
               const isBeatStart = i % subdivision === 0
               const isInRoll = cells.some(
@@ -50,6 +30,7 @@ export function Grid({ measure, lanes, onCycleCell, onCellContextMenu }: GridPro
                   label={cell.label}
                   isBeatStart={isBeatStart}
                   isRoll={isInRoll || !!cell.roll}
+                  isTripletStart={!!cell.triplet}
                   backgroundColor={lane.color}
                   onClick={() => onCycleCell(lane.id, i)}
                   onContextMenu={e => onCellContextMenu(lane.id, i, e)}
