@@ -5,16 +5,34 @@ import styles from './Grid.module.css'
 interface GridProps {
   measure: Measure
   lanes: Lane[]
+  showPulse?: boolean
   onCycleCell: (laneId: string, cellIndex: number) => void
   onCellContextMenu: (laneId: string, cellIndex: number, e: React.MouseEvent) => void
 }
 
-export function Grid({ measure, lanes, onCycleCell, onCellContextMenu }: GridProps) {
+const noop = () => {}
+const noopCtx = (e: React.MouseEvent) => { e.preventDefault() }
+
+export function Grid({ measure, lanes, showPulse, onCycleCell, onCellContextMenu }: GridProps) {
   const { beats, subdivision } = measure.timeSignature
   const tripletBeats = measure.tripletBeats ?? {}
 
   return (
     <div className={styles.grid}>
+      {showPulse && (
+        <div className={styles.laneRow}>
+          {Array.from({ length: beats * subdivision }, (_, i) => (
+            <Cell
+              key={`pulse-${i}`}
+              symbol={i % subdivision === 0 ? 'full-round' : null}
+              isBeatStart={i % subdivision === 0}
+              backgroundColor="#e8e8e8"
+              onClick={noop}
+              onContextMenu={noopCtx}
+            />
+          ))}
+        </div>
+      )}
       {lanes.map(lane => {
         const cells = measure.cells[lane.id] ?? []
         const laneTriplets = tripletBeats[lane.id] ?? []

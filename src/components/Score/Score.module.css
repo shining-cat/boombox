@@ -34,6 +34,18 @@
   color: #333;
 }
 
+.pulseLabel {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #999;
+  background: #e8e8e8;
+  letter-spacing: 0.5px;
+}
+
 .sectionSpacer {
   height: 28px;
 }

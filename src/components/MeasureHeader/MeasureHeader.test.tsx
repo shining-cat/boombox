@@ -25,12 +25,12 @@ describe('MeasureHeader', () => {
 
   it('displays pulses button with correct value', () => {
     render(<MeasureHeader {...defaultProps} />)
-    expect(screen.getByTitle('Change pulses (cycles through values)')).toHaveTextContent('4')
+    expect(screen.getByTitle('Click to change number of pulses per measure')).toHaveTextContent('4')
   })
 
   it('displays subdivision button with correct value', () => {
     render(<MeasureHeader {...defaultProps} />)
-    expect(screen.getByTitle('Change cells per pulse (cycles through values)')).toHaveTextContent('4')
+    expect(screen.getByTitle('Click to change number of cells per pulse')).toHaveTextContent('4')
   })
 
   it('shows legend labels for dropdowns', () => {

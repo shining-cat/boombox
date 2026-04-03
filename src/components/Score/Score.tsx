@@ -28,6 +28,7 @@ interface ScoreProps {
   onAddMeasure: (lineIndex: number) => void
   onAddLane: () => void
   onAddLine: () => void
+  showPulse?: boolean
 }
 
 function computeSections(measures: ScoreType['lines'][0]): Section[] {
@@ -67,6 +68,7 @@ export function Score({
   onAddMeasure,
   onAddLane,
   onAddLine,
+  showPulse,
 }: ScoreProps) {
   const canRemoveLane = score.lanes.length > 1
   const insertBtnWidth = 20
@@ -151,6 +153,9 @@ export function Score({
             <div className={styles.laneHeaders}>
               <div className={styles.sectionSpacer} />
               <div className={styles.headerSpacer} />
+              {showPulse && (
+                <div className={styles.pulseLabel}>PULSE</div>
+              )}
               {score.lanes.map(lane => (
                 <LaneHeader
                   key={lane.id}
@@ -290,6 +295,7 @@ export function Score({
                         <Grid
                           measure={measure}
                           lanes={score.lanes}
+                          showPulse={showPulse}
                           onCycleCell={(laneId, cellIndex) => onCycleCell(lineIndex, measure.id, laneId, cellIndex)}
                           onCellContextMenu={(laneId, cellIndex, e) => onCellContextMenu(lineIndex, measure.id, laneId, cellIndex, e)}
                         />

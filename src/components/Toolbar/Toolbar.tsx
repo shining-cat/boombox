@@ -9,6 +9,8 @@ export interface ToolbarProps {
   onExportPdf: () => void
   onExportPng: () => void
   onNewScore: () => void
+  showPulse: boolean
+  onTogglePulse: () => void
 }
 
 export function Toolbar({
@@ -20,6 +22,8 @@ export function Toolbar({
   onExportPdf,
   onExportPng,
   onNewScore,
+  showPulse,
+  onTogglePulse,
 }: ToolbarProps) {
   return (
     <div className={styles.toolbar}>
@@ -33,6 +37,9 @@ export function Toolbar({
       />
       {isDirty && <span className={styles.unsaved}>(unsaved)</span>}
       <div className={styles.spacer} />
+      <button onClick={onTogglePulse} title={showPulse ? 'Hide pulse lane' : 'Show pulse lane'}>
+        {showPulse ? 'Hide Pulse' : 'Show Pulse'}
+      </button>
       <button onClick={onNewScore} title="Create a new empty score">New</button>
       <button onClick={onLoad} title="Load a score from file">Load</button>
       <button className={styles.primaryButton} onClick={onSave} title="Save score to file">

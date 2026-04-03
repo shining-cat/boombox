@@ -13,6 +13,8 @@ function renderToolbar(overrides: Partial<React.ComponentProps<typeof Toolbar>> 
     onExportPdf: vi.fn(),
     onExportPng: vi.fn(),
     onNewScore: vi.fn(),
+    showPulse: false,
+    onTogglePulse: vi.fn(),
     ...overrides,
   }
   render(<Toolbar {...props} />)

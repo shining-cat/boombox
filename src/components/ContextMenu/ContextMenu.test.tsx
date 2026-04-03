@@ -11,6 +11,7 @@ function renderMenu(overrides = {}) {
     onSetLabel: vi.fn(),
     onSetTriplet: vi.fn(),
     onSetRoll: vi.fn(),
+    onApplyTemplate: vi.fn(),
     onClose: vi.fn(),
     ...overrides,
   }

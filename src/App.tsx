@@ -7,6 +7,7 @@ import { downloadScore, openScoreFile } from './utils/fileIO'
 import { createScore } from './model/factory'
 import { exportToPdf, exportToPng } from './utils/export'
 import type { CellSymbol } from './model/types'
+import type { RhythmTemplate } from './model/templates'
 import './App.css'
 
 interface ContextMenuState {
@@ -37,6 +38,7 @@ function App() {
     setSectionLength,
     setRepeat,
     setTimeSignature,
+    applyTemplate,
     updateLane,
     updateTitle,
     loadScore,
@@ -44,6 +46,7 @@ function App() {
   } = useScore()
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
+  const [showPulse, setShowPulse] = useState(false)
 
   useEffect(() => {
     const base = "Shining-cat's Boombox"
@@ -140,6 +143,15 @@ function App() {
     setContextMenu(null)
   }, [contextMenu, setRoll])
 
+  const handleApplyTemplate = useCallback(
+    (template: RhythmTemplate) => {
+      if (!contextMenu) return
+      applyTemplate(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, template)
+      setContextMenu(null)
+    },
+    [contextMenu, applyTemplate],
+  )
+
   const handleRepeatChange = useCallback(
     (lineIndex: number, measureId: string, times: number | null) => {
       setRepeat(lineIndex, measureId, times ?? 0)
@@ -158,6 +170,8 @@ function App() {
         onExportPdf={handleExportPdf}
         onExportPng={handleExportPng}
         onNewScore={handleNewScore}
+        showPulse={showPulse}
+        onTogglePulse={() => setShowPulse(p => !p)}
       />
       <Score
         score={score}
@@ -175,6 +189,7 @@ function App() {
         onAddMeasure={addMeasure}
         onAddLane={handleAddLane}
         onAddLine={addLine}
+        showPulse={showPulse}
       />
       {contextMenu && (
         <ContextMenu
@@ -184,6 +199,7 @@ function App() {
           onSetLabel={handleSetLabel}
           onSetTriplet={handleSetTriplet}
           onSetRoll={handleSetRoll}
+          onApplyTemplate={handleApplyTemplate}
           onClose={() => setContextMenu(null)}
         />
       )}

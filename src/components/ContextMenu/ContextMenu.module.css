@@ -38,3 +38,12 @@
   background: #e0e0e0;
   margin: 4px 0;
 }
+
+.submenuTrigger {
+  font-weight: 600;
+}
+
+.templateItem {
+  padding-left: 24px;
+  font-size: 13px;
+}

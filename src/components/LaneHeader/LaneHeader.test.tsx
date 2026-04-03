@@ -30,13 +30,13 @@ describe('LaneHeader', () => {
 
   it('disables remove button when canRemove is false', () => {
     render(<LaneHeader {...defaultProps} canRemove={false} />)
-    const button = screen.getByTitle('Remove lane')
+    const button = screen.getByTitle('Delete this lane')
     expect(button).toBeDisabled()
   })
 
   it('enables remove button when canRemove is true', () => {
     render(<LaneHeader {...defaultProps} canRemove={true} />)
-    const button = screen.getByTitle('Remove lane')
+    const button = screen.getByTitle('Delete this lane')
     expect(button).not.toBeDisabled()
   })
 
@@ -44,7 +44,7 @@ describe('LaneHeader', () => {
     const onRemove = vi.fn()
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     render(<LaneHeader {...defaultProps} onRemove={onRemove} />)
-    const button = screen.getByTitle('Remove lane')
+    const button = screen.getByTitle('Delete this lane')
     await userEvent.click(button)
     expect(onRemove).toHaveBeenCalledOnce()
     vi.restoreAllMocks()

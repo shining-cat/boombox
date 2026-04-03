@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import type { Cell, CellSymbol, Measure, Score, TimeSignature } from '../model/types'
+import type { RhythmTemplate } from '../model/templates'
 import { SYMBOL_CYCLE } from '../model/types'
 import { createCell, createLane, createMeasure, createScore } from '../model/factory'
 
@@ -305,6 +306,35 @@ export function useScore() {
     [dirtyUpdate],
   )
 
+  const applyTemplate = useCallback(
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number, template: RhythmTemplate) => {
+      dirtyUpdate((prev) => {
+        const line = prev.lines[lineIndex]
+        const measureIdx = line.findIndex((m) => m.id === measureId)
+        if (measureIdx === -1) return prev
+
+        let patternOffset = 0
+        const newLine = [...line]
+
+        for (let mi = measureIdx; mi < line.length && patternOffset < template.pattern.length; mi++) {
+          const m = newLine[mi]
+          const cells = [...(m.cells[laneId] ?? [])]
+          const startCell = mi === measureIdx ? cellIndex : 0
+
+          for (let ci = startCell; ci < cells.length && patternOffset < template.pattern.length; ci++) {
+            cells[ci] = { ...cells[ci], symbol: template.pattern[patternOffset] }
+            patternOffset++
+          }
+
+          newLine[mi] = { ...m, cells: { ...m.cells, [laneId]: cells } }
+        }
+
+        return { ...prev, lines: mapLine(prev.lines, lineIndex, () => newLine) }
+      })
+    },
+    [dirtyUpdate],
+  )
+
   const loadScore = useCallback((newScore: Score) => {
     setScore(newScore)
     setIsDirty(false)
@@ -332,6 +362,7 @@ export function useScore() {
     setSectionLength,
     setRepeat,
     setTimeSignature,
+    applyTemplate,
     updateLane,
     updateTitle,
     loadScore,

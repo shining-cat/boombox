@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import type { CellSymbol } from '../../model/types'
+import type { RhythmTemplate } from '../../model/templates'
+import { RHYTHM_TEMPLATES } from '../../model/templates'
 import styles from './ContextMenu.module.css'
 
 interface ContextMenuProps {
@@ -8,10 +11,13 @@ interface ContextMenuProps {
   onSetLabel: () => void
   onSetTriplet: () => void
   onSetRoll: () => void
+  onApplyTemplate: (template: RhythmTemplate) => void
   onClose: () => void
 }
 
-export function ContextMenu({ x, y, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onClose }: ContextMenuProps) {
+export function ContextMenu({ x, y, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onApplyTemplate, onClose }: ContextMenuProps) {
+  const [showTemplates, setShowTemplates] = useState(false)
+
   return (
     <>
       <div className={styles.overlay} onClick={onClose} />
@@ -27,6 +33,24 @@ export function ContextMenu({ x, y, onSetSymbol, onSetLabel, onSetTriplet, onSet
         <div className={styles.separator} />
         <button className={styles.item} onClick={onSetTriplet} title="Toggle triplet on this pulse (3 notes)">Triplet</button>
         <button className={styles.item} onClick={onSetRoll} title="Set a roll starting from this cell">Roll</button>
+        <div className={styles.separator} />
+        <button
+          className={`${styles.item} ${styles.submenuTrigger}`}
+          onClick={() => setShowTemplates(!showTemplates)}
+          title="Insert a preset rhythm pattern"
+        >
+          Insert a template {showTemplates ? '▾' : '▸'}
+        </button>
+        {showTemplates && RHYTHM_TEMPLATES.map(t => (
+          <button
+            key={t.name}
+            className={`${styles.item} ${styles.templateItem}`}
+            onClick={() => onApplyTemplate(t)}
+            title={`${t.name} — ${t.beats}/${t.subdivision}, ${t.measures} ${t.measures === 1 ? 'measure' : 'measures'}`}
+          >
+            {t.name}
+          </button>
+        ))}
       </div>
     </>
   )
