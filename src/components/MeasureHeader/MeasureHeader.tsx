@@ -58,7 +58,7 @@ export function MeasureHeader({
         <button
           className={styles.valueBtn}
           onClick={handleBeatsClick}
-          title="Change pulses (cycles through values)"
+          title="Click to change number of pulses per measure"
         >
           {beats}
         </button>
@@ -69,7 +69,7 @@ export function MeasureHeader({
         <button
           className={styles.valueBtn}
           onClick={handleSubdivisionClick}
-          title="Change cells per pulse (cycles through values)"
+          title="Click to change number of cells per pulse"
         >
           {subdivision}
         </button>
@@ -82,6 +82,7 @@ export function MeasureHeader({
         onClick={onRemove}
         disabled={!canRemove}
         aria-label="Remove measure"
+        title="Delete this measure"
       >
         ✕
       </button>

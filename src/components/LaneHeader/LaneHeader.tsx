@@ -25,6 +25,7 @@ export function LaneHeader({
         value={name}
         onChange={(e) => onNameChange(e.target.value)}
         aria-label="Lane name"
+        title="Instrument name (applies to all lines)"
       />
       <input
         className={styles.colorInput}
@@ -32,6 +33,7 @@ export function LaneHeader({
         value={color}
         onChange={(e) => onColorChange(e.target.value)}
         aria-label="Lane color"
+        title="Lane background color"
       />
       <button
         className={styles.removeButton}
@@ -39,7 +41,7 @@ export function LaneHeader({
           if (window.confirm(`Delete lane "${name}", confirm?`)) onRemove()
         }}
         disabled={!canRemove}
-        title="Remove lane"
+        title="Delete this lane"
       >
         &times;
       </button>

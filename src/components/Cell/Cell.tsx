@@ -35,6 +35,7 @@ export function Cell({ symbol, label, isBeatStart, isRoll, isTriplet, width, bac
     <div
       className={classNames}
       style={style}
+      title="Click to cycle symbol, right-click for more options"
       onClick={onClick}
       onContextMenu={onContextMenu}
     >

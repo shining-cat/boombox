@@ -166,6 +166,7 @@ export function Score({
                 <button
                   className={styles.addLaneBtn}
                   onClick={onAddLane}
+                  title="Add a new instrument lane"
                 >
                   + Lane
                 </button>
@@ -300,6 +301,7 @@ export function Score({
                 <button
                   className={styles.addMeasureBtn}
                   onClick={() => onAddMeasure(lineIndex)}
+                  title="Add a measure to this line"
                 >
                   + Measure
                 </button>
@@ -312,6 +314,7 @@ export function Score({
       <button
         className={styles.addLineBtn}
         onClick={onAddLine}
+        title="Add a new line of measures below"
       >
         + Line
       </button>
