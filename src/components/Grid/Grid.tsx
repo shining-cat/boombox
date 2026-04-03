@@ -32,22 +32,20 @@ export function Grid({ measure, lanes, onCycleCell, onCellContextMenu }: GridPro
             const tripletCellWidth = (subdivision * 28) / 3
             beatElements.push(
               <div key={`t${beat}`} className={styles.tripletGroup}>
-                <span className={styles.tripletLabel}>TRI</span>
-                <div className={styles.tripletCells}>
-                  {beatCells.map((cell, i) => (
-                    <Cell
-                      key={startOffset + i}
-                      symbol={cell.symbol}
-                      label={cell.label}
-                      isBeatStart={i === 0}
-                      isRoll={!!cell.roll}
-                      width={tripletCellWidth}
-                      backgroundColor={lane.color}
-                      onClick={() => onCycleCell(lane.id, startOffset + i)}
-                      onContextMenu={e => onCellContextMenu(lane.id, startOffset + i, e)}
-                    />
-                  ))}
-                </div>
+                {beatCells.map((cell, i) => (
+                  <Cell
+                    key={startOffset + i}
+                    symbol={cell.symbol}
+                    label={cell.label}
+                    isBeatStart={i === 0}
+                    isRoll={!!cell.roll}
+                    isTriplet
+                    width={tripletCellWidth}
+                    backgroundColor={lane.color}
+                    onClick={() => onCycleCell(lane.id, startOffset + i)}
+                    onContextMenu={e => onCellContextMenu(lane.id, startOffset + i, e)}
+                  />
+                ))}
               </div>
             )
           } else {

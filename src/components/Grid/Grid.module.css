@@ -10,25 +10,6 @@
 
 .tripletGroup {
   display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.tripletLabel {
-  position: absolute;
-  top: -10px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 8px;
-  font-weight: 700;
-  color: #c60;
-  line-height: 1;
-  pointer-events: none;
-}
-
-.tripletCells {
-  display: flex;
   flex-direction: row;
   border-top: 2px solid #c60;
 }
