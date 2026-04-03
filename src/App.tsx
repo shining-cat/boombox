@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useScore } from './state/useScore'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { Score } from './components/Score/Score'
@@ -44,6 +44,13 @@ function App() {
   } = useScore()
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
+
+  useEffect(() => {
+    const base = "Shining-cat's Boombox"
+    document.title = score.title && score.title !== 'Untitled Score'
+      ? `${score.title} - ${base}`
+      : base
+  }, [score.title])
 
   const handleSave = useCallback(() => {
     downloadScore(score)
