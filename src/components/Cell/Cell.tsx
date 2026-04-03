@@ -38,7 +38,7 @@ export function Cell({ symbol, label, isBeatStart, isRoll, isTriplet, width, bac
       onClick={onClick}
       onContextMenu={onContextMenu}
     >
-      {isTriplet && <span className={styles.tripletTag}>TRI</span>}
+      <span className={styles.triZone}>{isTriplet ? 'TRI' : ''}</span>
       {isRoll ? (
         <span className={styles.roll}>〰</span>
       ) : symbol ? (
@@ -46,7 +46,7 @@ export function Cell({ symbol, label, isBeatStart, isRoll, isTriplet, width, bac
       ) : (
         <span className={styles.empty}>·</span>
       )}
-      {label && <span className={styles.label}>{label}</span>}
+      <span className={styles.labelZone}>{label || ''}</span>
     </div>
   )
 }
