@@ -1,33 +1,39 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.5rem;
+  gap: 8px;
+  padding: 4px 8px;
+  height: 40px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.sectionLabel {
-  width: 5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 0.125rem 0.25rem;
-  font-size: 0.75rem;
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.fieldLabel {
+  font-size: 8px;
+  color: #999;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.timeSignature {
-  font-weight: bold;
-  font-size: 0.875rem;
+.select {
+  font-size: 12px;
+  padding: 1px 2px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: white;
 }
 
-.beatsSelect,
-.subdivisionSelect {
-  font-size: 0.75rem;
-  padding: 0.125rem;
-}
-
-.repeat {
-  font-size: 0.75rem;
-  font-weight: bold;
+.summary {
+  font-size: 10px;
+  color: #888;
+  font-weight: 600;
 }
 
 .removeButton {
@@ -36,8 +42,8 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.75rem;
-  padding: 0.125rem 0.375rem;
+  font-size: 11px;
+  padding: 2px 6px;
 }
 
 .removeButton:disabled {

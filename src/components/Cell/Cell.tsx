@@ -14,19 +14,24 @@ interface CellProps {
   label?: string
   isBeatStart?: boolean
   isRoll?: boolean
+  backgroundColor?: string
   onClick: () => void
   onContextMenu: (e: React.MouseEvent) => void
 }
 
-export function Cell({ symbol, label, isBeatStart, isRoll, onClick, onContextMenu }: CellProps) {
+export function Cell({ symbol, label, isBeatStart, isRoll, backgroundColor, onClick, onContextMenu }: CellProps) {
   const classNames = [
     styles.cell,
     isBeatStart ? styles.beatStart : '',
   ].filter(Boolean).join(' ')
 
   return (
-    <div className={classNames} onClick={onClick} onContextMenu={onContextMenu}>
-      {label && <span className={styles.label}>{label}</span>}
+    <div
+      className={classNames}
+      style={backgroundColor ? { backgroundColor } : undefined}
+      onClick={onClick}
+      onContextMenu={onContextMenu}
+    >
       {isRoll ? (
         <span className={styles.roll}>〰</span>
       ) : symbol ? (
@@ -34,6 +39,7 @@ export function Cell({ symbol, label, isBeatStart, isRoll, onClick, onContextMen
       ) : (
         <span className={styles.empty}>·</span>
       )}
+      {label && <span className={styles.label}>{label}</span>}
     </div>
   )
 }

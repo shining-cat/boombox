@@ -30,9 +30,9 @@ describe('Score', () => {
     expect(input).toBeDefined()
   })
 
-  it('renders measure header with time signature', () => {
+  it('renders measure header with summary', () => {
     renderScore()
-    expect(screen.getByText('4/4')).toBeDefined()
+    expect(screen.getByText('4×4=16')).toBeDefined()
   })
 
   it('renders 16 grid cells (4 beats × 4 subdivisions)', () => {

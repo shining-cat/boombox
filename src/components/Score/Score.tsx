@@ -39,6 +39,7 @@ export function Score({
   return (
     <div className={styles.scoreWrapper}>
       <div className={styles.laneHeaders}>
+        <div className={styles.sectionSpacer} />
         <div className={styles.headerSpacer} />
         {score.lanes.map(lane => (
           <LaneHeader
@@ -54,45 +55,71 @@ export function Score({
       </div>
 
       <div className={styles.measuresArea}>
-        {score.measures.map((measure, index) => (
-          <div key={measure.id} style={{ display: 'flex' }}>
-            {index > 0 && (
-              <button
-                className={styles.insertBtn}
-                onClick={() => onInsertMeasure(index)}
-                title="Insert measure"
-              >
-                +
-              </button>
-            )}
-            {measure.repeat && <span aria-label="repeat start">𝄆</span>}
-            <div
-              className={[
-                styles.measureColumn,
-                measure.repeat ? styles.repeatStart : '',
-              ].filter(Boolean).join(' ')}
-            >
-              <MeasureHeader
-                beats={measure.timeSignature.beats}
-                subdivision={measure.timeSignature.subdivision}
-                sectionLabel={measure.sectionLabel ?? ''}
-                repeat={measure.repeat}
-                onTimeSignatureChange={ts => onTimeSignatureChange(measure.id, ts)}
-                onSectionLabelChange={label => onSectionLabelChange(measure.id, label)}
-                onRepeatChange={times => onRepeatChange(measure.id, times)}
-                onRemove={() => onRemoveMeasure(measure.id)}
-                canRemove={canRemoveMeasure}
-              />
-              <Grid
-                measure={measure}
-                lanes={score.lanes}
-                onCycleCell={(laneId, cellIndex) => onCycleCell(measure.id, laneId, cellIndex)}
-                onCellContextMenu={(laneId, cellIndex, e) => onCellContextMenu(measure.id, laneId, cellIndex, e)}
-              />
+        {score.measures.map((measure, index) => {
+          const cellCount = measure.timeSignature.beats * measure.timeSignature.subdivision
+
+          return (
+            <div key={measure.id} style={{ display: 'flex' }}>
+              {index > 0 && (
+                <button
+                  className={styles.insertBtn}
+                  onClick={() => onInsertMeasure(index)}
+                  title="Insert measure"
+                >
+                  +
+                </button>
+              )}
+              <div className={styles.measureColumn}>
+                <div className={styles.sectionRow}>
+                  <input
+                    className={styles.sectionInput}
+                    type="text"
+                    value={measure.sectionLabel ?? ''}
+                    placeholder="section"
+                    onChange={e => onSectionLabelChange(measure.id, e.target.value)}
+                    style={{ width: `${Math.max(cellCount * 28, 80)}px` }}
+                  />
+                  {measure.sectionLabel && (
+                    <button
+                      className={styles.repeatBtn}
+                      onClick={() => {
+                        if (measure.repeat) {
+                          const input = window.prompt('Repeat count (0 to remove):', String(measure.repeat.times))
+                          if (input !== null) {
+                            const times = parseInt(input, 10)
+                            onRepeatChange(measure.id, times > 0 ? times : null)
+                          }
+                        } else {
+                          const input = window.prompt('Repeat count:', '2')
+                          if (input !== null) {
+                            const times = parseInt(input, 10)
+                            if (times > 0) onRepeatChange(measure.id, times)
+                          }
+                        }
+                      }}
+                      title="Set repeat for this section"
+                    >
+                      {measure.repeat ? `×${measure.repeat.times}` : '🔁'}
+                    </button>
+                  )}
+                </div>
+                <MeasureHeader
+                  beats={measure.timeSignature.beats}
+                  subdivision={measure.timeSignature.subdivision}
+                  onTimeSignatureChange={ts => onTimeSignatureChange(measure.id, ts)}
+                  onRemove={() => onRemoveMeasure(measure.id)}
+                  canRemove={canRemoveMeasure}
+                />
+                <Grid
+                  measure={measure}
+                  lanes={score.lanes}
+                  onCycleCell={(laneId, cellIndex) => onCycleCell(measure.id, laneId, cellIndex)}
+                  onCellContextMenu={(laneId, cellIndex, e) => onCellContextMenu(measure.id, laneId, cellIndex, e)}
+                />
+              </div>
             </div>
-            {measure.repeat && <span aria-label="repeat end">𝄇</span>}
-          </div>
-        ))}
+          )
+        })}
 
         <button
           className={styles.addMeasureBtn}

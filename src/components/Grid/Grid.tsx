@@ -15,7 +15,7 @@ export function Grid({ measure, lanes, onCycleCell, onCellContextMenu }: GridPro
   return (
     <div className={styles.grid}>
       {lanes.map(lane => (
-        <div key={lane.id} className={styles.laneRow} style={{ backgroundColor: lane.color }}>
+        <div key={lane.id} className={styles.laneRow}>
           {measure.cells[lane.id]?.map((cell, i) => {
             const isBeatStart = i % subdivision === 0
             const isInRoll = measure.cells[lane.id].some(
@@ -28,6 +28,7 @@ export function Grid({ measure, lanes, onCycleCell, onCellContextMenu }: GridPro
                 label={cell.label}
                 isBeatStart={isBeatStart}
                 isRoll={isInRoll || !!cell.roll}
+                backgroundColor={lane.color}
                 onClick={() => onCycleCell(lane.id, i)}
                 onContextMenu={e => onCellContextMenu(lane.id, i, e)}
               />
