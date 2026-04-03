@@ -40,11 +40,13 @@ describe('LaneHeader', () => {
     expect(button).not.toBeDisabled()
   })
 
-  it('calls onRemove when remove button is clicked', async () => {
+  it('calls onRemove when remove button is clicked and confirmed', async () => {
     const onRemove = vi.fn()
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
     render(<LaneHeader {...defaultProps} onRemove={onRemove} />)
     const button = screen.getByTitle('Remove lane')
     await userEvent.click(button)
     expect(onRemove).toHaveBeenCalledOnce()
+    vi.restoreAllMocks()
   })
 })

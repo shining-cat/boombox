@@ -14,11 +14,6 @@ interface MeasureHeaderProps {
 const BEAT_OPTIONS = [2, 3, 4, 5, 6]
 const SUBDIVISION_OPTIONS = [2, 3, 4, 6]
 
-function cycleValue(current: number, options: number[]): number {
-  const idx = options.indexOf(current)
-  return options[(idx + 1) % options.length]
-}
-
 export function MeasureHeader({
   measureNumber,
   totalMeasures,
@@ -29,16 +24,28 @@ export function MeasureHeader({
   canRemove,
 }: MeasureHeaderProps) {
   const handleBeatsClick = () => {
-    const next = cycleValue(beats, BEAT_OPTIONS)
-    if (window.confirm(`Change pulses from ${beats} to ${next}? This will reset the measure content.`)) {
-      onTimeSignatureChange({ beats: next, subdivision })
+    const options = BEAT_OPTIONS.filter((b) => b !== beats).join(', ')
+    const input = window.prompt(
+      `Change pulses (currently ${beats}).\nAvailable: ${options}\nThis will reset the measure content.`,
+      String(beats),
+    )
+    if (input === null) return
+    const value = parseInt(input, 10)
+    if (BEAT_OPTIONS.includes(value) && value !== beats) {
+      onTimeSignatureChange({ beats: value, subdivision })
     }
   }
 
   const handleSubdivisionClick = () => {
-    const next = cycleValue(subdivision, SUBDIVISION_OPTIONS)
-    if (window.confirm(`Change cells/pulse from ${subdivision} to ${next}? This will reset the measure content.`)) {
-      onTimeSignatureChange({ beats, subdivision: next })
+    const options = SUBDIVISION_OPTIONS.filter((s) => s !== subdivision).join(', ')
+    const input = window.prompt(
+      `Change cells/pulse (currently ${subdivision}).\nAvailable: ${options}\nThis will reset the measure content.`,
+      String(subdivision),
+    )
+    if (input === null) return
+    const value = parseInt(input, 10)
+    if (SUBDIVISION_OPTIONS.includes(value) && value !== subdivision) {
+      onTimeSignatureChange({ beats, subdivision: value })
     }
   }
 

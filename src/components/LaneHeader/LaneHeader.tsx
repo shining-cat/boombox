@@ -35,7 +35,9 @@ export function LaneHeader({
       />
       <button
         className={styles.removeButton}
-        onClick={onRemove}
+        onClick={() => {
+          if (window.confirm(`Delete lane "${name}", confirm?`)) onRemove()
+        }}
         disabled={!canRemove}
         title="Remove lane"
       >
