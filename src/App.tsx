@@ -150,7 +150,6 @@ function App() {
         onLoad={handleLoad}
         onExportPdf={handleExportPdf}
         onExportPng={handleExportPng}
-        onAddLane={handleAddLane}
         onNewScore={handleNewScore}
       />
       <Score
@@ -167,6 +166,7 @@ function App() {
         onRemoveMeasure={removeMeasure}
         onInsertMeasure={insertMeasure}
         onAddMeasure={addMeasure}
+        onAddLane={handleAddLane}
         onAddLine={addLine}
       />
       {contextMenu && (

@@ -18,6 +18,22 @@
   background: var(--bg, #fff);
 }
 
+.addLaneBtn {
+  height: 36px;
+  border: 2px dashed #ccc;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #999;
+  border-radius: 4px;
+  margin: 0 8px;
+}
+
+.addLaneBtn:hover {
+  border-color: #999;
+  color: #333;
+}
+
 .sectionSpacer {
   height: 28px;
 }

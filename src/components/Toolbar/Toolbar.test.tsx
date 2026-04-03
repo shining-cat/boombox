@@ -12,7 +12,6 @@ function renderToolbar(overrides: Partial<React.ComponentProps<typeof Toolbar>> 
     onLoad: vi.fn(),
     onExportPdf: vi.fn(),
     onExportPng: vi.fn(),
-    onAddLane: vi.fn(),
     onNewScore: vi.fn(),
     ...overrides,
   }
@@ -34,11 +33,10 @@ describe('Toolbar', () => {
     expect(props.onTitleChange).toHaveBeenCalledWith('A')
   })
 
-  it('renders Save, Load, and + Lane buttons', () => {
+  it('renders Save and Load buttons', () => {
     renderToolbar()
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Load' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '+ Lane' })).toBeInTheDocument()
   })
 
   it('shows "(unsaved)" when isDirty is true', () => {

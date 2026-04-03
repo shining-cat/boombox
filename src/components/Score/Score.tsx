@@ -26,6 +26,7 @@ interface ScoreProps {
   onRemoveMeasure: (lineIndex: number, measureId: string) => void
   onInsertMeasure: (lineIndex: number, index: number) => void
   onAddMeasure: (lineIndex: number) => void
+  onAddLane: () => void
   onAddLine: () => void
 }
 
@@ -64,6 +65,7 @@ export function Score({
   onRemoveMeasure,
   onInsertMeasure,
   onAddMeasure,
+  onAddLane,
   onAddLine,
 }: ScoreProps) {
   const canRemoveLane = score.lanes.length > 1
@@ -160,6 +162,14 @@ export function Score({
                   canRemove={canRemoveLane}
                 />
               ))}
+              {lineIndex === 0 && (
+                <button
+                  className={styles.addLaneBtn}
+                  onClick={onAddLane}
+                >
+                  + Lane
+                </button>
+              )}
             </div>
 
             <div className={styles.measuresArea}>

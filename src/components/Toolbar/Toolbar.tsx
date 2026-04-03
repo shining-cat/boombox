@@ -8,7 +8,6 @@ export interface ToolbarProps {
   onLoad: () => void
   onExportPdf: () => void
   onExportPng: () => void
-  onAddLane: () => void
   onNewScore: () => void
 }
 
@@ -20,7 +19,6 @@ export function Toolbar({
   onLoad,
   onExportPdf,
   onExportPng,
-  onAddLane,
   onNewScore,
 }: ToolbarProps) {
   return (
@@ -41,7 +39,6 @@ export function Toolbar({
       </button>
       <button onClick={onExportPdf}>PDF</button>
       <button onClick={onExportPng}>PNG</button>
-      <button onClick={onAddLane}>+ Lane</button>
     </div>
   )
 }
