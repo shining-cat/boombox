@@ -180,6 +180,13 @@ function App() {
           onClose={() => setContextMenu(null)}
         />
       )}
+      <footer className="footer">
+        <img src="/logo.png" alt="Shining Cat" className="footer-logo" />
+        <span className="footer-text">
+          <a href="https://github.com/shining-cat" target="_blank" rel="noopener noreferrer">@Shining-cat</a>
+          {' · '}GPL-3.0
+        </span>
+      </footer>
     </div>
   )
 }
