@@ -11,6 +11,14 @@ interface MeasureHeaderProps {
   canRemove: boolean
 }
 
+const BEAT_OPTIONS = [2, 3, 4, 5, 6]
+const SUBDIVISION_OPTIONS = [2, 3, 4, 6]
+
+function cycleValue(current: number, options: number[]): number {
+  const idx = options.indexOf(current)
+  return options[(idx + 1) % options.length]
+}
+
 export function MeasureHeader({
   measureNumber,
   totalMeasures,
@@ -20,41 +28,45 @@ export function MeasureHeader({
   onRemove,
   canRemove,
 }: MeasureHeaderProps) {
+  const handleBeatsClick = () => {
+    const next = cycleValue(beats, BEAT_OPTIONS)
+    if (window.confirm(`Change pulses from ${beats} to ${next}? This will reset the measure content.`)) {
+      onTimeSignatureChange({ beats: next, subdivision })
+    }
+  }
+
+  const handleSubdivisionClick = () => {
+    const next = cycleValue(subdivision, SUBDIVISION_OPTIONS)
+    if (window.confirm(`Change cells/pulse from ${subdivision} to ${next}? This will reset the measure content.`)) {
+      onTimeSignatureChange({ beats, subdivision: next })
+    }
+  }
+
   return (
     <div className={styles.header}>
       <span className={styles.measureNum}>{measureNumber}/{totalMeasures}</span>
 
-      <label className={styles.fieldGroup}>
+      <div className={styles.fieldGroup}>
         <span className={styles.fieldLabel}>Pulses</span>
-        <select
-          className={styles.select}
-          value={beats}
-          aria-label="Beats"
-          onChange={(e) =>
-            onTimeSignatureChange({ beats: Number(e.target.value), subdivision })
-          }
+        <button
+          className={styles.valueBtn}
+          onClick={handleBeatsClick}
+          title="Change pulses (cycles through values)"
         >
-          {[2, 3, 4, 5, 6].map((b) => (
-            <option key={b} value={b}>{b}</option>
-          ))}
-        </select>
-      </label>
+          {beats}
+        </button>
+      </div>
 
-      <label className={styles.fieldGroup}>
+      <div className={styles.fieldGroup}>
         <span className={styles.fieldLabel}>Cells/pulse</span>
-        <select
-          className={styles.select}
-          value={subdivision}
-          aria-label="Subdivision"
-          onChange={(e) =>
-            onTimeSignatureChange({ beats, subdivision: Number(e.target.value) })
-          }
+        <button
+          className={styles.valueBtn}
+          onClick={handleSubdivisionClick}
+          title="Change cells per pulse (cycles through values)"
         >
-          {[2, 3, 4, 6].map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
-      </label>
+          {subdivision}
+        </button>
+      </div>
 
       <span className={styles.summary}>{beats}×{subdivision}={beats * subdivision}</span>
 

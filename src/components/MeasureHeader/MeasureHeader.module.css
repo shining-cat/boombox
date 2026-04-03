@@ -29,12 +29,19 @@
   letter-spacing: 0.5px;
 }
 
-.select {
+.valueBtn {
   font-size: 12px;
-  padding: 1px 2px;
+  font-weight: 600;
+  padding: 2px 8px;
   border: 1px solid #ddd;
   border-radius: 3px;
   background: white;
+  cursor: pointer;
+}
+
+.valueBtn:hover {
+  background: #f0f0f0;
+  border-color: #bbb;
 }
 
 .summary {

@@ -39,7 +39,7 @@ export function Grid({ measure, lanes, onCycleCell, onCellContextMenu }: GridPro
                     label={cell.label}
                     isBeatStart={i === 0}
                     isRoll={!!cell.roll}
-                    isTriplet
+                    isTriplet={i === 1}
                     width={tripletCellWidth}
                     backgroundColor={lane.color}
                     onClick={() => onCycleCell(lane.id, startOffset + i)}

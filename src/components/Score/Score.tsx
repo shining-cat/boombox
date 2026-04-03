@@ -208,14 +208,15 @@ export function Score({
                     onClick={() => handleSectionLengthEdit(section)}
                     title="Set section length"
                   >
-                    {section.length}m
+                    {section.length} {section.length === 1 ? 'measure' : 'measures'}
                   </button>
+                  <span className={styles.repeatLabel}>section repeats</span>
                   <button
                     className={styles.repeatBtn}
                     onClick={() => handleRepeatClick(section)}
                     title="Set repeat"
                   >
-                    {section.repeat ? `×${section.repeat.times}` : '🔁'}
+                    {section.repeat ? `×${section.repeat.times}` : '—'}
                   </button>
                 </div>
               )

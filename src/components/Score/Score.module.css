@@ -78,6 +78,12 @@
   background: #ddd;
 }
 
+.repeatLabel {
+  font-size: 9px;
+  color: #999;
+  white-space: nowrap;
+}
+
 .repeatBtn {
   border: none;
   background: none;

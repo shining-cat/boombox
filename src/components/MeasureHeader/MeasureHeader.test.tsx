@@ -23,16 +23,14 @@ describe('MeasureHeader', () => {
     expect(screen.getByText('4×4=16')).toBeInTheDocument()
   })
 
-  it('displays pulses dropdown with correct value', () => {
+  it('displays pulses button with correct value', () => {
     render(<MeasureHeader {...defaultProps} />)
-    const beatsSelect = screen.getByLabelText('Beats') as HTMLSelectElement
-    expect(beatsSelect.value).toBe('4')
+    expect(screen.getByTitle('Change pulses (cycles through values)')).toHaveTextContent('4')
   })
 
-  it('displays subdivision dropdown with correct value', () => {
+  it('displays subdivision button with correct value', () => {
     render(<MeasureHeader {...defaultProps} />)
-    const subdivisionSelect = screen.getByLabelText('Subdivision') as HTMLSelectElement
-    expect(subdivisionSelect.value).toBe('4')
+    expect(screen.getByTitle('Change cells per pulse (cycles through values)')).toHaveTextContent('4')
   })
 
   it('shows legend labels for dropdowns', () => {
