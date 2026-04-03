@@ -24,6 +24,22 @@ export function MeasureHeader({
   onRemove,
   canRemove,
 }: MeasureHeaderProps) {
+  const handleRepeatClick = () => {
+    if (repeat) {
+      const input = window.prompt('Repeat count (0 to remove):', String(repeat.times))
+      if (input !== null) {
+        const times = parseInt(input, 10)
+        onRepeatChange(times > 0 ? times : null)
+      }
+    } else {
+      const input = window.prompt('Repeat count:', '2')
+      if (input !== null) {
+        const times = parseInt(input, 10)
+        if (times > 0) onRepeatChange(times)
+      }
+    }
+  }
+
   return (
     <div className={styles.header}>
       <input
@@ -68,7 +84,9 @@ export function MeasureHeader({
         ))}
       </select>
 
-      {repeat && <span className={styles.repeat}>×{repeat.times}</span>}
+      <button className={styles.repeatButton} onClick={handleRepeatClick} title="Set repeat">
+        {repeat ? `×${repeat.times}` : '🔁'}
+      </button>
 
       <button
         className={styles.removeButton}
