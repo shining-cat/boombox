@@ -132,10 +132,12 @@ export function Toolbar({
 
               <section>
                 <h3>Files &amp; Sharing</h3>
+                <p className={styles.helpWarning}>This program never saves anything on its own. You need to save (download) yourself, and load your saved file next time you want to work on it.</p>
                 <ul>
                   <li>Save/Load use <code>.boombox.json</code> files</li>
                   <li>Export to PDF or PNG</li>
-                  <li>Warning before leaving with unsaved changes — nothing is saved automatically</li>
+                  <li>Warning before leaving with unsaved changes</li>
+                  <li>To print, export a PDF file</li>
                   <li>To share with others, export a PDF or PNG file</li>
                   <li>To share a modifiable file, share the <code>.boombox.json</code> file</li>
                 </ul>

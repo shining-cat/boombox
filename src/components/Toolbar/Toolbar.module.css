@@ -127,6 +127,14 @@
   line-height: 1.6;
 }
 
+.helpWarning {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+
 .helpContent code {
   background: #f0f0f0;
   padding: 1px 4px;
