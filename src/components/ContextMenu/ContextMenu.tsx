@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import type { CellSymbol } from '../../model/types'
 import type { RhythmTemplate } from '../../model/templates'
 import { RHYTHM_TEMPLATES } from '../../model/templates'
@@ -20,11 +20,28 @@ interface ContextMenuProps {
 
 export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onRemoveRoll, onApplyTemplate, onClose }: ContextMenuProps) {
   const [showTemplates, setShowTemplates] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const [pos, setPos] = useState({ left: x, top: y })
+
+  useEffect(() => {
+    const el = menuRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    let left = x
+    let top = y
+    if (top + rect.height > window.innerHeight - 8) {
+      top = Math.max(8, window.innerHeight - rect.height - 8)
+    }
+    if (left + rect.width > window.innerWidth - 8) {
+      left = Math.max(8, window.innerWidth - rect.width - 8)
+    }
+    setPos({ left, top })
+  }, [x, y, showTemplates])
 
   return (
     <>
       <div className={styles.overlay} onClick={onClose} />
-      <div className={styles.menu} style={{ left: x, top: y }}>
+      <div ref={menuRef} className={styles.menu} style={{ left: pos.left, top: pos.top }}>
         <button className={styles.item} onClick={() => onSetSymbol('cross')} title="Set cross symbol">✕ Cross</button>
         <button className={styles.item} onClick={() => onSetSymbol('empty-round')} title="Set empty round symbol">○ Empty round</button>
         <button className={styles.item} onClick={() => onSetSymbol('full-round')} title="Set full round symbol">● Full round</button>
