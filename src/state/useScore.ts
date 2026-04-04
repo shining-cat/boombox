@@ -232,6 +232,17 @@ export function useScore() {
     [updateCells],
   )
 
+  const removeRoll = useCallback(
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number) => {
+      updateCells(lineIndex, measureId, laneId, (cells) => {
+        const { roll: _, ...rest } = cells[cellIndex]
+        cells[cellIndex] = rest
+        return cells
+      })
+    },
+    [updateCells],
+  )
+
   const setSectionLabel = useCallback(
     (lineIndex: number, measureId: string, label: string) => {
       dirtyUpdate((prev) => ({
@@ -358,6 +369,7 @@ export function useScore() {
     setCellLabel,
     setTriplet,
     setRoll,
+    removeRoll,
     setSectionLabel,
     setSectionLength,
     setRepeat,

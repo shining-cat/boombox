@@ -34,6 +34,7 @@ function App() {
     setCellLabel,
     setTriplet,
     setRoll,
+    removeRoll,
     setSectionLabel,
     setSectionLength,
     setRepeat,
@@ -143,6 +144,12 @@ function App() {
     setContextMenu(null)
   }, [contextMenu, setRoll])
 
+  const handleRemoveRoll = useCallback(() => {
+    if (!contextMenu) return
+    removeRoll(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex)
+    setContextMenu(null)
+  }, [contextMenu, removeRoll])
+
   const handleApplyTemplate = useCallback(
     (template: RhythmTemplate) => {
       if (!contextMenu) return
@@ -191,18 +198,35 @@ function App() {
         onAddLine={addLine}
         showPulse={showPulse}
       />
-      {contextMenu && (
-        <ContextMenu
-          x={contextMenu.x}
-          y={contextMenu.y}
-          onSetSymbol={handleSetSymbol}
-          onSetLabel={handleSetLabel}
-          onSetTriplet={handleSetTriplet}
-          onSetRoll={handleSetRoll}
-          onApplyTemplate={handleApplyTemplate}
-          onClose={() => setContextMenu(null)}
-        />
-      )}
+      {contextMenu && (() => {
+        const measure = score.lines[contextMenu.lineIndex]?.find(m => m.id === contextMenu.measureId)
+        const cells = measure?.cells[contextMenu.laneId] ?? []
+        const cell = cells[contextMenu.cellIndex]
+        const laneTriplets = measure?.tripletBeats?.[contextMenu.laneId] ?? []
+        const { beats, subdivision } = measure?.timeSignature ?? { beats: 0, subdivision: 0 }
+        let beatIndex = 0
+        let pos = 0
+        for (let b = 0; b < beats; b++) {
+          const beatSize = laneTriplets.includes(b) ? 3 : subdivision
+          if (pos + beatSize > contextMenu.cellIndex) { beatIndex = b; break }
+          pos += beatSize
+        }
+        return (
+          <ContextMenu
+            x={contextMenu.x}
+            y={contextMenu.y}
+            hasTriplet={laneTriplets.includes(beatIndex)}
+            hasRoll={!!cell?.roll}
+            onSetSymbol={handleSetSymbol}
+            onSetLabel={handleSetLabel}
+            onSetTriplet={handleSetTriplet}
+            onSetRoll={handleSetRoll}
+            onRemoveRoll={handleRemoveRoll}
+            onApplyTemplate={handleApplyTemplate}
+            onClose={() => setContextMenu(null)}
+          />
+        )
+      })()}
       <footer className="footer">
         <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" className="footer-logo" />
         <span className="footer-text">

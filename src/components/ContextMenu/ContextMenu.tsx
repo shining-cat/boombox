@@ -7,15 +7,18 @@ import styles from './ContextMenu.module.css'
 interface ContextMenuProps {
   x: number
   y: number
+  hasTriplet: boolean
+  hasRoll: boolean
   onSetSymbol: (symbol: CellSymbol) => void
   onSetLabel: () => void
   onSetTriplet: () => void
   onSetRoll: () => void
+  onRemoveRoll: () => void
   onApplyTemplate: (template: RhythmTemplate) => void
   onClose: () => void
 }
 
-export function ContextMenu({ x, y, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onApplyTemplate, onClose }: ContextMenuProps) {
+export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onRemoveRoll, onApplyTemplate, onClose }: ContextMenuProps) {
   const [showTemplates, setShowTemplates] = useState(false)
 
   return (
@@ -32,8 +35,14 @@ export function ContextMenu({ x, y, onSetSymbol, onSetLabel, onSetTriplet, onSet
         <div className={styles.separator} />
         <button className={styles.item} onClick={onSetLabel} title="Add a text label below the cell">Add label</button>
         <div className={styles.separator} />
-        <button className={styles.item} onClick={onSetTriplet} title="Toggle triplet on this pulse (3 notes)">Triplet</button>
-        <button className={styles.item} onClick={onSetRoll} title="Set a roll starting from this cell">Roll</button>
+        <button className={styles.item} onClick={onSetTriplet} title={hasTriplet ? 'Remove triplet from this pulse' : 'Add triplet on this pulse (3 notes)'}>
+          {hasTriplet ? 'Remove triplet' : 'Add triplet'}
+        </button>
+        {hasRoll ? (
+          <button className={styles.item} onClick={onRemoveRoll} title="Remove roll from this cell">Remove roll</button>
+        ) : (
+          <button className={styles.item} onClick={onSetRoll} title="Set a roll starting from this cell">Add roll</button>
+        )}
         <div className={styles.separator} />
         <button
           className={`${styles.item} ${styles.submenuTrigger}`}

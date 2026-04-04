@@ -11,6 +11,9 @@ function renderMenu(overrides = {}) {
     onSetLabel: vi.fn(),
     onSetTriplet: vi.fn(),
     onSetRoll: vi.fn(),
+    onRemoveRoll: vi.fn(),
+    hasTriplet: false,
+    hasRoll: false,
     onApplyTemplate: vi.fn(),
     onClose: vi.fn(),
     ...overrides,
@@ -30,11 +33,21 @@ describe('ContextMenu', () => {
     expect(screen.getByText('Clear')).toBeInTheDocument()
   })
 
-  it('renders Triplet, Roll, and Add label options', () => {
+  it('renders Add triplet, Add roll, and Add label options', () => {
     renderMenu()
     expect(screen.getByText('Add label')).toBeInTheDocument()
-    expect(screen.getByText('Triplet')).toBeInTheDocument()
-    expect(screen.getByText('Roll')).toBeInTheDocument()
+    expect(screen.getByText('Add triplet')).toBeInTheDocument()
+    expect(screen.getByText('Add roll')).toBeInTheDocument()
+  })
+
+  it('renders Remove triplet when hasTriplet is true', () => {
+    renderMenu({ hasTriplet: true })
+    expect(screen.getByText('Remove triplet')).toBeInTheDocument()
+  })
+
+  it('renders Remove roll when hasRoll is true', () => {
+    renderMenu({ hasRoll: true })
+    expect(screen.getByText('Remove roll')).toBeInTheDocument()
   })
 
   it('calls onSetSymbol with "cross" when Cross is clicked', async () => {
@@ -58,17 +71,17 @@ describe('ContextMenu', () => {
     expect(props.onSetLabel).toHaveBeenCalled()
   })
 
-  it('calls onSetTriplet when Triplet is clicked', async () => {
+  it('calls onSetTriplet when Add triplet is clicked', async () => {
     const user = userEvent.setup()
     const props = renderMenu()
-    await user.click(screen.getByText('Triplet'))
+    await user.click(screen.getByText('Add triplet'))
     expect(props.onSetTriplet).toHaveBeenCalled()
   })
 
-  it('calls onSetRoll when Roll is clicked', async () => {
+  it('calls onSetRoll when Add roll is clicked', async () => {
     const user = userEvent.setup()
     const props = renderMenu()
-    await user.click(screen.getByText('Roll'))
+    await user.click(screen.getByText('Add roll'))
     expect(props.onSetRoll).toHaveBeenCalled()
   })
 })
