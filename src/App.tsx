@@ -3,6 +3,7 @@ import { useScore } from './state/useScore'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { Score } from './components/Score/Score'
 import { ContextMenu } from './components/ContextMenu/ContextMenu'
+import { MidiExportModal } from './components/MidiExportModal/MidiExportModal'
 import { downloadScore, openScoreFile } from './utils/fileIO'
 import { createScore } from './model/factory'
 import { exportToPdf, exportToPng } from './utils/export'
@@ -48,6 +49,7 @@ function App() {
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [showPulse, setShowPulse] = useState(false)
+  const [showMidiExport, setShowMidiExport] = useState(false)
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -184,6 +186,7 @@ function App() {
         onLoad={handleLoad}
         onExportPdf={handleExportPdf}
         onExportPng={handleExportPng}
+        onExportMidi={() => setShowMidiExport(true)}
         onNewScore={handleNewScore}
         showPulse={showPulse}
         onTogglePulse={() => setShowPulse(p => !p)}
@@ -235,6 +238,9 @@ function App() {
           />
         )
       })()}
+      {showMidiExport && (
+        <MidiExportModal score={score} onClose={() => setShowMidiExport(false)} />
+      )}
       <footer className="footer">
         <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" className="footer-logo" />
         <span className="footer-text">

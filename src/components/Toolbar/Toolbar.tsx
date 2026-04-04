@@ -9,6 +9,7 @@ export interface ToolbarProps {
   onLoad: () => void
   onExportPdf: () => void
   onExportPng: () => void
+  onExportMidi: () => void
   onNewScore: () => void
   showPulse: boolean
   onTogglePulse: () => void
@@ -22,6 +23,7 @@ export function Toolbar({
   onLoad,
   onExportPdf,
   onExportPng,
+  onExportMidi,
   onNewScore,
   showPulse,
   onTogglePulse,
@@ -52,6 +54,7 @@ export function Toolbar({
       </button>
       <button onClick={onExportPdf} title="Export score as PDF">PDF</button>
       <button onClick={onExportPng} title="Export score as PNG image">PNG</button>
+      <button onClick={onExportMidi} title="Export score as MIDI file (experimental)">MIDI</button>
 
       {showHelp && (
         <>
