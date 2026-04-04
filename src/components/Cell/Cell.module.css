@@ -16,5 +16,5 @@
 .empty { color: #ccc; font-size: 12px; }
 .symbol { color: #333; }
 .triZone { height: 8px; font-size: 7px; font-weight: 700; color: #c60; line-height: 8px; }
-.roll { font-size: 10px; color: #333; letter-spacing: -2px; }
+.roll { font-size: 10px; color: #333; letter-spacing: -2px; font-weight: 700; }
 .labelZone { height: 8px; font-size: 7px; color: #666; white-space: nowrap; line-height: 8px; }
