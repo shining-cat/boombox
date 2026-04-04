@@ -7,6 +7,7 @@ const SYMBOL_DISPLAY: Record<string, string> = {
   'full-round': '●',
   square: '■',
   diamond: '◆',
+  dot: '•',
 }
 
 interface CellProps {
@@ -45,7 +46,7 @@ export function Cell({ symbol, label, isBeatStart, isRoll, isTriplet, width, bac
       ) : symbol ? (
         <span className={styles.symbol}>{SYMBOL_DISPLAY[symbol]}</span>
       ) : (
-        <span className={styles.empty}>·</span>
+        <span className={styles.empty}>-</span>
       )}
       <span className={styles.labelZone}>{label || ''}</span>
     </div>

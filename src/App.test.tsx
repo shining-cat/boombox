@@ -13,7 +13,7 @@ describe('App', () => {
 
   it('can cycle a cell symbol by clicking', () => {
     render(<App />)
-    const dots = screen.getAllByText('·')
+    const dots = screen.getAllByText('-')
     fireEvent.click(dots[0])
     // After clicking, one dot should become a cross symbol
     expect(screen.getAllByText('✕').length).toBeGreaterThan(0)
@@ -21,7 +21,7 @@ describe('App', () => {
 
   it('shows unsaved indicator after edit', () => {
     render(<App />)
-    const dots = screen.getAllByText('·')
+    const dots = screen.getAllByText('-')
     fireEvent.click(dots[0])
     expect(screen.getByText('(unsaved)')).toBeInTheDocument()
   })

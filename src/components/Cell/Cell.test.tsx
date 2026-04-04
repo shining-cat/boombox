@@ -9,7 +9,7 @@ const noopContext = (e: React.MouseEvent) => { e.preventDefault() }
 describe('Cell', () => {
   it('renders dot for null symbol', () => {
     render(<Cell symbol={null} onClick={noop} onContextMenu={noopContext} />)
-    expect(screen.getByText('·')).toBeInTheDocument()
+    expect(screen.getByText('-')).toBeInTheDocument()
   })
 
   it.each([
@@ -26,7 +26,7 @@ describe('Cell', () => {
   it('calls onClick when clicked', async () => {
     const handleClick = vi.fn()
     render(<Cell symbol={null} onClick={handleClick} onContextMenu={noopContext} />)
-    await userEvent.click(screen.getByText('·'))
+    await userEvent.click(screen.getByText('-'))
     expect(handleClick).toHaveBeenCalledOnce()
   })
 

@@ -27,6 +27,7 @@ export function ContextMenu({ x, y, onSetSymbol, onSetLabel, onSetTriplet, onSet
         <button className={styles.item} onClick={() => onSetSymbol('full-round')} title="Set full round symbol">● Full round</button>
         <button className={styles.item} onClick={() => onSetSymbol('square')} title="Set square symbol">■ Square</button>
         <button className={styles.item} onClick={() => onSetSymbol('diamond')} title="Set diamond symbol">◆ Diamond</button>
+        <button className={styles.item} onClick={() => onSetSymbol('dot')} title="Set dot symbol">• Dot</button>
         <button className={styles.item} onClick={() => onSetSymbol(null)} title="Remove symbol from cell">Clear</button>
         <div className={styles.separator} />
         <button className={styles.item} onClick={onSetLabel} title="Add a text label below the cell">Add label</button>

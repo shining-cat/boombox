@@ -1,6 +1,6 @@
-export type CellSymbol = 'cross' | 'empty-round' | 'full-round' | 'square' | 'diamond' | null
+export type CellSymbol = 'cross' | 'empty-round' | 'full-round' | 'square' | 'diamond' | 'dot' | null
 
-export const SYMBOL_CYCLE: CellSymbol[] = [null, 'cross', 'empty-round', 'full-round', 'square', 'diamond']
+export const SYMBOL_CYCLE: CellSymbol[] = [null, 'cross', 'empty-round', 'full-round', 'square', 'diamond', 'dot']
 
 export interface Cell {
   symbol: CellSymbol
