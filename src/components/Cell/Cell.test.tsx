@@ -45,7 +45,7 @@ describe('Cell', () => {
 
   it('renders roll symbol when isRoll is true', () => {
     render(<Cell symbol="cross" isRoll onClick={noop} onContextMenu={noopContext} />)
-    expect(screen.getByText('〰')).toBeInTheDocument()
+    expect(screen.getByText('≈')).toBeInTheDocument()
     expect(screen.queryByText('✕')).not.toBeInTheDocument()
   })
 })

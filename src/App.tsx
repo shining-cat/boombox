@@ -50,6 +50,14 @@ function App() {
   const [showPulse, setShowPulse] = useState(false)
 
   useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (isDirty) e.preventDefault()
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [isDirty])
+
+  useEffect(() => {
     const base = "Shining-cat's Boombox"
     document.title = score.title && score.title !== 'Untitled Score'
       ? `${score.title} - ${base}`
