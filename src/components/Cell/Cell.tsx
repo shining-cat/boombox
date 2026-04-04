@@ -42,7 +42,7 @@ export function Cell({ symbol, label, isBeatStart, isRoll, isTriplet, width, bac
     >
       <span className={styles.triZone}>{isTriplet ? 'TRI' : ''}</span>
       {isRoll ? (
-        <span className={styles.roll}>〰</span>
+        <span className={styles.roll}>≈</span>
       ) : symbol ? (
         <span className={styles.symbol}>{SYMBOL_DISPLAY[symbol]}</span>
       ) : (
