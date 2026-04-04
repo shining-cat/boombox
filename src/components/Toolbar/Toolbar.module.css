@@ -48,3 +48,88 @@
 .primaryButton:hover {
   background-color: #1d4ed8;
 }
+
+.helpOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+.helpModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  width: 560px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.helpHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.helpHeader h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.helpClose {
+  border: none;
+  background: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0 4px;
+}
+
+.helpClose:hover {
+  color: #333;
+}
+
+.helpContent {
+  padding: 16px 20px;
+  overflow-y: auto;
+}
+
+.helpContent section {
+  margin-bottom: 16px;
+}
+
+.helpContent h3 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.helpContent ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.helpContent li {
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.helpContent code {
+  background: #f0f0f0;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
