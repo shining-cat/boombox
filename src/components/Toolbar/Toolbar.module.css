@@ -127,6 +127,14 @@
   line-height: 1.6;
 }
 
+.helpIntro {
+  font-size: 0.85rem;
+  color: #555;
+  font-style: italic;
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
 .helpWarning {
   font-size: 0.85rem;
   font-weight: 700;

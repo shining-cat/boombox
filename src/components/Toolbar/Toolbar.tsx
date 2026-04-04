@@ -62,6 +62,8 @@ export function Toolbar({
               <button className={styles.helpClose} onClick={() => setShowHelp(false)} title="Close help">&times;</button>
             </div>
             <div className={styles.helpContent}>
+              <p className={styles.helpIntro}>Boombox is a tool for writing and sharing non-melodic percussion scores. It does not offer playback features.</p>
+
               <section>
                 <h3>Getting Started</h3>
                 <ul>
