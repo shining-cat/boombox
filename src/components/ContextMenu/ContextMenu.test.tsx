@@ -14,7 +14,7 @@ function renderMenu(overrides = {}) {
     onRemoveRoll: vi.fn(),
     hasTriplet: false,
     hasRoll: false,
-    onApplyTemplate: vi.fn(),
+    onOpenTemplates: vi.fn(),
     onClose: vi.fn(),
     ...overrides,
   }

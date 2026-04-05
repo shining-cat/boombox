@@ -3,10 +3,12 @@ import { useScore } from './state/useScore'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { Score } from './components/Score/Score'
 import { ContextMenu } from './components/ContextMenu/ContextMenu'
+import TemplatePopup from './components/TemplatePopup/TemplatePopup'
 import { MidiExportModal } from './components/MidiExportModal/MidiExportModal'
 import { downloadScore, openScoreFile } from './utils/fileIO'
 import { createScore } from './model/factory'
 import { exportToPdf, exportToPng } from './utils/export'
+import { loadTemplates } from './model/templates'
 import type { CellSymbol } from './model/types'
 import type { RhythmTemplate } from './model/templates'
 import './App.css'
@@ -50,6 +52,8 @@ function App() {
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [showPulse, setShowPulse] = useState(false)
   const [showMidiExport, setShowMidiExport] = useState(false)
+  const [templates, setTemplates] = useState<RhythmTemplate[]>([])
+  const [templatePopup, setTemplatePopup] = useState<{ lineIndex: number; measureIndex: number; laneId: string; laneName: string; beats: number; subdivision: number } | null>(null)
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -65,6 +69,10 @@ function App() {
       ? `${score.title} - ${base}`
       : base
   }, [score.title])
+
+  useEffect(() => {
+    loadTemplates().then(setTemplates).catch(() => {})
+  }, [])
 
   const handleSave = useCallback(() => {
     downloadScore(score)
@@ -162,12 +170,30 @@ function App() {
 
   const handleApplyTemplate = useCallback(
     (template: RhythmTemplate) => {
-      if (!contextMenu) return
-      applyTemplate(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, template)
-      setContextMenu(null)
+      if (!templatePopup) return
+      applyTemplate(templatePopup.lineIndex, templatePopup.measureIndex, templatePopup.laneId, template)
+      setTemplatePopup(null)
     },
-    [contextMenu, applyTemplate],
+    [templatePopup, applyTemplate],
   )
+
+  const handleOpenTemplates = useCallback(() => {
+    if (!contextMenu) return
+    const line = score.lines[contextMenu.lineIndex]
+    const measureIndex = line.findIndex(m => m.id === contextMenu.measureId)
+    if (measureIndex === -1) return
+    const measure = line[measureIndex]
+    const lane = score.lanes.find(l => l.id === contextMenu.laneId)
+    setContextMenu(null)
+    setTemplatePopup({
+      lineIndex: contextMenu.lineIndex,
+      measureIndex,
+      laneId: contextMenu.laneId,
+      laneName: lane?.name ?? '',
+      beats: measure.timeSignature.beats,
+      subdivision: measure.timeSignature.subdivision,
+    })
+  }, [contextMenu, score.lines, score.lanes])
 
   const handleRepeatChange = useCallback(
     (lineIndex: number, measureId: string, times: number | null) => {
@@ -233,11 +259,21 @@ function App() {
             onSetTriplet={handleSetTriplet}
             onSetRoll={handleSetRoll}
             onRemoveRoll={handleRemoveRoll}
-            onApplyTemplate={handleApplyTemplate}
+            onOpenTemplates={handleOpenTemplates}
             onClose={() => setContextMenu(null)}
           />
         )
       })()}
+      {templatePopup && (
+        <TemplatePopup
+          templates={templates}
+          laneName={templatePopup.laneName}
+          targetBeats={templatePopup.beats}
+          targetSubdivision={templatePopup.subdivision}
+          onSelect={handleApplyTemplate}
+          onClose={() => setTemplatePopup(null)}
+        />
+      )}
       {showMidiExport && (
         <MidiExportModal score={score} onClose={() => setShowMidiExport(false)} />
       )}

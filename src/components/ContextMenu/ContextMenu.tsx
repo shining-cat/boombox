@@ -1,7 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
 import type { CellSymbol } from '../../model/types'
-import type { RhythmTemplate } from '../../model/templates'
-import { RHYTHM_TEMPLATES } from '../../model/templates'
 import styles from './ContextMenu.module.css'
 
 interface ContextMenuProps {
@@ -14,12 +12,11 @@ interface ContextMenuProps {
   onSetTriplet: () => void
   onSetRoll: () => void
   onRemoveRoll: () => void
-  onApplyTemplate: (template: RhythmTemplate) => void
+  onOpenTemplates: () => void
   onClose: () => void
 }
 
-export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onRemoveRoll, onApplyTemplate, onClose }: ContextMenuProps) {
-  const [showTemplates, setShowTemplates] = useState(false)
+export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onRemoveRoll, onOpenTemplates, onClose }: ContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState({ left: x, top: y })
 
@@ -44,7 +41,7 @@ export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel
     const vv = window.visualViewport
     vv?.addEventListener('resize', reposition)
     return () => vv?.removeEventListener('resize', reposition)
-  }, [x, y, showTemplates])
+  }, [x, y])
 
   return (
     <>
@@ -69,23 +66,9 @@ export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel
           <button className={styles.item} onClick={onSetRoll} title="Set a roll starting from this cell">Add roll</button>
         )}
         <div className={styles.separator} />
-        <button
-          className={`${styles.item} ${styles.submenuTrigger}`}
-          onClick={() => setShowTemplates(!showTemplates)}
-          title="Insert a preset rhythm pattern"
-        >
-          Insert a template {showTemplates ? '▾' : '▸'}
+        <button className={styles.item} onClick={onOpenTemplates} title="Insert a preset rhythm pattern">
+          Insert a template...
         </button>
-        {showTemplates && RHYTHM_TEMPLATES.map(t => (
-          <button
-            key={t.name}
-            className={`${styles.item} ${styles.templateItem}`}
-            onClick={() => onApplyTemplate(t)}
-            title={`${t.name} — ${t.beats}/${t.subdivision}, ${t.measures} ${t.measures === 1 ? 'measure' : 'measures'}`}
-          >
-            {t.name}
-          </button>
-        ))}
       </div>
     </>
   )
