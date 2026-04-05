@@ -318,26 +318,68 @@ export function useScore() {
   )
 
   const applyTemplate = useCallback(
-    (lineIndex: number, measureId: string, laneId: string, cellIndex: number, template: RhythmTemplate) => {
+    (lineIndex: number, measureIndex: number, laneId: string, template: RhythmTemplate) => {
       dirtyUpdate((prev) => {
-        const line = prev.lines[lineIndex]
-        const measureIdx = line.findIndex((m) => m.id === measureId)
-        if (measureIdx === -1) return prev
+        const laneIds = prev.lanes.map((l) => l.id)
+        const newLine = [...prev.lines[lineIndex]]
 
-        let patternOffset = 0
-        const newLine = [...line]
+        for (let i = 0; i < template.measures.length; i++) {
+          const tm = template.measures[i]
+          const targetIdx = measureIndex + i
 
-        for (let mi = measureIdx; mi < line.length && patternOffset < template.pattern.length; mi++) {
-          const m = newLine[mi]
-          const cells = [...(m.cells[laneId] ?? [])]
-          const startCell = mi === measureIdx ? cellIndex : 0
-
-          for (let ci = startCell; ci < cells.length && patternOffset < template.pattern.length; ci++) {
-            cells[ci] = { ...cells[ci], symbol: template.pattern[patternOffset] }
-            patternOffset++
+          // Auto-add measure if it doesn't exist
+          while (newLine.length <= targetIdx) {
+            const lastTs = newLine[newLine.length - 1].timeSignature
+            newLine.push(createMeasure(laneIds, lastTs))
           }
 
-          newLine[mi] = { ...m, cells: { ...m.cells, [laneId]: cells } }
+          const oldMeasure = newLine[targetIdx]
+          const newTs = { beats: tm.beats, subdivision: tm.subdivision }
+          const tsChanged =
+            oldMeasure.timeSignature.beats !== newTs.beats ||
+            oldMeasure.timeSignature.subdivision !== newTs.subdivision
+
+          // Build cells for the target lane from template
+          const templateCells: Cell[] = tm.cells.map((c) => {
+            const cell: Cell = { symbol: c.symbol }
+            if (c.label) cell.label = c.label
+            if (c.roll) cell.roll = { length: c.roll.length }
+            return cell
+          })
+
+          // Build cells map: template lane gets template cells, others keep or rebuild
+          const newCells: Record<string, Cell[]> = {}
+          const newCellCount = newTs.beats * newTs.subdivision
+          for (const lid of laneIds) {
+            if (lid === laneId) {
+              newCells[lid] = templateCells
+            } else if (tsChanged) {
+              newCells[lid] = Array.from({ length: newCellCount }, () => createCell())
+            } else {
+              newCells[lid] = oldMeasure.cells[lid] ?? Array.from({ length: newCellCount }, () => createCell())
+            }
+          }
+
+          // Build tripletBeats
+          const newTripletBeats: Record<string, number[]> = {}
+          if (tm.tripletBeats.length > 0) {
+            newTripletBeats[laneId] = tm.tripletBeats
+          }
+          if (!tsChanged && oldMeasure.tripletBeats) {
+            for (const lid of laneIds) {
+              if (lid === laneId) continue
+              if (oldMeasure.tripletBeats[lid]?.length) {
+                newTripletBeats[lid] = oldMeasure.tripletBeats[lid]
+              }
+            }
+          }
+
+          newLine[targetIdx] = {
+            ...oldMeasure,
+            timeSignature: newTs,
+            cells: newCells,
+            tripletBeats: Object.keys(newTripletBeats).length > 0 ? newTripletBeats : undefined,
+          }
         }
 
         return { ...prev, lines: mapLine(prev.lines, lineIndex, () => newLine) }
