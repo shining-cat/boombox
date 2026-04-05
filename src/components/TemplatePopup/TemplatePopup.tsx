@@ -182,6 +182,11 @@ export default function TemplatePopup({
             )
           })}
         </div>
+        <div className={styles.footer}>
+          <a href="#/editor" target="_blank" rel="noopener noreferrer">
+            Create a new template
+          </a>
+        </div>
       </div>
     </>
   )

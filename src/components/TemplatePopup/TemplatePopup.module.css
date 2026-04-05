@@ -152,3 +152,19 @@
 .instrumentMismatch {
   color: #e67e00;
 }
+
+.footer {
+  padding: 12px 20px;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.footer a {
+  color: #555;
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  color: #333;
+}
