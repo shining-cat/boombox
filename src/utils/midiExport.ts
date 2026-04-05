@@ -1,3 +1,4 @@
+// @ts-expect-error midi-writer-js package.json exports don't resolve types correctly
 import MidiWriter from 'midi-writer-js'
 import type { Score } from '../model/types'
 
@@ -150,7 +151,7 @@ export function generateMidi(score: Score, options: MidiExportOptions): Uint8Arr
 }
 
 export function downloadMidi(data: Uint8Array, filename: string) {
-  const blob = new Blob([data], { type: 'audio/midi' })
+  const blob = new Blob([data as BlobPart], { type: 'audio/midi' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url

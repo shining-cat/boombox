@@ -1,4 +1,3 @@
-import type { CellSymbol } from './types'
 
 export interface PercussionInstrument {
   note: number
