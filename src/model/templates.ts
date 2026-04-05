@@ -1,58 +1,19 @@
 import type { CellSymbol } from './types'
 
-export interface RhythmTemplate {
-  name: string
+export interface TemplateMeasure {
   beats: number
   subdivision: number
-  measures: number
-  pattern: CellSymbol[]
+  cells: { symbol: CellSymbol; label?: string; roll?: { length: number } }[]
+  tripletBeats: number[]
 }
 
-function parsePattern(str: string): CellSymbol[] {
-  return [...str].map(c => (c === 'x' ? 'full-round' : null))
+export interface RhythmTemplate {
+  name: string
+  instrument: string
+  measures: TemplateMeasure[]
 }
 
-export const RHYTHM_TEMPLATES: RhythmTemplate[] = [
-  {
-    name: '3-2 Clave',
-    beats: 4,
-    subdivision: 4,
-    measures: 1,
-    pattern: parsePattern('x..x..x...x.x...'),
-  },
-  {
-    name: 'Afoxe',
-    beats: 4,
-    subdivision: 4,
-    measures: 1,
-    pattern: parsePattern('xx.x.xx.x.x.x.x.'),
-  },
-  {
-    name: 'Rumba',
-    beats: 4,
-    subdivision: 4,
-    measures: 1,
-    pattern: parsePattern('x..x...x..x.x.x.'),
-  },
-  {
-    name: 'Tambourim',
-    beats: 4,
-    subdivision: 4,
-    measures: 1,
-    pattern: parsePattern('.x.x.xx.x.x.x.xx'),
-  },
-  {
-    name: 'Samba Reggae',
-    beats: 4,
-    subdivision: 4,
-    measures: 1,
-    pattern: parsePattern('......x.....xxxx'),
-  },
-  {
-    name: 'Funk',
-    beats: 4,
-    subdivision: 4,
-    measures: 2,
-    pattern: parsePattern('xx....xx....xxxxxx....xx....x...'),
-  },
-]
+export async function loadTemplates(): Promise<RhythmTemplate[]> {
+  const response = await fetch(`${import.meta.env.BASE_URL}templates.json`)
+  return response.json() as Promise<RhythmTemplate[]>
+}

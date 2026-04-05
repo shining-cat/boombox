@@ -1,0 +1,115 @@
+[
+  {
+    "name": "3-2 Clave",
+    "instrument": "General",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Afoxe",
+    "instrument": "General",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Rumba",
+    "instrument": "General",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Tambourim",
+    "instrument": "General",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": null}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae",
+    "instrument": "General",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Funk",
+    "instrument": "General",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      },
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  }
+]
