@@ -3,10 +3,13 @@ import type { Score } from '../model/types'
 import { autoDetectInstrument } from '../model/midiMappings'
 import { createSampleLoader } from './SampleLoader'
 import type { SampleLoader } from './SampleLoader'
-import { buildNoteEvents, createScheduler } from './Scheduler'
+import { buildNoteEvents, buildPulseEvents, createScheduler } from './Scheduler'
 import type { SchedulerController } from './Scheduler'
 
 export type TransportState = 'stopped' | 'playing' | 'paused'
+
+export const PULSE_LANE_ID = '__pulse'
+const PULSE_GM_NOTE = 37 // Side Stick
 
 const MIN_TEMPO = 40
 const MAX_TEMPO = 300
@@ -15,7 +18,7 @@ function clampTempo(bpm: number): number {
   return Math.max(MIN_TEMPO, Math.min(MAX_TEMPO, bpm))
 }
 
-export function useTransport(score: Score) {
+export function useTransport(score: Score, showPulse: boolean) {
   const [state, setState] = useState<TransportState>('stopped')
   const [tempo, setTempoState] = useState(score.tempo)
   const [currentMeasureIndex, setCurrentMeasureIndex] = useState(-1)
@@ -64,12 +67,22 @@ export function useTransport(score: Score) {
       }
     }
 
+    // Include pulse click if visible and not muted
+    const pulseActive = showPulse && !mutedLanes.has(PULSE_LANE_ID)
+    if (pulseActive) {
+      instrumentMap[PULSE_LANE_ID] = PULSE_GM_NOTE
+    }
+
     // Load samples for all needed notes
     const noteNumbers = [...new Set(Object.values(instrumentMap))]
     const samples = await loader.loadSamples(noteNumbers)
 
     // Build note events from score
     const events = buildNoteEvents(score, instrumentMap, tempo)
+    if (pulseActive) {
+      events.push(...buildPulseEvents(score, PULSE_GM_NOTE, tempo))
+      events.sort((a, b) => a.time - b.time)
+    }
 
     // Create and start scheduler
     const scheduler = createScheduler(
@@ -94,7 +107,7 @@ export function useTransport(score: Score) {
     schedulerRef.current = scheduler
     scheduler.start()
     setState('playing')
-  }, [score, tempo, mutedLanes, stopInternal])
+  }, [score, tempo, mutedLanes, showPulse, stopInternal])
 
   playRef.current = play
 

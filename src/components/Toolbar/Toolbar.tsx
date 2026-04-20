@@ -13,8 +13,6 @@ export interface ToolbarProps {
   onExportPng: () => void
   onExportMidi: () => void
   onNewScore: () => void
-  showPulse: boolean
-  onTogglePulse: () => void
   transportState: TransportState
   tempo: number
   onPlay: () => void
@@ -36,8 +34,6 @@ export function Toolbar({
   onExportPng,
   onExportMidi,
   onNewScore,
-  showPulse,
-  onTogglePulse,
   transportState,
   tempo,
   onPlay,
@@ -52,15 +48,17 @@ export function Toolbar({
 
   return (
     <div className={styles.toolbar}>
-      <input
-        className={styles.titleInput}
-        type="text"
-        value={title}
-        onChange={(e) => onTitleChange(e.target.value)}
-        aria-label="Score title"
-        title="Score title"
-      />
-      {isDirty && <span className={styles.unsaved}>(unsaved)</span>}
+      <div className={styles.titleGroup}>
+        <input
+          className={styles.titleInput}
+          type="text"
+          value={title}
+          onChange={(e) => onTitleChange(e.target.value)}
+          aria-label="Score title"
+          title="Score title"
+        />
+        {isDirty && <span className={styles.unsaved}>(unsaved)</span>}
+      </div>
       <div className={styles.spacer} />
       <button onClick={() => setShowHelp(true)} title="Show help">Help</button>
       <PlaybackControls
@@ -75,17 +73,18 @@ export function Toolbar({
         onToggleLoop={onToggleLoop}
       />
       <div className={styles.spacer} />
-      <button onClick={onTogglePulse} title={showPulse ? 'Hide pulse lane' : 'Show pulse lane'}>
-        {showPulse ? 'Hide Pulse' : 'Show Pulse'}
-      </button>
-      <button onClick={onNewScore} title="Create a new empty score">New</button>
-      <button onClick={onLoad} title="Load a score from file">Load</button>
-      <button className={styles.primaryButton} onClick={onSave} title="Save score to file">
-        Save
-      </button>
-      <button onClick={onExportPdf} title="Export score as PDF">PDF</button>
-      <button onClick={onExportPng} title="Export score as PNG image">PNG</button>
-      <button onClick={onExportMidi} title="Export score as MIDI file (experimental)">MIDI</button>
+      <div className={styles.buttonGroup}>
+        <button onClick={onNewScore} title="Create a new empty score">New</button>
+        <button onClick={onLoad} title="Load a score from file">Load</button>
+        <button className={styles.primaryButton} onClick={onSave} title="Save score to file">
+          Save
+        </button>
+      </div>
+      <div className={styles.buttonGroup}>
+        <button onClick={onExportPdf} title="Export score as PDF">PDF</button>
+        <button onClick={onExportPng} title="Export score as PNG image">PNG</button>
+        <button onClick={onExportMidi} title="Export score as MIDI file (experimental)">MIDI</button>
+      </div>
 
       {showHelp && (
         <>
@@ -162,7 +161,7 @@ export function Toolbar({
               <section>
                 <h3>Pulse Lane</h3>
                 <ul>
-                  <li>"Show Pulse" in the toolbar adds a read-only lane showing beat positions</li>
+                  <li>"Show Pulse" at the top-left of the score adds a playable metronome lane</li>
                 </ul>
               </section>
 

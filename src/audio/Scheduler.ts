@@ -89,6 +89,35 @@ export function buildNoteEvents(
   return events
 }
 
+export function buildPulseEvents(
+  score: Score,
+  gmNote: number,
+  tempo: number,
+): NoteEvent[] {
+  const flatMeasures = flattenMeasures(score)
+  const events: NoteEvent[] = []
+  const beatDuration = 60 / tempo
+  let currentTime = 0
+
+  for (const { measure, visualIndex } of flatMeasures) {
+    const { beats, subdivision } = measure.timeSignature
+    const measureDuration = beats * subdivision * (beatDuration / subdivision)
+
+    for (let beat = 0; beat < beats; beat++) {
+      events.push({
+        time: currentTime + beat * beatDuration,
+        note: gmNote,
+        velocity: beat === 0 ? 0.7 : 0.4,
+        measureIndex: visualIndex,
+      })
+    }
+
+    currentTime += measureDuration
+  }
+
+  return events
+}
+
 export interface SchedulerController {
   start: () => void
   stop: () => void

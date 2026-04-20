@@ -21,7 +21,7 @@ export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onC
   return (
     <div className={styles.grid}>
       {showPulse && (
-        <div className={styles.laneRow}>
+        <div className={`${styles.laneRow} ${mutedLaneIds?.has('__pulse') ? styles.laneMuted : ''}`}>
           {Array.from({ length: beats * subdivision }, (_, i) => (
             <Cell
               key={`pulse-${i}`}

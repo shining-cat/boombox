@@ -4,6 +4,27 @@
   gap: 12px;
 }
 
+.pulseToggle {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+}
+
+.pulseToggle:hover {
+  background: #f0f0f0;
+}
+
+.pulseToggleActive {
+  background: #e8e8e8;
+  border-color: #aaa;
+  color: #333;
+}
+
 .lineWrapper {
   display: flex;
   overflow-x: auto;
@@ -38,12 +59,32 @@
   height: 36px;
   display: flex;
   align-items: center;
+  gap: 4px;
   padding: 0 8px;
   font-size: 10px;
   font-weight: 700;
   color: #999;
   background: #e8e8e8;
   letter-spacing: 0.5px;
+}
+
+.pulseMuted {
+  opacity: 0.5;
+}
+
+.pulseMuteBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  color: inherit;
+  border-radius: 3px;
+}
+
+.pulseMuteBtn:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .sectionSpacer {

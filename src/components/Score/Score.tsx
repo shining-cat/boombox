@@ -29,6 +29,7 @@ interface ScoreProps {
   onAddLane: () => void
   onAddLine: () => void
   onToggleMute: (laneId: string) => void
+  onTogglePulse: () => void
   showPulse?: boolean
   highlightMeasureIndex?: number
   mutedLaneIds?: Set<string>
@@ -72,6 +73,7 @@ export function Score({
   onAddLane,
   onAddLine,
   onToggleMute,
+  onTogglePulse,
   showPulse,
   highlightMeasureIndex,
   mutedLaneIds,
@@ -89,6 +91,13 @@ export function Score({
 
   return (
     <div className={styles.scoreContainer}>
+      <button
+        className={`${styles.pulseToggle} ${showPulse ? styles.pulseToggleActive : ''}`}
+        onClick={onTogglePulse}
+        title={showPulse ? 'Hide pulse lane' : 'Show pulse lane'}
+      >
+        {showPulse ? 'Hide Pulse' : 'Show Pulse'}
+      </button>
       {score.lines.map((line, lineIndex) => {
         const canRemoveMeasure = line.length > 1 || score.lines.length > 1
         const totalMeasures = line.length
@@ -168,7 +177,28 @@ export function Score({
               <div className={styles.sectionSpacer} />
               <div className={styles.headerSpacer} />
               {showPulse && (
-                <div className={styles.pulseLabel}>PULSE</div>
+                <div className={`${styles.pulseLabel} ${mutedLaneIds?.has('__pulse') ? styles.pulseMuted : ''}`}>
+                  <button
+                    className={styles.pulseMuteBtn}
+                    onClick={() => onToggleMute('__pulse')}
+                    title={mutedLaneIds?.has('__pulse') ? 'Unmute pulse' : 'Mute pulse'}
+                    aria-label={mutedLaneIds?.has('__pulse') ? 'Unmute pulse' : 'Mute pulse'}
+                  >
+                    {mutedLaneIds?.has('__pulse') ? (
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                        <line x1="23" y1="9" x2="17" y2="15" />
+                        <line x1="17" y1="9" x2="23" y2="15" />
+                      </svg>
+                    ) : (
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                        <path d="M15.54 8.46a5 5 0 010 7.07" />
+                      </svg>
+                    )}
+                  </button>
+                  PULSE
+                </div>
               )}
               {score.lanes.map(lane => (
                 <LaneHeader

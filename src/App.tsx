@@ -50,10 +50,10 @@ function App() {
     markClean,
   } = useScore()
 
-  const transport = useTransport(score)
+  const [showPulse, setShowPulse] = useState(false)
+  const transport = useTransport(score, showPulse)
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
-  const [showPulse, setShowPulse] = useState(false)
   const [showMidiExport, setShowMidiExport] = useState(false)
   const [templates, setTemplates] = useState<RhythmTemplate[]>([])
   const [templatePopup, setTemplatePopup] = useState<{ lineIndex: number; measureIndex: number; laneId: string; laneName: string; beats: number; subdivision: number } | null>(null)
@@ -217,8 +217,6 @@ function App() {
         onExportPng={handleExportPng}
         onExportMidi={() => setShowMidiExport(true)}
         onNewScore={handleNewScore}
-        showPulse={showPulse}
-        onTogglePulse={() => setShowPulse(p => !p)}
         transportState={transport.state}
         tempo={transport.tempo}
         onPlay={transport.play}
@@ -246,6 +244,7 @@ function App() {
         onAddLane={handleAddLane}
         onAddLine={addLine}
         onToggleMute={transport.toggleMute}
+        onTogglePulse={() => setShowPulse(p => !p)}
         showPulse={showPulse}
         highlightMeasureIndex={transport.currentMeasureIndex}
         mutedLaneIds={transport.mutedLanes}
