@@ -6,7 +6,7 @@ import { createScore } from '../model/factory'
 describe('useTransport', () => {
   it('starts in stopped state with score tempo', () => {
     const score = createScore() // tempo = 120
-    const { result } = renderHook(() => useTransport(score))
+    const { result } = renderHook(() => useTransport(score, false))
 
     expect(result.current.state).toBe('stopped')
     expect(result.current.tempo).toBe(120)
@@ -15,7 +15,7 @@ describe('useTransport', () => {
 
   it('setTempo updates tempo value', () => {
     const score = createScore()
-    const { result } = renderHook(() => useTransport(score))
+    const { result } = renderHook(() => useTransport(score, false))
 
     act(() => result.current.setTempo(90))
     expect(result.current.tempo).toBe(90)
@@ -26,7 +26,7 @@ describe('useTransport', () => {
 
   it('setTempo clamps to 40-300 range', () => {
     const score = createScore()
-    const { result } = renderHook(() => useTransport(score))
+    const { result } = renderHook(() => useTransport(score, false))
 
     act(() => result.current.setTempo(10))
     expect(result.current.tempo).toBe(40)

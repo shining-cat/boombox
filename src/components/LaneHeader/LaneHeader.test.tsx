@@ -6,8 +6,12 @@ import { LaneHeader } from './LaneHeader'
 const defaultProps = {
   name: 'Kick',
   color: '#ffcccc',
+  muted: false,
+  resolvedNote: 36,
   onNameChange: vi.fn(),
   onColorChange: vi.fn(),
+  onToggleMute: vi.fn(),
+  onInstrumentChange: vi.fn(),
   onRemove: vi.fn(),
   canRemove: true,
 }

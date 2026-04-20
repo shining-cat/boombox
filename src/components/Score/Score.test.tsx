@@ -22,6 +22,11 @@ function renderScore() {
       onAddMeasure={vi.fn()}
       onAddLane={vi.fn()}
       onAddLine={vi.fn()}
+      onToggleMute={vi.fn()}
+      onInstrumentChange={vi.fn()}
+      onTogglePulse={vi.fn()}
+      pulseNote={37}
+      onPulseInstrumentChange={vi.fn()}
     />
   )
 }
