@@ -1,73 +1,41 @@
-# React + TypeScript + Vite
+# Boombox
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A tool for writing and sharing non-melodic percussion scores.
 
-Currently, two official plugins are available:
+## [Open Boombox](https://shining-cat.github.io/boombox/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## What is this?
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Boombox lets you write percussion scores for drums, djembe, cajon, batucada, or any non-melodic percussion instrument. It runs entirely in your browser — no account, no install, nothing stored on a server.
 
-## Expanding the ESLint configuration
+You build your score by clicking cells on a grid, where each row is an instrument (lane) and each column is a pulse. Export to PDF or PNG to print or share, or save as a `.boombox.json` file to keep editing later.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Lanes** for each instrument, with custom names and colors
+- **Measures and lines** with configurable time signatures (pulses per measure, cells per pulse)
+- **Sections and repeats** to structure your score (intro 2x, verse 4x, etc.)
+- **Triplets and rolls**
+- **Rhythm templates** — preset patterns (Clave, Son, Afoxe, Rumba, etc.) you can insert into any measure
+- **Pulse lane** — a read-only reference lane showing beat positions
+- **Export** to PDF, PNG, or MIDI (experimental)
+- **Save/Load** as `.boombox.json` files — your scores stay on your machine
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## How to use
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. Click any cell to cycle through symbols (cross, circle, dot, etc.)
+2. Right-click a cell for more options: pick a symbol, add a triplet, insert a rhythm template
+3. Add measures, lines, and lanes using the "+" buttons
+4. Save your work — Boombox never saves anything on its own
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+For the full guide, click **Help** in the toolbar.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Rhythm templates
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Boombox comes with a library of preset rhythm patterns. You can also create your own using the [template editor](https://shining-cat.github.io/boombox/#/editor), then submit them to eventually be included inside the tool's library.
+
+## License
+
+GPL-3.0 — see [LICENSE](LICENSE).
