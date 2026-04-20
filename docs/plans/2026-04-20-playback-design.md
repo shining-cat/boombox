@@ -28,9 +28,9 @@ Add minimalist score playback so drummers can hear what they've written. No MIDI
 
 ### Samples
 
-**Source:** Salamander Drumkit (CC-BY, effectively CC0 since March 2022)
+**Source:** FluidR3 GM SoundFont via WebAudioFont (MIT license)
 
-Cherry-pick ~25 samples to cover the GM percussion instruments already mapped in `midiMappings.ts`. Convert to MP3 (44.1kHz, mono, 96kbps) for web-friendly size — expect ~1-2MB total.
+47 samples covering GM percussion notes 35-81, extracted as MP3 (44.1kHz, mono, 56kbps) — ~1.1MB total. Note 82 (Shaker) unavailable; SampleLoader handles missing samples gracefully.
 
 Samples live in `public/samples/{note}.mp3` (e.g. `36.mp3` for Bass Drum 1, `38.mp3` for Acoustic Snare). Named by GM note number to match the existing `GM_PERCUSSION` mapping directly.
 
@@ -130,12 +130,13 @@ Self-contained component rendered inside the Toolbar. Receives the transport hoo
 
 ## Sample licensing
 
-Include a `public/samples/LICENSE.md` attributing the Salamander Drumkit:
+Include a `public/samples/LICENSE.md` attributing the source:
 
 ```
-Samples from the Salamander Drumkit by Alexander Holm.
-License: CC-BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
-Source: https://github.com/endolith/Salamander-Drumkit
+Percussion samples extracted from the FluidR3 GM SoundFont,
+distributed via the WebAudioFont project.
+WebAudioFont Data: MIT License — https://github.com/surikov/webaudiofontdata
+FluidR3 GM SoundFont: MIT License
 ```
 
 ## Error handling
