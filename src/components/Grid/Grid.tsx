@@ -6,6 +6,7 @@ interface GridProps {
   measure: Measure
   lanes: Lane[]
   showPulse?: boolean
+  mutedLaneIds?: Set<string>
   onCycleCell: (laneId: string, cellIndex: number) => void
   onCellContextMenu: (laneId: string, cellIndex: number, e: React.MouseEvent) => void
 }
@@ -13,7 +14,7 @@ interface GridProps {
 const noop = () => {}
 const noopCtx = (e: React.MouseEvent) => { e.preventDefault() }
 
-export function Grid({ measure, lanes, showPulse, onCycleCell, onCellContextMenu }: GridProps) {
+export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onCellContextMenu }: GridProps) {
   const { beats, subdivision } = measure.timeSignature
   const tripletBeats = measure.tripletBeats ?? {}
 
@@ -90,8 +91,9 @@ export function Grid({ measure, lanes, showPulse, onCycleCell, onCellContextMenu
           cellOffset += beatCellCount
         }
 
+        const isMuted = mutedLaneIds?.has(lane.id) ?? false
         return (
-          <div key={lane.id} className={styles.laneRow}>
+          <div key={lane.id} className={`${styles.laneRow} ${isMuted ? styles.laneMuted : ''}`}>
             {beatElements}
           </div>
         )

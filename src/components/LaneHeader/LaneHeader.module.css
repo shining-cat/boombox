@@ -63,3 +63,28 @@
   opacity: 0.3;
   cursor: default;
 }
+
+.muteButton {
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.muteButton:hover,
+.muteButton:focus {
+  border-color: rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
+.muteButton.muted {
+  opacity: 0.5;
+}
+
+.laneHeaderMuted {
+  opacity: 0.5;
+}

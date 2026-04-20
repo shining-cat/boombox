@@ -243,8 +243,10 @@ function App() {
         onAddMeasure={addMeasure}
         onAddLane={handleAddLane}
         onAddLine={addLine}
+        onToggleMute={transport.toggleMute}
         showPulse={showPulse}
         highlightMeasureIndex={transport.currentMeasureIndex}
+        mutedLaneIds={transport.mutedLanes}
       />
       {contextMenu && (() => {
         const measure = score.lines[contextMenu.lineIndex]?.find(m => m.id === contextMenu.measureId)

@@ -19,6 +19,7 @@ export function useTransport(score: Score) {
   const [state, setState] = useState<TransportState>('stopped')
   const [tempo, setTempoState] = useState(score.tempo)
   const [currentMeasureIndex, setCurrentMeasureIndex] = useState(-1)
+  const [mutedLanes, setMutedLanes] = useState<Set<string>>(new Set())
 
   const ctxRef = useRef<AudioContext | null>(null)
   const loaderRef = useRef<SampleLoader | null>(null)
@@ -46,10 +47,12 @@ export function useTransport(score: Score) {
       await ctx.resume()
     }
 
-    // Map lanes to GM note numbers
+    // Map non-muted lanes to GM note numbers
     const instrumentMap: Record<string, number> = {}
     for (const lane of score.lanes) {
-      instrumentMap[lane.id] = autoDetectInstrument(lane.name)
+      if (!mutedLanes.has(lane.id)) {
+        instrumentMap[lane.id] = autoDetectInstrument(lane.name)
+      }
     }
 
     // Load samples for all needed notes
@@ -71,7 +74,7 @@ export function useTransport(score: Score) {
     schedulerRef.current = scheduler
     scheduler.start()
     setState('playing')
-  }, [score, tempo, stopInternal])
+  }, [score, tempo, mutedLanes, stopInternal])
 
   const pause = useCallback(async () => {
     schedulerRef.current?.pause()
@@ -92,6 +95,15 @@ export function useTransport(score: Score) {
   const stop = useCallback(() => {
     stopInternal()
   }, [stopInternal])
+
+  const toggleMute = useCallback((laneId: string) => {
+    setMutedLanes(prev => {
+      const next = new Set(prev)
+      if (next.has(laneId)) next.delete(laneId)
+      else next.add(laneId)
+      return next
+    })
+  }, [])
 
   const setTempo = useCallback((bpm: number) => {
     const clamped = clampTempo(bpm)
@@ -114,10 +126,12 @@ export function useTransport(score: Score) {
     state,
     tempo,
     currentMeasureIndex,
+    mutedLanes,
     play,
     pause,
     resume,
     stop,
     setTempo,
+    toggleMute,
   }
 }

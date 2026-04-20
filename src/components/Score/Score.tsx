@@ -28,8 +28,10 @@ interface ScoreProps {
   onAddMeasure: (lineIndex: number) => void
   onAddLane: () => void
   onAddLine: () => void
+  onToggleMute: (laneId: string) => void
   showPulse?: boolean
   highlightMeasureIndex?: number
+  mutedLaneIds?: Set<string>
 }
 
 function computeSections(measures: ScoreType['lines'][0]): Section[] {
@@ -69,8 +71,10 @@ export function Score({
   onAddMeasure,
   onAddLane,
   onAddLine,
+  onToggleMute,
   showPulse,
   highlightMeasureIndex,
+  mutedLaneIds,
 }: ScoreProps) {
   const canRemoveLane = score.lanes.length > 1
   const insertBtnWidth = 20
@@ -171,8 +175,10 @@ export function Score({
                   key={lane.id}
                   name={lane.name}
                   color={lane.color}
+                  muted={mutedLaneIds?.has(lane.id) ?? false}
                   onNameChange={name => onLaneNameChange(lane.id, name)}
                   onColorChange={color => onLaneColorChange(lane.id, color)}
+                  onToggleMute={() => onToggleMute(lane.id)}
                   onRemove={() => onRemoveLane(lane.id)}
                   canRemove={canRemoveLane}
                 />
@@ -307,6 +313,7 @@ export function Score({
                           measure={measure}
                           lanes={score.lanes}
                           showPulse={showPulse}
+                          mutedLaneIds={mutedLaneIds}
                           onCycleCell={(laneId, cellIndex) => onCycleCell(lineIndex, measure.id, laneId, cellIndex)}
                           onCellContextMenu={(laneId, cellIndex, e) => onCellContextMenu(lineIndex, measure.id, laneId, cellIndex, e)}
                         />

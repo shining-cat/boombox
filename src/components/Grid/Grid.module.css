@@ -8,6 +8,10 @@
   flex-direction: row;
 }
 
+.laneMuted {
+  opacity: 0.4;
+}
+
 .tripletGroup {
   display: flex;
   flex-direction: row;
