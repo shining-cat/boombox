@@ -158,6 +158,11 @@
   border-right: 1px solid #ccc;
 }
 
+.measureHighlight {
+  background-color: rgba(37, 99, 235, 0.08);
+  transition: background-color 0.1s;
+}
+
 /* Section border indicators on measure columns */
 .inSection {
   border-top: 2px solid #999;

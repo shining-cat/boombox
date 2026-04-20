@@ -5,6 +5,7 @@ import { Score } from './components/Score/Score'
 import { ContextMenu } from './components/ContextMenu/ContextMenu'
 import TemplatePopup from './components/TemplatePopup/TemplatePopup'
 import { MidiExportModal } from './components/MidiExportModal/MidiExportModal'
+import { useTransport } from './audio/useTransport'
 import { downloadScore, openScoreFile } from './utils/fileIO'
 import { createScore } from './model/factory'
 import { exportToPdf, exportToPng } from './utils/export'
@@ -48,6 +49,8 @@ function App() {
     loadScore,
     markClean,
   } = useScore()
+
+  const transport = useTransport(score)
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [showPulse, setShowPulse] = useState(false)
@@ -216,6 +219,13 @@ function App() {
         onNewScore={handleNewScore}
         showPulse={showPulse}
         onTogglePulse={() => setShowPulse(p => !p)}
+        transportState={transport.state}
+        tempo={transport.tempo}
+        onPlay={transport.play}
+        onPause={transport.pause}
+        onResume={transport.resume}
+        onStop={transport.stop}
+        onTempoChange={transport.setTempo}
       />
       <Score
         score={score}
@@ -234,6 +244,7 @@ function App() {
         onAddLane={handleAddLane}
         onAddLine={addLine}
         showPulse={showPulse}
+        highlightMeasureIndex={transport.currentMeasureIndex}
       />
       {contextMenu && (() => {
         const measure = score.lines[contextMenu.lineIndex]?.find(m => m.id === contextMenu.measureId)

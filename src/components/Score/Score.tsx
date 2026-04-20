@@ -29,6 +29,7 @@ interface ScoreProps {
   onAddLane: () => void
   onAddLine: () => void
   showPulse?: boolean
+  highlightMeasureIndex?: number
 }
 
 function computeSections(measures: ScoreType['lines'][0]): Section[] {
@@ -69,9 +70,18 @@ export function Score({
   onAddLane,
   onAddLine,
   showPulse,
+  highlightMeasureIndex,
 }: ScoreProps) {
   const canRemoveLane = score.lanes.length > 1
   const insertBtnWidth = 20
+
+  // Compute the starting global measure index for each line
+  const lineStartIndex: number[] = []
+  let runningCount = 0
+  for (const line of score.lines) {
+    lineStartIndex.push(runningCount)
+    runningCount += line.length
+  }
 
   return (
     <div className={styles.scoreContainer}>
@@ -281,6 +291,7 @@ export function Score({
                           showSectionBorder ? styles.inSection : '',
                           isFirstOfSection ? styles.sectionStart : '',
                           isLastOfSection ? styles.sectionEnd : '',
+                          highlightMeasureIndex != null && lineStartIndex[lineIndex] + index === highlightMeasureIndex ? styles.measureHighlight : '',
                         ].filter(Boolean).join(' ')}
                       >
                         <MeasureHeader

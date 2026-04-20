@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { PlaybackControls } from '../PlaybackControls/PlaybackControls'
+import type { TransportState } from '../../audio/useTransport'
 import styles from './Toolbar.module.css'
 
 export interface ToolbarProps {
@@ -13,6 +15,13 @@ export interface ToolbarProps {
   onNewScore: () => void
   showPulse: boolean
   onTogglePulse: () => void
+  transportState: TransportState
+  tempo: number
+  onPlay: () => void
+  onPause: () => void
+  onResume: () => void
+  onStop: () => void
+  onTempoChange: (bpm: number) => void
 }
 
 export function Toolbar({
@@ -27,6 +36,13 @@ export function Toolbar({
   onNewScore,
   showPulse,
   onTogglePulse,
+  transportState,
+  tempo,
+  onPlay,
+  onPause,
+  onResume,
+  onStop,
+  onTempoChange,
 }: ToolbarProps) {
   const [showHelp, setShowHelp] = useState(false)
 
@@ -43,6 +59,15 @@ export function Toolbar({
       {isDirty && <span className={styles.unsaved}>(unsaved)</span>}
       <div className={styles.spacer} />
       <button onClick={() => setShowHelp(true)} title="Show help">Help</button>
+      <PlaybackControls
+        state={transportState}
+        tempo={tempo}
+        onPlay={onPlay}
+        onPause={onPause}
+        onResume={onResume}
+        onStop={onStop}
+        onTempoChange={onTempoChange}
+      />
       <div className={styles.spacer} />
       <button onClick={onTogglePulse} title={showPulse ? 'Hide pulse lane' : 'Show pulse lane'}>
         {showPulse ? 'Hide Pulse' : 'Show Pulse'}
@@ -65,7 +90,7 @@ export function Toolbar({
               <button className={styles.helpClose} onClick={() => setShowHelp(false)} title="Close help">&times;</button>
             </div>
             <div className={styles.helpContent}>
-              <p className={styles.helpIntro}>Boombox is a tool for writing and sharing non-melodic percussion scores. It does not offer playback features.</p>
+              <p className={styles.helpIntro}>Boombox is a tool for writing and sharing non-melodic percussion scores.</p>
 
               <section>
                 <h3>Getting Started</h3>
@@ -132,6 +157,17 @@ export function Toolbar({
                 <h3>Pulse Lane</h3>
                 <ul>
                   <li>"Show Pulse" in the toolbar adds a read-only lane showing beat positions</li>
+                </ul>
+              </section>
+
+              <section>
+                <h3>Playback</h3>
+                <ul>
+                  <li>{'\u25b6'} Play / {'\u23f8'} Pause / {'\u23f9'} Stop — in the toolbar</li>
+                  <li>Adjust tempo with the number input or slider (40-300 BPM)</li>
+                  <li>Tempo is independent from the score — use it for practice at different speeds</li>
+                  <li>Instruments are auto-detected from lane names (e.g. "Snare", "Kick", "Hi-Hat")</li>
+                  <li>The current measure is highlighted during playback</li>
                 </ul>
               </section>
 

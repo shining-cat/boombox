@@ -1,0 +1,48 @@
+.playbackBlock {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  margin: 0 4px;
+}
+
+.transportBtn {
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  line-height: 1;
+}
+
+.transportBtn:hover:not(:disabled) {
+  background: #e8e8e8;
+}
+
+.transportBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tempoLabel {
+  font-size: 0.85rem;
+  color: #666;
+  margin-left: 4px;
+}
+
+.tempoInput {
+  width: 48px;
+  font-size: 0.85rem;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.tempoSlider {
+  width: 80px;
+  cursor: pointer;
+}
