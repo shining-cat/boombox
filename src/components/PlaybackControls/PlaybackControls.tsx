@@ -58,7 +58,13 @@ export function PlaybackControls({
       >
         ⏹
       </button>
-      <span className={styles.tempoLabel}>♩=</span>
+      <span className={styles.tempoLabel}>
+        <svg className={styles.noteIcon} viewBox="0 0 24 32" aria-hidden="true">
+          <ellipse cx="8" cy="27" rx="7" ry="5" transform="rotate(-20 8 27)" fill="currentColor" />
+          <rect x="14" y="2" width="2.5" height="25" fill="currentColor" />
+        </svg>
+        =
+      </span>
       <input
         className={styles.tempoInput}
         type="number"
