@@ -1,16 +1,16 @@
 .playbackBlock {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
+  gap: 10px;
+  padding: 4px 16px;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  margin: 0 4px;
+  margin: 0 8px;
 }
 
 .transportBtn {
-  font-size: 1.1rem;
-  padding: 4px 8px;
+  font-size: 1.3rem;
+  padding: 4px 10px;
   cursor: pointer;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -28,21 +28,21 @@
 }
 
 .tempoLabel {
-  font-size: 0.85rem;
-  color: #666;
-  margin-left: 4px;
+  font-size: 0.95rem;
+  color: #555;
+  margin-left: 2px;
 }
 
 .tempoInput {
-  width: 48px;
-  font-size: 0.85rem;
+  width: 56px;
+  font-size: 0.95rem;
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 2px 4px;
+  padding: 4px 6px;
 }
 
 .tempoSlider {
-  width: 80px;
+  width: 120px;
   cursor: pointer;
 }
