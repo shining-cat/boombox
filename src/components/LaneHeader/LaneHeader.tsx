@@ -1,12 +1,17 @@
+import { useRef, useState } from 'react'
+import { GM_PERCUSSION } from '../../model/midiMappings'
+import { InstrumentPicker } from '../InstrumentPicker/InstrumentPicker'
 import styles from './LaneHeader.module.css'
 
 interface LaneHeaderProps {
   name: string
   color: string
   muted: boolean
+  resolvedNote: number
   onNameChange: (name: string) => void
   onColorChange: (color: string) => void
   onToggleMute: () => void
+  onInstrumentChange: (note: number | undefined) => void
   onRemove: () => void
   canRemove: boolean
 }
@@ -34,12 +39,19 @@ export function LaneHeader({
   name,
   color,
   muted,
+  resolvedNote,
   onNameChange,
   onColorChange,
   onToggleMute,
+  onInstrumentChange,
   onRemove,
   canRemove,
 }: LaneHeaderProps) {
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const instrumentName = GM_PERCUSSION.find(i => i.note === resolvedNote)?.name ?? 'Unknown'
+
   return (
     <div className={`${styles.laneHeader} ${muted ? styles.laneHeaderMuted : ''}`} style={{ backgroundColor: color }}>
       <button
@@ -50,6 +62,29 @@ export function LaneHeader({
       >
         <SpeakerIcon muted={muted} />
       </button>
+      <button
+        ref={btnRef}
+        className={styles.instrumentBtn}
+        onClick={() => {
+          if (pickerOpen) {
+            setPickerOpen(false)
+          } else {
+            setAnchorRect(btnRef.current!.getBoundingClientRect())
+            setPickerOpen(true)
+          }
+        }}
+        title={`Sound: ${instrumentName} — click to change`}
+      >
+        {instrumentName}
+      </button>
+      {pickerOpen && anchorRect && (
+        <InstrumentPicker
+          currentNote={resolvedNote}
+          anchorRect={anchorRect}
+          onSelect={(note) => onInstrumentChange(note)}
+          onClose={() => setPickerOpen(false)}
+        />
+      )}
       <input
         className={styles.nameInput}
         type="text"

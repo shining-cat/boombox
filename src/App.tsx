@@ -244,7 +244,10 @@ function App() {
         onAddLane={handleAddLane}
         onAddLine={addLine}
         onToggleMute={transport.toggleMute}
+        onInstrumentChange={(laneId, note) => updateLane(laneId, { gmNote: note })}
         onTogglePulse={() => setShowPulse(p => !p)}
+        pulseNote={transport.pulseNote}
+        onPulseInstrumentChange={transport.setPulseNote}
         showPulse={showPulse}
         highlightMeasureIndex={transport.currentMeasureIndex}
         mutedLaneIds={transport.mutedLanes}

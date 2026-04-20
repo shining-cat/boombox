@@ -299,7 +299,7 @@ export function useScore() {
   )
 
   const updateLane = useCallback(
-    (laneId: string, updates: { name?: string; color?: string }) => {
+    (laneId: string, updates: { name?: string; color?: string; gmNote?: number }) => {
       dirtyUpdate((prev) => ({
         ...prev,
         lanes: prev.lanes.map((l) =>

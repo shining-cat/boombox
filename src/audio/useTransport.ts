@@ -24,6 +24,7 @@ export function useTransport(score: Score, showPulse: boolean) {
   const [currentMeasureIndex, setCurrentMeasureIndex] = useState(-1)
   const [mutedLanes, setMutedLanes] = useState<Set<string>>(new Set())
   const [looping, setLooping] = useState(false)
+  const [pulseNote, setPulseNote] = useState(PULSE_GM_NOTE)
 
   const ctxRef = useRef<AudioContext | null>(null)
   const loaderRef = useRef<SampleLoader | null>(null)
@@ -59,18 +60,18 @@ export function useTransport(score: Score, showPulse: boolean) {
       await ctx.resume()
     }
 
-    // Map non-muted lanes to GM note numbers
+    // Map non-muted lanes to GM note numbers (override takes priority)
     const instrumentMap: Record<string, number> = {}
     for (const lane of score.lanes) {
       if (!mutedLanes.has(lane.id)) {
-        instrumentMap[lane.id] = autoDetectInstrument(lane.name)
+        instrumentMap[lane.id] = lane.gmNote ?? autoDetectInstrument(lane.name)
       }
     }
 
     // Include pulse click if visible and not muted
     const pulseActive = showPulse && !mutedLanes.has(PULSE_LANE_ID)
     if (pulseActive) {
-      instrumentMap[PULSE_LANE_ID] = PULSE_GM_NOTE
+      instrumentMap[PULSE_LANE_ID] = pulseNote
     }
 
     // Load samples for all needed notes
@@ -80,7 +81,7 @@ export function useTransport(score: Score, showPulse: boolean) {
     // Build note events from score
     const events = buildNoteEvents(score, instrumentMap, tempo)
     if (pulseActive) {
-      events.push(...buildPulseEvents(score, PULSE_GM_NOTE, tempo))
+      events.push(...buildPulseEvents(score, pulseNote, tempo))
       events.sort((a, b) => a.time - b.time)
     }
 
@@ -107,7 +108,7 @@ export function useTransport(score: Score, showPulse: boolean) {
     schedulerRef.current = scheduler
     scheduler.start()
     setState('playing')
-  }, [score, tempo, mutedLanes, showPulse, stopInternal])
+  }, [score, tempo, mutedLanes, showPulse, pulseNote, stopInternal])
 
   playRef.current = play
 
@@ -170,6 +171,7 @@ export function useTransport(score: Score, showPulse: boolean) {
     currentMeasureIndex,
     mutedLanes,
     looping,
+    pulseNote,
     play,
     pause,
     resume,
@@ -177,5 +179,6 @@ export function useTransport(score: Score, showPulse: boolean) {
     setTempo,
     toggleMute,
     toggleLoop,
+    setPulseNote,
   }
 }

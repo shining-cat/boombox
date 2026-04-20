@@ -1,7 +1,10 @@
+import { useRef, useState } from 'react'
 import type { Score as ScoreType, TimeSignature } from '../../model/types'
+import { autoDetectInstrument, GM_PERCUSSION } from '../../model/midiMappings'
 import { LaneHeader } from '../LaneHeader/LaneHeader'
 import { MeasureHeader } from '../MeasureHeader/MeasureHeader'
 import { Grid } from '../Grid/Grid'
+import { InstrumentPicker } from '../InstrumentPicker/InstrumentPicker'
 import styles from './Score.module.css'
 
 interface Section {
@@ -29,7 +32,10 @@ interface ScoreProps {
   onAddLane: () => void
   onAddLine: () => void
   onToggleMute: (laneId: string) => void
+  onInstrumentChange: (laneId: string, note: number | undefined) => void
   onTogglePulse: () => void
+  pulseNote: number
+  onPulseInstrumentChange: (note: number) => void
   showPulse?: boolean
   highlightMeasureIndex?: number
   mutedLaneIds?: Set<string>
@@ -50,6 +56,66 @@ function computeSections(measures: ScoreType['lines'][0]): Section[] {
     }
   }
   return sections
+}
+
+function PulseLabel({ muted, pulseNote, onToggleMute, onInstrumentChange }: {
+  muted: boolean
+  pulseNote: number
+  onToggleMute: () => void
+  onInstrumentChange: (note: number) => void
+}) {
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const instrumentName = GM_PERCUSSION.find(i => i.note === pulseNote)?.name ?? 'Unknown'
+
+  return (
+    <div className={`${styles.pulseLabel} ${muted ? styles.pulseMuted : ''}`}>
+      <button
+        className={styles.pulseMuteBtn}
+        onClick={onToggleMute}
+        title={muted ? 'Unmute pulse' : 'Mute pulse'}
+        aria-label={muted ? 'Unmute pulse' : 'Mute pulse'}
+      >
+        {muted ? (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11 5L6 9H2v6h4l5 4V5z" />
+            <line x1="23" y1="9" x2="17" y2="15" />
+            <line x1="17" y1="9" x2="23" y2="15" />
+          </svg>
+        ) : (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11 5L6 9H2v6h4l5 4V5z" />
+            <path d="M15.54 8.46a5 5 0 010 7.07" />
+          </svg>
+        )}
+      </button>
+      <button
+        ref={btnRef}
+        className={styles.pulseInstrumentBtn}
+        onClick={() => {
+          if (pickerOpen) {
+            setPickerOpen(false)
+          } else {
+            setAnchorRect(btnRef.current!.getBoundingClientRect())
+            setPickerOpen(true)
+          }
+        }}
+        title={`Sound: ${instrumentName} — click to change`}
+      >
+        {instrumentName}
+      </button>
+      {pickerOpen && anchorRect && (
+        <InstrumentPicker
+          currentNote={pulseNote}
+          anchorRect={anchorRect}
+          onSelect={onInstrumentChange}
+          onClose={() => setPickerOpen(false)}
+        />
+      )}
+      PULSE
+    </div>
+  )
 }
 
 function getMeasureColumnWidth(beats: number, subdivision: number): number {
@@ -73,7 +139,10 @@ export function Score({
   onAddLane,
   onAddLine,
   onToggleMute,
+  onInstrumentChange,
   onTogglePulse,
+  pulseNote,
+  onPulseInstrumentChange,
   showPulse,
   highlightMeasureIndex,
   mutedLaneIds,
@@ -177,28 +246,12 @@ export function Score({
               <div className={styles.sectionSpacer} />
               <div className={styles.headerSpacer} />
               {showPulse && (
-                <div className={`${styles.pulseLabel} ${mutedLaneIds?.has('__pulse') ? styles.pulseMuted : ''}`}>
-                  <button
-                    className={styles.pulseMuteBtn}
-                    onClick={() => onToggleMute('__pulse')}
-                    title={mutedLaneIds?.has('__pulse') ? 'Unmute pulse' : 'Mute pulse'}
-                    aria-label={mutedLaneIds?.has('__pulse') ? 'Unmute pulse' : 'Mute pulse'}
-                  >
-                    {mutedLaneIds?.has('__pulse') ? (
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                        <line x1="23" y1="9" x2="17" y2="15" />
-                        <line x1="17" y1="9" x2="23" y2="15" />
-                      </svg>
-                    ) : (
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                        <path d="M15.54 8.46a5 5 0 010 7.07" />
-                      </svg>
-                    )}
-                  </button>
-                  PULSE
-                </div>
+                <PulseLabel
+                  muted={mutedLaneIds?.has('__pulse') ?? false}
+                  pulseNote={pulseNote}
+                  onToggleMute={() => onToggleMute('__pulse')}
+                  onInstrumentChange={onPulseInstrumentChange}
+                />
               )}
               {score.lanes.map(lane => (
                 <LaneHeader
@@ -206,9 +259,11 @@ export function Score({
                   name={lane.name}
                   color={lane.color}
                   muted={mutedLaneIds?.has(lane.id) ?? false}
+                  resolvedNote={lane.gmNote ?? autoDetectInstrument(lane.name)}
                   onNameChange={name => onLaneNameChange(lane.id, name)}
                   onColorChange={color => onLaneColorChange(lane.id, color)}
                   onToggleMute={() => onToggleMute(lane.id)}
+                  onInstrumentChange={note => onInstrumentChange(lane.id, note)}
                   onRemove={() => onRemoveLane(lane.id)}
                   canRemove={canRemoveLane}
                 />

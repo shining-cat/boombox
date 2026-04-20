@@ -87,6 +87,26 @@
   background: rgba(0, 0, 0, 0.1);
 }
 
+.pulseInstrumentBtn {
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 0.6rem;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  padding: 1px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseInstrumentBtn:hover,
+.pulseInstrumentBtn:focus {
+  border-color: rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
 .sectionSpacer {
   height: 28px;
 }
