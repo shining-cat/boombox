@@ -18,8 +18,8 @@ export function buildNoteEvents(
   const events: NoteEvent[] = []
   let currentTime = 0
 
-  for (let measureIndex = 0; measureIndex < flatMeasures.length; measureIndex++) {
-    const measure = flatMeasures[measureIndex]
+  for (let i = 0; i < flatMeasures.length; i++) {
+    const { measure, visualIndex: measureIndex } = flatMeasures[i]
     const { beats, subdivision } = measure.timeSignature
     const beatDuration = 60 / tempo
     const normalCellDuration = beatDuration / subdivision

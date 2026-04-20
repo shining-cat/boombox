@@ -226,6 +226,8 @@ function App() {
         onResume={transport.resume}
         onStop={transport.stop}
         onTempoChange={transport.setTempo}
+        looping={transport.looping}
+        onToggleLoop={transport.toggleLoop}
       />
       <Score
         score={score}

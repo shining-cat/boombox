@@ -27,6 +27,12 @@
   cursor: default;
 }
 
+.loopActive {
+  background: #e0edff;
+  border-color: #4a90d9;
+  color: #2563eb;
+}
+
 .tempoLabel {
   font-size: 1.3rem;
   color: #555;

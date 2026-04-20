@@ -20,12 +20,21 @@ export function useTransport(score: Score) {
   const [tempo, setTempoState] = useState(score.tempo)
   const [currentMeasureIndex, setCurrentMeasureIndex] = useState(-1)
   const [mutedLanes, setMutedLanes] = useState<Set<string>>(new Set())
+  const [looping, setLooping] = useState(false)
 
   const ctxRef = useRef<AudioContext | null>(null)
   const loaderRef = useRef<SampleLoader | null>(null)
   const schedulerRef = useRef<SchedulerController | null>(null)
+  const loopingRef = useRef(false)
+  const loopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const playRef = useRef<(() => Promise<void>) | null>(null)
 
   const stopInternal = useCallback(() => {
+    if (loopTimerRef.current !== null) {
+      clearTimeout(loopTimerRef.current)
+      loopTimerRef.current = null
+    }
     schedulerRef.current?.stop()
     schedulerRef.current = null
     setState('stopped')
@@ -68,13 +77,26 @@ export function useTransport(score: Score) {
       samples,
       events,
       (index) => setCurrentMeasureIndex(index),
-      () => stopInternal(),
+      () => {
+        schedulerRef.current = null
+        if (loopingRef.current && playRef.current) {
+          setCurrentMeasureIndex(-1)
+          loopTimerRef.current = setTimeout(() => {
+            loopTimerRef.current = null
+            playRef.current?.()
+          }, 1000)
+        } else {
+          stopInternal()
+        }
+      },
     )
 
     schedulerRef.current = scheduler
     scheduler.start()
     setState('playing')
   }, [score, tempo, mutedLanes, stopInternal])
+
+  playRef.current = play
 
   const pause = useCallback(async () => {
     schedulerRef.current?.pause()
@@ -95,6 +117,13 @@ export function useTransport(score: Score) {
   const stop = useCallback(() => {
     stopInternal()
   }, [stopInternal])
+
+  const toggleLoop = useCallback(() => {
+    setLooping(prev => {
+      loopingRef.current = !prev
+      return !prev
+    })
+  }, [])
 
   const toggleMute = useCallback((laneId: string) => {
     setMutedLanes(prev => {
@@ -127,11 +156,13 @@ export function useTransport(score: Score) {
     tempo,
     currentMeasureIndex,
     mutedLanes,
+    looping,
     play,
     pause,
     resume,
     stop,
     setTempo,
     toggleMute,
+    toggleLoop,
   }
 }

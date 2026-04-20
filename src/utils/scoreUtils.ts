@@ -1,7 +1,14 @@
-import type { Score } from '../model/types'
+import type { Measure, Score } from '../model/types'
 
-export function flattenMeasures(score: Score) {
-  const allMeasures: typeof score.lines[0] = []
+export interface FlattenedMeasure {
+  measure: Measure
+  visualIndex: number
+}
+
+export function flattenMeasures(score: Score): FlattenedMeasure[] {
+  const result: FlattenedMeasure[] = []
+  let visualOffset = 0
+
   for (const line of score.lines) {
     const sections: { startIndex: number; length: number; repeatTimes: number }[] = []
     for (let i = 0; i < line.length; i++) {
@@ -28,17 +35,19 @@ export function flattenMeasures(score: Score) {
       if (sec && sec.startIndex === i) {
         for (let rep = 0; rep < sec.repeatTimes; rep++) {
           for (let j = sec.startIndex; j < sec.startIndex + sec.length; j++) {
-            allMeasures.push(line[j])
+            result.push({ measure: line[j], visualIndex: visualOffset + j })
           }
         }
         i = sec.startIndex + sec.length
       } else if (!measureSectionMap.has(i)) {
-        allMeasures.push(line[i])
+        result.push({ measure: line[i], visualIndex: visualOffset + i })
         i++
       } else {
         i++
       }
     }
+
+    visualOffset += line.length
   }
-  return allMeasures
+  return result
 }

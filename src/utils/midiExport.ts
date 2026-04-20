@@ -36,7 +36,7 @@ export function generateMidi(score: Score, options: MidiExportOptions): Uint8Arr
 
     const midiNote = options.instrumentMap[lane.id] ?? 38
 
-    for (const measure of measures) {
+    for (const { measure } of measures) {
       const { beats, subdivision } = measure.timeSignature
       const cells = measure.cells[lane.id] ?? []
       const laneTriplets = measure.tripletBeats?.[lane.id] ?? []

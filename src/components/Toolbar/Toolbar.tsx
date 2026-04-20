@@ -22,6 +22,8 @@ export interface ToolbarProps {
   onResume: () => void
   onStop: () => void
   onTempoChange: (bpm: number) => void
+  looping: boolean
+  onToggleLoop: () => void
 }
 
 export function Toolbar({
@@ -43,6 +45,8 @@ export function Toolbar({
   onResume,
   onStop,
   onTempoChange,
+  looping,
+  onToggleLoop,
 }: ToolbarProps) {
   const [showHelp, setShowHelp] = useState(false)
 
@@ -62,11 +66,13 @@ export function Toolbar({
       <PlaybackControls
         state={transportState}
         tempo={tempo}
+        looping={looping}
         onPlay={onPlay}
         onPause={onPause}
         onResume={onResume}
         onStop={onStop}
         onTempoChange={onTempoChange}
+        onToggleLoop={onToggleLoop}
       />
       <div className={styles.spacer} />
       <button onClick={onTogglePulse} title={showPulse ? 'Hide pulse lane' : 'Show pulse lane'}>
@@ -168,6 +174,8 @@ export function Toolbar({
                   <li>Tempo is independent from the score — use it for practice at different speeds</li>
                   <li>Instruments are auto-detected from lane names (e.g. "Snare", "Kick", "Hi-Hat")</li>
                   <li>The current measure is highlighted during playback</li>
+                  <li>Loop button repeats the entire score continuously</li>
+                  <li>Mute individual lanes with the speaker icon in the lane header</li>
                 </ul>
               </section>
 
