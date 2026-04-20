@@ -63,3 +63,48 @@
   opacity: 0.3;
   cursor: default;
 }
+
+.muteButton {
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.muteButton:hover,
+.muteButton:focus {
+  border-color: rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
+.muteButton.muted {
+  opacity: 0.5;
+}
+
+.laneHeaderMuted {
+  opacity: 0.5;
+}
+
+.instrumentBtn {
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.instrumentBtn:hover,
+.instrumentBtn:focus {
+  border-color: rgba(0, 0, 0, 0.3);
+  outline: none;
+}

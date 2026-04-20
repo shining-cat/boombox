@@ -1,0 +1,72 @@
+.popover {
+  position: fixed;
+  z-index: 200;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  width: 420px;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  padding: 6px 6px 4px;
+  border-bottom: 1px solid #eee;
+  background: #fafafa;
+}
+
+.tab {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  color: #666;
+}
+
+.tab:hover {
+  background: #eee;
+}
+
+.tabActive {
+  background: #e0edff;
+  border-color: #4a90d9;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.instrument {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  color: #333;
+  white-space: nowrap;
+}
+
+.instrument:hover {
+  background: #f0f0f0;
+  border-color: #aaa;
+}
+
+.instrumentActive {
+  background: #e0edff;
+  border-color: #4a90d9;
+  color: #2563eb;
+  font-weight: 600;
+}

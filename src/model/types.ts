@@ -27,6 +27,7 @@ export interface Lane {
   id: string
   name: string
   color: string
+  gmNote?: number
 }
 
 export interface Score {

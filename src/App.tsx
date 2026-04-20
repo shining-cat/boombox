@@ -5,6 +5,7 @@ import { Score } from './components/Score/Score'
 import { ContextMenu } from './components/ContextMenu/ContextMenu'
 import TemplatePopup from './components/TemplatePopup/TemplatePopup'
 import { MidiExportModal } from './components/MidiExportModal/MidiExportModal'
+import { useTransport } from './audio/useTransport'
 import { downloadScore, openScoreFile } from './utils/fileIO'
 import { createScore } from './model/factory'
 import { exportToPdf, exportToPng } from './utils/export'
@@ -49,8 +50,10 @@ function App() {
     markClean,
   } = useScore()
 
-  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [showPulse, setShowPulse] = useState(false)
+  const transport = useTransport(score, showPulse)
+
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
   const [showMidiExport, setShowMidiExport] = useState(false)
   const [templates, setTemplates] = useState<RhythmTemplate[]>([])
   const [templatePopup, setTemplatePopup] = useState<{ lineIndex: number; measureIndex: number; laneId: string; laneName: string; beats: number; subdivision: number } | null>(null)
@@ -214,8 +217,15 @@ function App() {
         onExportPng={handleExportPng}
         onExportMidi={() => setShowMidiExport(true)}
         onNewScore={handleNewScore}
-        showPulse={showPulse}
-        onTogglePulse={() => setShowPulse(p => !p)}
+        transportState={transport.state}
+        tempo={transport.tempo}
+        onPlay={transport.play}
+        onPause={transport.pause}
+        onResume={transport.resume}
+        onStop={transport.stop}
+        onTempoChange={transport.setTempo}
+        looping={transport.looping}
+        onToggleLoop={transport.toggleLoop}
       />
       <Score
         score={score}
@@ -233,7 +243,14 @@ function App() {
         onAddMeasure={addMeasure}
         onAddLane={handleAddLane}
         onAddLine={addLine}
+        onToggleMute={transport.toggleMute}
+        onInstrumentChange={(laneId, note) => updateLane(laneId, { gmNote: note })}
+        onTogglePulse={() => setShowPulse(p => !p)}
+        pulseNote={transport.pulseNote}
+        onPulseInstrumentChange={transport.setPulseNote}
         showPulse={showPulse}
+        highlightMeasureIndex={transport.currentMeasureIndex}
+        mutedLaneIds={transport.mutedLanes}
       />
       {contextMenu && (() => {
         const measure = score.lines[contextMenu.lineIndex]?.find(m => m.id === contextMenu.measureId)

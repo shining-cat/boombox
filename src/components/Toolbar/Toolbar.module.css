@@ -33,6 +33,19 @@
 
 .spacer {
   flex: 1;
+  min-width: 0;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .primaryButton {

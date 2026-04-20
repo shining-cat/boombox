@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { PlaybackControls } from '../PlaybackControls/PlaybackControls'
+import type { TransportState } from '../../audio/useTransport'
 import styles from './Toolbar.module.css'
 
 export interface ToolbarProps {
@@ -11,8 +13,15 @@ export interface ToolbarProps {
   onExportPng: () => void
   onExportMidi: () => void
   onNewScore: () => void
-  showPulse: boolean
-  onTogglePulse: () => void
+  transportState: TransportState
+  tempo: number
+  onPlay: () => void
+  onPause: () => void
+  onResume: () => void
+  onStop: () => void
+  onTempoChange: (bpm: number) => void
+  looping: boolean
+  onToggleLoop: () => void
 }
 
 export function Toolbar({
@@ -25,36 +34,57 @@ export function Toolbar({
   onExportPng,
   onExportMidi,
   onNewScore,
-  showPulse,
-  onTogglePulse,
+  transportState,
+  tempo,
+  onPlay,
+  onPause,
+  onResume,
+  onStop,
+  onTempoChange,
+  looping,
+  onToggleLoop,
 }: ToolbarProps) {
   const [showHelp, setShowHelp] = useState(false)
 
   return (
     <div className={styles.toolbar}>
-      <input
-        className={styles.titleInput}
-        type="text"
-        value={title}
-        onChange={(e) => onTitleChange(e.target.value)}
-        aria-label="Score title"
-        title="Score title"
-      />
-      {isDirty && <span className={styles.unsaved}>(unsaved)</span>}
+      <div className={styles.titleGroup}>
+        <input
+          className={styles.titleInput}
+          type="text"
+          value={title}
+          onChange={(e) => onTitleChange(e.target.value)}
+          aria-label="Score title"
+          title="Score title"
+        />
+        {isDirty && <span className={styles.unsaved}>(unsaved)</span>}
+      </div>
       <div className={styles.spacer} />
       <button onClick={() => setShowHelp(true)} title="Show help">Help</button>
+      <PlaybackControls
+        state={transportState}
+        tempo={tempo}
+        looping={looping}
+        onPlay={onPlay}
+        onPause={onPause}
+        onResume={onResume}
+        onStop={onStop}
+        onTempoChange={onTempoChange}
+        onToggleLoop={onToggleLoop}
+      />
       <div className={styles.spacer} />
-      <button onClick={onTogglePulse} title={showPulse ? 'Hide pulse lane' : 'Show pulse lane'}>
-        {showPulse ? 'Hide Pulse' : 'Show Pulse'}
-      </button>
-      <button onClick={onNewScore} title="Create a new empty score">New</button>
-      <button onClick={onLoad} title="Load a score from file">Load</button>
-      <button className={styles.primaryButton} onClick={onSave} title="Save score to file">
-        Save
-      </button>
-      <button onClick={onExportPdf} title="Export score as PDF">PDF</button>
-      <button onClick={onExportPng} title="Export score as PNG image">PNG</button>
-      <button onClick={onExportMidi} title="Export score as MIDI file (experimental)">MIDI</button>
+      <div className={styles.buttonGroup}>
+        <button onClick={onNewScore} title="Create a new empty score">New</button>
+        <button onClick={onLoad} title="Load a score from file">Load</button>
+        <button className={styles.primaryButton} onClick={onSave} title="Save score to file">
+          Save
+        </button>
+      </div>
+      <div className={styles.buttonGroup}>
+        <button onClick={onExportPdf} title="Export score as PDF">PDF</button>
+        <button onClick={onExportPng} title="Export score as PNG image">PNG</button>
+        <button onClick={onExportMidi} title="Export score as MIDI file (experimental)">MIDI</button>
+      </div>
 
       {showHelp && (
         <>
@@ -65,7 +95,7 @@ export function Toolbar({
               <button className={styles.helpClose} onClick={() => setShowHelp(false)} title="Close help">&times;</button>
             </div>
             <div className={styles.helpContent}>
-              <p className={styles.helpIntro}>Boombox is a tool for writing and sharing non-melodic percussion scores. It does not offer playback features.</p>
+              <p className={styles.helpIntro}>Boombox is a tool for writing and sharing non-melodic percussion scores.</p>
 
               <section>
                 <h3>Getting Started</h3>
@@ -131,7 +161,20 @@ export function Toolbar({
               <section>
                 <h3>Pulse Lane</h3>
                 <ul>
-                  <li>"Show Pulse" in the toolbar adds a read-only lane showing beat positions</li>
+                  <li>"Show Pulse" at the top-left of the score adds a playable metronome lane</li>
+                </ul>
+              </section>
+
+              <section>
+                <h3>Playback</h3>
+                <ul>
+                  <li>{'\u25b6'} Play / {'\u23f8'} Pause / {'\u23f9'} Stop — in the toolbar</li>
+                  <li>Adjust tempo with the number input or slider (40-300 BPM)</li>
+                  <li>Tempo is independent from the score — use it for practice at different speeds</li>
+                  <li>Instruments are auto-detected from lane names (e.g. "Snare", "Kick", "Hi-Hat")</li>
+                  <li>The current measure is highlighted during playback</li>
+                  <li>Loop button repeats the entire score continuously</li>
+                  <li>Mute individual lanes with the speaker icon in the lane header</li>
                 </ul>
               </section>
 

@@ -14,8 +14,15 @@ function renderToolbar(overrides: Partial<React.ComponentProps<typeof Toolbar>> 
     onExportPng: vi.fn(),
     onExportMidi: vi.fn(),
     onNewScore: vi.fn(),
-    showPulse: false,
-    onTogglePulse: vi.fn(),
+    transportState: 'stopped' as const,
+    tempo: 120,
+    onPlay: vi.fn(),
+    onPause: vi.fn(),
+    onResume: vi.fn(),
+    onStop: vi.fn(),
+    onTempoChange: vi.fn(),
+    looping: false,
+    onToggleLoop: vi.fn(),
     ...overrides,
   }
   render(<Toolbar {...props} />)
