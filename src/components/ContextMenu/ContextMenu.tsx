@@ -7,16 +7,20 @@ interface ContextMenuProps {
   y: number
   hasTriplet: boolean
   hasRoll: boolean
+  hasFlam: boolean
+  hasSymbol: boolean
   onSetSymbol: (symbol: CellSymbol) => void
   onSetLabel: () => void
   onSetTriplet: () => void
   onSetRoll: () => void
   onRemoveRoll: () => void
+  onSetFlam: () => void
+  onRemoveFlam: () => void
   onOpenTemplates: () => void
   onClose: () => void
 }
 
-export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onRemoveRoll, onOpenTemplates, onClose }: ContextMenuProps) {
+export function ContextMenu({ x, y, hasTriplet, hasRoll, hasFlam, hasSymbol, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onRemoveRoll, onSetFlam, onRemoveFlam, onOpenTemplates, onClose }: ContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState({ left: x, top: y })
 
@@ -67,6 +71,11 @@ export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel
         ) : (
           <button className={styles.item} onClick={onSetRoll} title="Set a roll starting from this cell">Add roll</button>
         )}
+        {hasSymbol && (hasFlam ? (
+          <button className={styles.item} onClick={onRemoveFlam} title="Remove flam from this cell">Remove flam</button>
+        ) : (
+          <button className={styles.item} onClick={onSetFlam} title="Add a flam grace note before this hit">Add flam</button>
+        ))}
         <div className={styles.separator} />
         <button className={styles.item} onClick={onOpenTemplates} title="Insert a preset rhythm pattern">
           Insert a template...

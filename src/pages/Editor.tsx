@@ -177,6 +177,24 @@ export function Editor() {
     )
   }, [])
 
+  // --- Flam ---
+
+  const setFlam = useCallback((measureId: string, cellIndex: number, flam: boolean) => {
+    setMeasures(prev =>
+      prev.map(m => {
+        if (m.id !== measureId) return m
+        const cells = [...(m.cells[LANE_ID] ?? [])]
+        if (flam) {
+          cells[cellIndex] = { ...cells[cellIndex], flam: true }
+        } else {
+          const { flam: _, ...rest } = cells[cellIndex]
+          cells[cellIndex] = rest
+        }
+        return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
+      }),
+    )
+  }, [])
+
   // --- Context menu handlers ---
 
   const handleCellContextMenu = useCallback(
@@ -239,6 +257,18 @@ export function Editor() {
     removeRoll(contextMenu.measureId, contextMenu.cellIndex)
     setContextMenu(null)
   }, [contextMenu, removeRoll])
+
+  const handleSetFlam = useCallback(() => {
+    if (!contextMenu) return
+    setFlam(contextMenu.measureId, contextMenu.cellIndex, true)
+    setContextMenu(null)
+  }, [contextMenu, setFlam])
+
+  const handleRemoveFlam = useCallback(() => {
+    if (!contextMenu) return
+    setFlam(contextMenu.measureId, contextMenu.cellIndex, false)
+    setContextMenu(null)
+  }, [contextMenu, setFlam])
 
   // --- Export ---
 
@@ -375,11 +405,15 @@ export function Editor() {
           y={contextMenu.y}
           hasTriplet={contextLaneTriplets.includes(contextBeatIndex)}
           hasRoll={!!contextCell?.roll}
+          hasFlam={!!contextCell?.flam}
+          hasSymbol={!!contextCell?.symbol}
           onSetSymbol={handleSetSymbol}
           onSetLabel={handleSetLabel}
           onSetTriplet={handleSetTriplet}
           onSetRoll={handleSetRoll}
           onRemoveRoll={handleRemoveRoll}
+          onSetFlam={handleSetFlam}
+          onRemoveFlam={handleRemoveFlam}
           onOpenTemplates={() => {}}
           onClose={() => setContextMenu(null)}
         />

@@ -39,6 +39,7 @@ function App() {
     setTriplet,
     setRoll,
     removeRoll,
+    setFlam,
     setSectionLabel,
     setSectionLength,
     setRepeat,
@@ -171,6 +172,18 @@ function App() {
     setContextMenu(null)
   }, [contextMenu, removeRoll])
 
+  const handleSetFlam = useCallback(() => {
+    if (!contextMenu) return
+    setFlam(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, true)
+    setContextMenu(null)
+  }, [contextMenu, setFlam])
+
+  const handleRemoveFlam = useCallback(() => {
+    if (!contextMenu) return
+    setFlam(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex, false)
+    setContextMenu(null)
+  }, [contextMenu, setFlam])
+
   const handleApplyTemplate = useCallback(
     (template: RhythmTemplate) => {
       if (!templatePopup) return
@@ -271,11 +284,15 @@ function App() {
             y={contextMenu.y}
             hasTriplet={laneTriplets.includes(beatIndex)}
             hasRoll={!!cell?.roll}
+            hasFlam={!!cell?.flam}
+            hasSymbol={!!cell?.symbol}
             onSetSymbol={handleSetSymbol}
             onSetLabel={handleSetLabel}
             onSetTriplet={handleSetTriplet}
             onSetRoll={handleSetRoll}
             onRemoveRoll={handleRemoveRoll}
+            onSetFlam={handleSetFlam}
+            onRemoveFlam={handleRemoveFlam}
             onOpenTemplates={handleOpenTemplates}
             onClose={() => setContextMenu(null)}
           />
