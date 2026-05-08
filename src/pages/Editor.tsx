@@ -9,6 +9,13 @@ import styles from './Editor.module.css'
 
 const LANE_ID = 'editor-lane'
 
+export function slug(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 interface ContextMenuState {
   x: number
   y: number
@@ -257,7 +264,10 @@ export function Editor() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${templateName || 'template'}.template.json`
+    const tSlug = slug(templateName) || 'template'
+    const iSlug = slug(instrumentName)
+    const stem = iSlug ? `${tSlug}-${iSlug}` : tSlug
+    a.download = `${stem}.template.json`
     a.click()
     URL.revokeObjectURL(url)
   }
