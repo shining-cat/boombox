@@ -31,3 +31,11 @@ describe('SectionBanner — idle render (named with repeat)', () => {
     expect(screen.getByText('4×')).toBeInTheDocument()
   })
 })
+
+describe('SectionBanner — idle render (named, no repeat)', () => {
+  it('shows "no repeat" when repeat is null', () => {
+    render(<SectionBanner {...defaultProps} repeat={null} />)
+    expect(screen.getByText('no repeat')).toBeInTheDocument()
+    expect(screen.queryByText('4×')).not.toBeInTheDocument()
+  })
+})
