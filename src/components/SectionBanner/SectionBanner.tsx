@@ -20,6 +20,7 @@ export function SectionBanner({
   width,
   onLabelChange,
   onLengthChange,
+  onRepeatChange,
 }: SectionBannerProps) {
   const locked = label === null
   const lockedClass = locked ? styles.locked : ''
@@ -61,6 +62,33 @@ export function SectionBanner({
   }
 
   const cancelLength = () => setLengthEditing(false)
+
+  const [repeatEditing, setRepeatEditing] = useState(false)
+  const [repeatDraft, setRepeatDraft] = useState('')
+
+  const startRepeatEdit = () => {
+    if (locked) return
+    setRepeatDraft(repeat ? String(repeat.times) : '')
+    setRepeatEditing(true)
+  }
+
+  const commitRepeat = () => {
+    setRepeatEditing(false)
+    const trimmed = repeatDraft.trim()
+    if (trimmed === '') {
+      if (repeat !== null) onRepeatChange(null)
+      return
+    }
+    const parsed = parseInt(trimmed, 10)
+    if (isNaN(parsed)) return
+    if (parsed <= 0) {
+      if (repeat !== null) onRepeatChange(null)
+      return
+    }
+    if (repeat?.times !== parsed) onRepeatChange(parsed)
+  }
+
+  const cancelRepeat = () => setRepeatEditing(false)
 
   return (
     <div
@@ -127,10 +155,35 @@ export function SectionBanner({
           </span>
         )}
         <span className={styles.fieldLabel}>Repeat:</span>
-        {repeat ? (
-          <span className={`${styles.fieldValue} ${lockedClass}`}>{repeat.times}×</span>
+        {repeatEditing ? (
+          <input
+            aria-label="Repeat count"
+            type="text"
+            inputMode="numeric"
+            className={styles.numInput}
+            value={repeatDraft}
+            autoFocus
+            onChange={(e) => setRepeatDraft(e.target.value)}
+            onBlur={commitRepeat}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') commitRepeat()
+              else if (e.key === 'Escape') cancelRepeat()
+            }}
+          />
+        ) : repeat ? (
+          <span
+            className={`${styles.fieldValue} ${lockedClass}`}
+            onClick={startRepeatEdit}
+          >
+            {repeat.times}×
+          </span>
         ) : (
-          <span className={`${styles.fieldEmpty} ${lockedClass}`}>no repeat</span>
+          <span
+            className={`${styles.fieldEmpty} ${lockedClass}`}
+            onClick={startRepeatEdit}
+          >
+            no repeat
+          </span>
         )}
       </div>
     </div>

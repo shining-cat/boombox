@@ -203,3 +203,69 @@ describe('SectionBanner — length editing', () => {
     expect(onLengthChange).not.toHaveBeenCalled()
   })
 })
+
+describe('SectionBanner — repeat editing', () => {
+  it('clicking 4× turns into a numeric input pre-filled with 4', async () => {
+    render(<SectionBanner {...defaultProps} />)
+    await userEvent.click(screen.getByText('4×'))
+    const input = screen.getByLabelText('Repeat count') as HTMLInputElement
+    expect(input.value).toBe('4')
+  })
+
+  it('clicking "no repeat" turns into an empty numeric input', async () => {
+    render(<SectionBanner {...defaultProps} repeat={null} />)
+    await userEvent.click(screen.getByText('no repeat'))
+    const input = screen.getByLabelText('Repeat count') as HTMLInputElement
+    expect(input.value).toBe('')
+  })
+
+  it('Enter commits a valid repeat', async () => {
+    const onRepeatChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onRepeatChange={onRepeatChange} />)
+    await userEvent.click(screen.getByText('4×'))
+    const input = screen.getByLabelText('Repeat count')
+    await userEvent.clear(input)
+    await userEvent.type(input, '6{Enter}')
+    expect(onRepeatChange).toHaveBeenCalledWith(6)
+  })
+
+  it('Esc cancels (no callback)', async () => {
+    const onRepeatChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onRepeatChange={onRepeatChange} />)
+    await userEvent.click(screen.getByText('4×'))
+    const input = screen.getByLabelText('Repeat count')
+    await userEvent.clear(input)
+    await userEvent.type(input, '6{Escape}')
+    expect(onRepeatChange).not.toHaveBeenCalled()
+  })
+
+  it('committing 0 clears the repeat', async () => {
+    const onRepeatChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onRepeatChange={onRepeatChange} />)
+    await userEvent.click(screen.getByText('4×'))
+    const input = screen.getByLabelText('Repeat count')
+    await userEvent.clear(input)
+    await userEvent.type(input, '0{Enter}')
+    expect(onRepeatChange).toHaveBeenCalledWith(null)
+  })
+
+  it('committing negative clears the repeat', async () => {
+    const onRepeatChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onRepeatChange={onRepeatChange} />)
+    await userEvent.click(screen.getByText('4×'))
+    const input = screen.getByLabelText('Repeat count')
+    await userEvent.clear(input)
+    await userEvent.type(input, '-3{Enter}')
+    expect(onRepeatChange).toHaveBeenCalledWith(null)
+  })
+
+  it('committing non-numeric cancels (no callback)', async () => {
+    const onRepeatChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onRepeatChange={onRepeatChange} />)
+    await userEvent.click(screen.getByText('4×'))
+    const input = screen.getByLabelText('Repeat count')
+    await userEvent.clear(input)
+    await userEvent.type(input, 'abc{Enter}')
+    expect(onRepeatChange).not.toHaveBeenCalled()
+  })
+})
