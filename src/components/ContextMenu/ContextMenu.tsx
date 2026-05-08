@@ -48,8 +48,10 @@ export function ContextMenu({ x, y, hasTriplet, hasRoll, onSetSymbol, onSetLabel
       <div className={styles.overlay} onClick={onClose} />
       <div ref={menuRef} className={styles.menu} style={{ left: pos.left, top: pos.top }}>
         <button className={styles.item} onClick={() => onSetSymbol('cross')} title="Set cross symbol">✕ Cross</button>
+        <button className={styles.item} onClick={() => onSetSymbol('double-cross')} title="Set double cross symbol">✕✕ Double cross</button>
         <button className={styles.item} onClick={() => onSetSymbol('empty-round')} title="Set empty round symbol">○ Empty round</button>
         <button className={styles.item} onClick={() => onSetSymbol('full-round')} title="Set full round symbol">● Full round</button>
+        <button className={styles.item} onClick={() => onSetSymbol('double-full-round')} title="Set double full round symbol">●● Double full</button>
         <button className={styles.item} onClick={() => onSetSymbol('square')} title="Set square symbol">■ Square</button>
         <button className={styles.item} onClick={() => onSetSymbol('diamond')} title="Set diamond symbol">◆ Diamond</button>
         <button className={styles.item} onClick={() => onSetSymbol('dot')} title="Set dot symbol">• Dot</button>

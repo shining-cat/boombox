@@ -3,8 +3,10 @@ import styles from './Cell.module.css'
 
 const SYMBOL_DISPLAY: Record<string, string> = {
   cross: '✕',
+  'double-cross': '✕✕',
   'empty-round': '○',
   'full-round': '●',
+  'double-full-round': '●●',
   square: '■',
   diamond: '◆',
   dot: '•',

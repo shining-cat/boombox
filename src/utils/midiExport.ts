@@ -1,6 +1,7 @@
 // @ts-expect-error midi-writer-js package.json exports don't resolve types correctly
 import MidiWriter from 'midi-writer-js'
 import type { Score } from '../model/types'
+import { isDoubleSymbol } from '../model/midiMappings'
 import { flattenMeasures } from './scoreUtils'
 
 interface MidiExportOptions {
@@ -22,6 +23,18 @@ function getSubdivisionDuration(subdivision: number): string {
     case 6: return '16t'
     case 8: return '32'
     default: return '16'
+  }
+}
+
+function halveDuration(d: string): string {
+  switch (d) {
+    case '4': return '8'
+    case '8': return '16'
+    case '8t': return '16t'
+    case '16': return '32'
+    case '16t': return '32t'
+    case '32': return '64'
+    default: return d
   }
 }
 
@@ -77,6 +90,21 @@ export function generateMidi(score: Score, options: MidiExportOptions): Uint8Arr
                 channel: 10,
               }))
             }
+          } else if (isDoubleSymbol(cell.symbol)) {
+            const velocity = toMidiWriterVelocity(options.velocityMap[cell.symbol] ?? 90)
+            const halfDuration = halveDuration(duration)
+            track.addEvent(new MidiWriter.NoteEvent({
+              pitch: [midiNote],
+              duration: halfDuration,
+              velocity,
+              channel: 10,
+            }))
+            track.addEvent(new MidiWriter.NoteEvent({
+              pitch: [midiNote],
+              duration: halfDuration,
+              velocity,
+              channel: 10,
+            }))
           } else if (cell.symbol) {
             const velocity = toMidiWriterVelocity(options.velocityMap[cell.symbol] ?? 90)
             track.addEvent(new MidiWriter.NoteEvent({

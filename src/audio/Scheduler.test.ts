@@ -118,3 +118,73 @@ describe('buildNoteEvents', () => {
     expect(events[1].measureIndex).toBe(1)
   })
 })
+
+describe('buildNoteEvents — double symbols', () => {
+  it('emits 2 events for a double-cross cell at correct times and equal velocities', () => {
+    const lane = createLane('Snare')
+    // 1 beat, 1 subdivision → cellDuration = beatDuration = 60/120 = 0.5s at tempo 120
+    const measure = createMeasure([lane.id], { beats: 1, subdivision: 1 })
+    measure.cells[lane.id] = [{ symbol: 'double-cross' }]
+
+    const score: Score = {
+      title: 'Test', author: '', tempo: 120, lanes: [lane], lines: [[measure]],
+    }
+    const events = buildNoteEvents(score, { [lane.id]: 38 }, 120)
+
+    expect(events).toHaveLength(2)
+    expect(events[0].time).toBeCloseTo(0, 5)
+    expect(events[1].time).toBeCloseTo(0.25, 5) // cellDuration (0.5) / 2
+    expect(events[0].velocity).toBeCloseTo(events[1].velocity, 5)
+    expect(events[0].velocity).toBeCloseTo(127 / 127, 5) // double-cross full velocity
+  })
+
+  it('emits 2 events for a double-full-round cell at correct velocities', () => {
+    const lane = createLane('Kick')
+    const measure = createMeasure([lane.id], { beats: 1, subdivision: 1 })
+    measure.cells[lane.id] = [{ symbol: 'double-full-round' }]
+
+    const score: Score = {
+      title: 'Test', author: '', tempo: 120, lanes: [lane], lines: [[measure]],
+    }
+    const events = buildNoteEvents(score, { [lane.id]: 36 }, 120)
+
+    expect(events).toHaveLength(2)
+    expect(events[0].velocity).toBeCloseTo(110 / 127, 5)
+  })
+
+  it('uses triplet cell duration for spacing inside a triplet beat', () => {
+    const lane = createLane('Snare')
+    const measure = createMeasure([lane.id], { beats: 1, subdivision: 4 })
+    measure.cells[lane.id] = [
+      { symbol: 'double-cross' },
+      { symbol: null },
+      { symbol: null },
+    ]
+    measure.tripletBeats = { [lane.id]: [0] }
+
+    const score: Score = {
+      title: 'Test', author: '', tempo: 120, lanes: [lane], lines: [[measure]],
+    }
+    const events = buildNoteEvents(score, { [lane.id]: 38 }, 120)
+
+    // beatDuration=0.5, cellsInBeat=3 (triplet), cellDuration=0.5/3 ≈ 0.1667
+    // Second stroke at cellDuration/2 ≈ 0.0833
+    expect(events).toHaveLength(2)
+    expect(events[0].time).toBeCloseTo(0, 5)
+    expect(events[1].time).toBeCloseTo(0.5 / 3 / 2, 5)
+  })
+
+  it('emits roll only (not double) when cell has both roll and double symbol', () => {
+    const lane = createLane('Snare')
+    const measure = createMeasure([lane.id], { beats: 1, subdivision: 1 })
+    measure.cells[lane.id] = [{ symbol: 'double-cross', roll: { length: 1 } }]
+
+    const score: Score = {
+      title: 'Test', author: '', tempo: 120, lanes: [lane], lines: [[measure]],
+    }
+    const events = buildNoteEvents(score, { [lane.id]: 38 }, 120)
+
+    // Roll path emits ~25/sec across the roll span (cellDuration=0.5 → ~12 events).
+    expect(events.length).toBeGreaterThan(2)
+  })
+})

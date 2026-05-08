@@ -1,3 +1,10 @@
+import type { CellSymbol } from './types'
+
+export type DoubleSymbol = 'double-cross' | 'double-full-round'
+
+export function isDoubleSymbol(s: CellSymbol): s is DoubleSymbol {
+  return s === 'double-cross' || s === 'double-full-round'
+}
 
 export interface PercussionInstrument {
   note: number
@@ -20,7 +27,9 @@ export const VELOCITY_PRESETS: VelocityPreset[] = [
 
 export const DEFAULT_SYMBOL_VELOCITIES: Record<string, number> = {
   cross: 127,
+  'double-cross': 127,
   'full-round': 110,
+  'double-full-round': 110,
   square: 90,
   diamond: 90,
   'empty-round': 60,
