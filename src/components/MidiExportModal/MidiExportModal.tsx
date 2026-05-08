@@ -12,8 +12,10 @@ import styles from './MidiExportModal.module.css'
 
 const SYMBOL_DISPLAY: Record<string, string> = {
   cross: '✕ Cross',
+  'double-cross': '✕✕ Double cross',
   'empty-round': '○ Empty round',
   'full-round': '● Full round',
+  'double-full-round': '●● Double full',
   square: '■ Square',
   diamond: '◆ Diamond',
   dot: '• Dot',

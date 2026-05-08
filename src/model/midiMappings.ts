@@ -20,7 +20,9 @@ export const VELOCITY_PRESETS: VelocityPreset[] = [
 
 export const DEFAULT_SYMBOL_VELOCITIES: Record<string, number> = {
   cross: 127,
+  'double-cross': 127,
   'full-round': 110,
+  'double-full-round': 110,
   square: 90,
   diamond: 90,
   'empty-round': 60,
