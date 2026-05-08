@@ -51,21 +51,27 @@ export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onC
             const tripletCellWidth = (subdivision * 28) / 3
             beatElements.push(
               <div key={`t${beat}`} className={styles.tripletGroup}>
-                {beatCells.map((cell, i) => (
-                  <Cell
-                    key={startOffset + i}
-                    symbol={cell.symbol}
-                    label={cell.label}
-                    isBeatStart={i === 0}
-                    isRoll={!!cell.roll}
-                    isFlam={!!cell.flam}
-                    isTriplet={i === 1}
-                    width={tripletCellWidth}
-                    backgroundColor={lane.color}
-                    onClick={() => onCycleCell(lane.id, startOffset + i)}
-                    onContextMenu={e => onCellContextMenu(lane.id, startOffset + i, e)}
-                  />
-                ))}
+                {beatCells.map((cell, i) => {
+                  const globalIdx = startOffset + i
+                  const isInRoll = cells.some(
+                    (c, ci) => c.roll && ci <= globalIdx && ci + c.roll.length > globalIdx && ci !== globalIdx
+                  )
+                  return (
+                    <Cell
+                      key={globalIdx}
+                      symbol={isInRoll ? null : cell.symbol}
+                      label={cell.label}
+                      isBeatStart={i === 0}
+                      isRoll={isInRoll || !!cell.roll}
+                      isFlam={!!cell.flam}
+                      isTriplet={i === 1}
+                      width={tripletCellWidth}
+                      backgroundColor={lane.color}
+                      onClick={() => onCycleCell(lane.id, globalIdx)}
+                      onContextMenu={e => onCellContextMenu(lane.id, globalIdx, e)}
+                    />
+                  )
+                })}
               </div>
             )
           } else {
