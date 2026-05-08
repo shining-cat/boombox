@@ -7,7 +7,6 @@ const defaultProps = {
   label: 'CHORUS',
   length: 3,
   repeat: { times: 4 },
-  maxLength: 8,
   width: 240,
   onLabelChange: vi.fn(),
   onLengthChange: vi.fn(),
@@ -172,16 +171,14 @@ describe('SectionBanner — length editing', () => {
     expect(onLengthChange).not.toHaveBeenCalled()
   })
 
-  it('clamps length to maxLength when input exceeds it', async () => {
+  it('commits any positive length unchanged (parent handles growth)', async () => {
     const onLengthChange = vi.fn()
-    render(
-      <SectionBanner {...defaultProps} maxLength={5} onLengthChange={onLengthChange} />,
-    )
+    render(<SectionBanner {...defaultProps} onLengthChange={onLengthChange} />)
     await userEvent.click(screen.getByText('3'))
     const input = screen.getByLabelText('Section length')
     await userEvent.clear(input)
     await userEvent.type(input, '99{Enter}')
-    expect(onLengthChange).toHaveBeenCalledWith(5)
+    expect(onLengthChange).toHaveBeenCalledWith(99)
   })
 
   it('clamps length to 1 when input is 0 or negative', async () => {

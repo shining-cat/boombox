@@ -5,7 +5,6 @@ export interface SectionBannerProps {
   label: string | null
   length: number
   repeat: { times: number } | null
-  maxLength: number
   width: number
   onLabelChange: (label: string | null) => void
   onLengthChange: (length: number) => void
@@ -16,7 +15,6 @@ export function SectionBanner({
   label,
   length,
   repeat,
-  maxLength,
   width,
   onLabelChange,
   onLengthChange,
@@ -57,7 +55,7 @@ export function SectionBanner({
     setLengthEditing(false)
     const parsed = parseInt(lengthDraft, 10)
     if (isNaN(parsed)) return
-    const clamped = Math.max(1, Math.min(parsed, maxLength))
+    const clamped = Math.max(1, parsed)
     if (clamped !== length) onLengthChange(clamped)
   }
 

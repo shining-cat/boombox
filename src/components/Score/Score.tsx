@@ -256,8 +256,6 @@ export function Score({
                         line[mi].timeSignature.subdivision,
                       )
                     }
-                    const maxLength = line.length - section.startIndex
-
                     return (
                       <div
                         key={measure.id}
@@ -267,7 +265,6 @@ export function Score({
                           label={section.label}
                           length={section.length}
                           repeat={section.repeat ?? null}
-                          maxLength={maxLength}
                           width={sectionWidth}
                           onLabelChange={(label) =>
                             onSectionLabelChange(lineIndex, section.measureId, label ?? '')
@@ -291,7 +288,6 @@ export function Score({
                           label={null}
                           length={1}
                           repeat={null}
-                          maxLength={line.length - index}
                           width={colWidth}
                           onLabelChange={(label) =>
                             onSectionLabelChange(lineIndex, measure.id, label ?? '')

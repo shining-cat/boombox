@@ -136,6 +136,54 @@ describe('useScore', () => {
     expect(result.current.score.lines[0][0].sectionLabel).toBe('Chorus')
   })
 
+  it('setSectionLabel with empty string clears label, sectionLength, and repeat together', () => {
+    const { result } = renderHook(() => useScore())
+    const measureId = result.current.score.lines[0][0].id
+
+    act(() => result.current.setSectionLabel(0, measureId, 'Chorus'))
+    act(() => result.current.setSectionLength(0, measureId, 1))
+    act(() => result.current.setRepeat(0, measureId, 4))
+    expect(result.current.score.lines[0][0].sectionLabel).toBe('Chorus')
+    expect(result.current.score.lines[0][0].repeat).toEqual({ times: 4 })
+
+    act(() => result.current.setSectionLabel(0, measureId, ''))
+    const measure = result.current.score.lines[0][0]
+    expect(measure.sectionLabel).toBeUndefined()
+    expect(measure.sectionLength).toBeUndefined()
+    expect(measure.repeat).toBeUndefined()
+  })
+
+  it('setSectionLength grows the line if length exceeds remaining measures', () => {
+    const { result } = renderHook(() => useScore())
+    const firstId = result.current.score.lines[0][0].id
+
+    expect(result.current.score.lines[0]).toHaveLength(1)
+
+    act(() => result.current.setSectionLength(0, firstId, 3))
+
+    expect(result.current.score.lines[0]).toHaveLength(3)
+    expect(result.current.score.lines[0][0].sectionLength).toBe(3)
+    expect(result.current.score.lines[0][1].timeSignature).toEqual(
+      result.current.score.lines[0][0].timeSignature,
+    )
+    expect(result.current.score.lines[0][2].timeSignature).toEqual(
+      result.current.score.lines[0][0].timeSignature,
+    )
+  })
+
+  it('setSectionLength does not add measures when length fits in remaining', () => {
+    const { result } = renderHook(() => useScore())
+    act(() => result.current.addMeasure(0))
+    act(() => result.current.addMeasure(0))
+    expect(result.current.score.lines[0]).toHaveLength(3)
+
+    const firstId = result.current.score.lines[0][0].id
+    act(() => result.current.setSectionLength(0, firstId, 2))
+
+    expect(result.current.score.lines[0]).toHaveLength(3)
+    expect(result.current.score.lines[0][0].sectionLength).toBe(2)
+  })
+
   it('setRepeat sets repeat on a measure', () => {
     const { result } = renderHook(() => useScore())
     const measureId = result.current.score.lines[0][0].id
