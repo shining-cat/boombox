@@ -3,6 +3,9 @@
 }
 
 .nameRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -53,4 +56,22 @@
   font-size: inherit;
   width: 100%;
   box-sizing: border-box;
+}
+
+.removeBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #888;
+  padding: 0 4px;
+  visibility: hidden;
+}
+
+.banner:hover .removeBtn {
+  visibility: visible;
+}
+
+.removeBtn:hover {
+  color: #c00;
 }

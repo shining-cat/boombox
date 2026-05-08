@@ -65,9 +65,19 @@ export function SectionBanner({
             + name
           </span>
         ) : (
-          <span className={styles.nameValue} onClick={startNameEdit}>
-            {label}
-          </span>
+          <>
+            <span className={styles.nameValue} onClick={startNameEdit}>
+              {label}
+            </span>
+            <button
+              type="button"
+              className={styles.removeBtn}
+              aria-label="Remove section name"
+              onClick={() => onLabelChange(null)}
+            >
+              ×
+            </button>
+          </>
         )}
       </div>
       <div className={styles.controlsRow}>

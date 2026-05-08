@@ -129,3 +129,17 @@ describe('SectionBanner — name editing', () => {
     expect(onLabelChange).not.toHaveBeenCalled()
   })
 })
+
+describe('SectionBanner — × remove button', () => {
+  it('renders × button when named', () => {
+    render(<SectionBanner {...defaultProps} />)
+    expect(screen.getByLabelText('Remove section name')).toBeInTheDocument()
+  })
+
+  it('clicking × fires onLabelChange(null)', async () => {
+    const onLabelChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onLabelChange={onLabelChange} />)
+    await userEvent.click(screen.getByLabelText('Remove section name'))
+    expect(onLabelChange).toHaveBeenCalledWith(null)
+  })
+})
