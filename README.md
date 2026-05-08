@@ -14,21 +14,24 @@ You build your score by clicking cells on a grid, where each row is an instrumen
 
 ## Features
 
-- **Lanes** for each instrument, with custom names and colors
+- **Lanes** for each instrument, with custom names, colors, and per-lane GM percussion sound + mute
 - **Measures and lines** with configurable time signatures (pulses per measure, cells per pulse)
-- **Sections and repeats** to structure your score (intro 2x, verse 4x, etc.)
-- **Triplets and rolls**
+- **Sections and repeats** to structure your score (intro 2x, verse 4x, etc.) — every measure has an editable banner, named sections unlock length and repeat-count controls
+- **Triplets, rolls, and flams** (grace note + main hit) for percussion ornaments
+- **Repinique double-strokes** — `✕✕` and `●●` symbols for two equal hits inside one cell
 - **Rhythm templates** — preset patterns (Clave, Son, Afoxe, Rumba, etc.) you can insert into any measure
-- **Pulse lane** — a read-only reference lane showing beat positions
+- **Playable pulse lane** — a metronome lane with its own GM sound, useful for practice
+- **Playback** with per-lane mute, tempo control (40-300 BPM), loop toggle, and live measure highlighting
 - **Export** to PDF, PNG, or MIDI (experimental)
 - **Save/Load** as `.boombox.json` files — your scores stay on your machine
 
 ## How to use
 
 1. Click any cell to cycle through symbols (cross, circle, dot, etc.)
-2. Right-click a cell for more options: pick a symbol, add a triplet, insert a rhythm template
+2. Right-click a cell for more options: pick a symbol (including the double `✕✕` / `●●`), add a triplet, roll, flam, label, or insert a rhythm template
 3. Add measures, lines, and lanes using the "+" buttons
-4. Save your work — Boombox never saves anything on its own
+4. Click a section banner above any measure to name it; once named, edit its length and repeat count inline
+5. Save your work — Boombox never saves anything on its own
 
 For the full guide, click **Help** in the toolbar.
 

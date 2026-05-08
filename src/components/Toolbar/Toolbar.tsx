@@ -108,8 +108,9 @@ export function Toolbar({
               <section>
                 <h3>Symbols</h3>
                 <ul>
-                  <li>✕ Cross, ○ Empty round, ● Full round, ■ Square, ◆ Diamond, • Dot</li>
-                  <li>Click cycles through them; right-click to pick directly or clear</li>
+                  <li>Cycle (left-click): ✕ Cross, ○ Empty round, ● Full round, ■ Square, ◆ Diamond, • Dot</li>
+                  <li>Picker-only (right-click): ✕✕ Double cross, ●● Double full — two equal hits inside one cell (repinique style)</li>
+                  <li>Right-click to pick directly or clear</li>
                 </ul>
               </section>
 
@@ -135,18 +136,22 @@ export function Toolbar({
               <section>
                 <h3>Sections &amp; Repeats</h3>
                 <ul>
-                  <li>Click "+ section" above a measure to create a section</li>
-                  <li>Set section length (number of measures) and play count (N×)</li>
-                  <li>Click the label to rename or remove</li>
+                  <li>Every measure has a banner above it. Unnamed banners show "+ name" (greyed out)</li>
+                  <li>Click the "+ name" placeholder to name the section. Once named, length and repeat unlock</li>
+                  <li>Click the Length value to set how many measures the section spans (auto-adds measures if needed)</li>
+                  <li>Click the Repeat value to set how many times it plays. 0 (or empty) clears the repeat</li>
+                  <li>Hover a named banner → × button appears to remove the section name (clears length and repeat too)</li>
                 </ul>
               </section>
 
               <section>
-                <h3>Triplets &amp; Rolls</h3>
+                <h3>Triplets, Rolls &amp; Flams</h3>
                 <ul>
                   <li>Right-click a cell → Add triplet: replaces the pulse with 3 wider cells</li>
                   <li>Right-click a cell → Add roll: marks a roll starting from that cell</li>
-                  <li>To remove, right-click the starting cell of the triplet or roll</li>
+                  <li>Right-click a cell with a symbol → Add flam: a soft grace note 30ms before the main hit (renders as ʼ before the symbol, e.g. ʼ✕)</li>
+                  <li>To remove a triplet, roll, or flam, right-click the cell again and pick Remove</li>
+                  <li>If a cell has both a roll and a flam, the roll takes over (no grace note plays)</li>
                 </ul>
               </section>
 
