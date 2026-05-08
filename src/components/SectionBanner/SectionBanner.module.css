@@ -43,3 +43,14 @@
 .locked {
   cursor: not-allowed;
 }
+
+.nameInput {
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px solid #888;
+  background: white;
+  padding: 1px 4px;
+  font-size: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}

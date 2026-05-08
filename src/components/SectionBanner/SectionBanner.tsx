@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import styles from './SectionBanner.module.css'
 
 export interface SectionBannerProps {
@@ -11,9 +12,34 @@ export interface SectionBannerProps {
   onRepeatChange: (times: number | null) => void
 }
 
-export function SectionBanner({ label, length, repeat, width }: SectionBannerProps) {
+export function SectionBanner({
+  label,
+  length,
+  repeat,
+  width,
+  onLabelChange,
+}: SectionBannerProps) {
   const locked = label === null
   const lockedClass = locked ? styles.locked : ''
+
+  const [nameEditing, setNameEditing] = useState(false)
+  const [nameDraft, setNameDraft] = useState('')
+
+  const startNameEdit = () => {
+    setNameDraft(label ?? '')
+    setNameEditing(true)
+  }
+
+  const commitName = () => {
+    setNameEditing(false)
+    const trimmed = nameDraft.trim()
+    if (trimmed === (label ?? '')) return
+    onLabelChange(trimmed === '' ? null : trimmed)
+  }
+
+  const cancelName = () => {
+    setNameEditing(false)
+  }
 
   return (
     <div
@@ -21,10 +47,27 @@ export function SectionBanner({ label, length, repeat, width }: SectionBannerPro
       style={{ width }}
     >
       <div className={styles.nameRow}>
-        {locked ? (
-          <span className={styles.namePlaceholder}>+ name</span>
+        {nameEditing ? (
+          <input
+            aria-label="Section name"
+            className={styles.nameInput}
+            value={nameDraft}
+            autoFocus
+            onChange={(e) => setNameDraft(e.target.value)}
+            onBlur={commitName}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') commitName()
+              else if (e.key === 'Escape') cancelName()
+            }}
+          />
+        ) : locked ? (
+          <span className={styles.namePlaceholder} onClick={startNameEdit}>
+            + name
+          </span>
         ) : (
-          <span className={styles.nameValue}>{label}</span>
+          <span className={styles.nameValue} onClick={startNameEdit}>
+            {label}
+          </span>
         )}
       </div>
       <div className={styles.controlsRow}>

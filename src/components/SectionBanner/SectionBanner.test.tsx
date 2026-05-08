@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { SectionBanner } from './SectionBanner'
 
 const defaultProps = {
@@ -59,5 +60,45 @@ describe('SectionBanner — idle render (unnamed)', () => {
   it('does not render the × remove button when unnamed', () => {
     render(<SectionBanner {...unnamedProps} />)
     expect(screen.queryByLabelText('Remove section name')).not.toBeInTheDocument()
+  })
+})
+
+describe('SectionBanner — name editing', () => {
+  it('clicking the name turns it into an input pre-filled', async () => {
+    render(<SectionBanner {...defaultProps} />)
+    await userEvent.click(screen.getByText('CHORUS'))
+    const input = screen.getByLabelText('Section name') as HTMLInputElement
+    expect(input.value).toBe('CHORUS')
+  })
+
+  it('Enter commits the new name', async () => {
+    const onLabelChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onLabelChange={onLabelChange} />)
+    await userEvent.click(screen.getByText('CHORUS'))
+    const input = screen.getByLabelText('Section name')
+    await userEvent.clear(input)
+    await userEvent.type(input, 'BRIDGE{Enter}')
+    expect(onLabelChange).toHaveBeenCalledWith('BRIDGE')
+  })
+
+  it('Esc cancels the edit (no callback fired)', async () => {
+    const onLabelChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onLabelChange={onLabelChange} />)
+    await userEvent.click(screen.getByText('CHORUS'))
+    const input = screen.getByLabelText('Section name')
+    await userEvent.clear(input)
+    await userEvent.type(input, 'BRIDGE{Escape}')
+    expect(onLabelChange).not.toHaveBeenCalled()
+  })
+
+  it('blur commits', async () => {
+    const onLabelChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onLabelChange={onLabelChange} />)
+    await userEvent.click(screen.getByText('CHORUS'))
+    const input = screen.getByLabelText('Section name') as HTMLInputElement
+    await userEvent.clear(input)
+    await userEvent.type(input, 'BRIDGE')
+    input.blur()
+    expect(onLabelChange).toHaveBeenCalledWith('BRIDGE')
   })
 })
