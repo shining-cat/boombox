@@ -9,6 +9,13 @@ import styles from './Editor.module.css'
 
 const LANE_ID = 'editor-lane'
 
+export function slug(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 interface ContextMenuState {
   x: number
   y: number
