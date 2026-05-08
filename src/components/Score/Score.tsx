@@ -19,6 +19,7 @@ interface Section {
 interface ScoreProps {
   score: ScoreType
   onCycleCell: (lineIndex: number, measureId: string, laneId: string, cellIndex: number) => void
+  onSplitRoll: (lineIndex: number, measureId: string, laneId: string, cellIndex: number) => void
   onCellContextMenu: (lineIndex: number, measureId: string, laneId: string, cellIndex: number, event: React.MouseEvent) => void
   onLaneNameChange: (laneId: string, name: string) => void
   onLaneColorChange: (laneId: string, color: string) => void
@@ -126,6 +127,7 @@ function getMeasureColumnWidth(beats: number, subdivision: number): number {
 export function Score({
   score,
   onCycleCell,
+  onSplitRoll,
   onCellContextMenu,
   onLaneNameChange,
   onLaneColorChange,
@@ -347,6 +349,7 @@ export function Score({
                           showPulse={showPulse}
                           mutedLaneIds={mutedLaneIds}
                           onCycleCell={(laneId, cellIndex) => onCycleCell(lineIndex, measure.id, laneId, cellIndex)}
+                          onSplitRoll={(laneId, cellIndex) => onSplitRoll(lineIndex, measure.id, laneId, cellIndex)}
                           onCellContextMenu={(laneId, cellIndex, e) => onCellContextMenu(lineIndex, measure.id, laneId, cellIndex, e)}
                         />
                       </div>

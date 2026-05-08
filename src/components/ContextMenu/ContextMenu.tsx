@@ -7,6 +7,7 @@ interface ContextMenuProps {
   y: number
   hasTriplet: boolean
   hasRoll: boolean
+  inRoll: boolean
   hasFlam: boolean
   hasSymbol: boolean
   onSetSymbol: (symbol: CellSymbol) => void
@@ -20,7 +21,7 @@ interface ContextMenuProps {
   onClose: () => void
 }
 
-export function ContextMenu({ x, y, hasTriplet, hasRoll, hasFlam, hasSymbol, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onRemoveRoll, onSetFlam, onRemoveFlam, onOpenTemplates, onClose }: ContextMenuProps) {
+export function ContextMenu({ x, y, hasTriplet, hasRoll, inRoll, hasFlam, hasSymbol, onSetSymbol, onSetLabel, onSetTriplet, onSetRoll, onRemoveRoll, onSetFlam, onRemoveFlam, onOpenTemplates, onClose }: ContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState({ left: x, top: y })
 
@@ -66,7 +67,7 @@ export function ContextMenu({ x, y, hasTriplet, hasRoll, hasFlam, hasSymbol, onS
         <button className={styles.item} onClick={onSetTriplet} title={hasTriplet ? 'Remove triplet from this pulse' : 'Add triplet on this pulse (3 notes)'}>
           {hasTriplet ? 'Remove triplet' : 'Add triplet'}
         </button>
-        {hasRoll ? (
+        {(hasRoll || inRoll) ? (
           <button className={styles.item} onClick={onRemoveRoll} title="Remove roll from this cell">Remove roll</button>
         ) : (
           <button className={styles.item} onClick={onSetRoll} title="Set a roll starting from this cell">Add roll</button>

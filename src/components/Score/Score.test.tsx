@@ -9,6 +9,7 @@ function renderScore() {
     <Score
       score={score}
       onCycleCell={vi.fn()}
+      onSplitRoll={vi.fn()}
       onCellContextMenu={vi.fn()}
       onLaneNameChange={vi.fn()}
       onLaneColorChange={vi.fn()}

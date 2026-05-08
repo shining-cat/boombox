@@ -16,6 +16,7 @@ function renderMenu(overrides = {}) {
     onRemoveFlam: vi.fn(),
     hasTriplet: false,
     hasRoll: false,
+    inRoll: false,
     hasFlam: false,
     hasSymbol: true,
     onOpenTemplates: vi.fn(),
@@ -133,5 +134,21 @@ describe('ContextMenu', () => {
     const props = renderMenu({ hasFlam: true, hasSymbol: true })
     await user.click(screen.getByText('Remove flam'))
     expect(props.onRemoveFlam).toHaveBeenCalled()
+  })
+
+  it('shows Remove roll when inRoll is true (interior of a roll)', () => {
+    renderMenu({ hasRoll: false, inRoll: true })
+    expect(screen.getByText('Remove roll')).toBeInTheDocument()
+    expect(screen.queryByText('Add roll')).not.toBeInTheDocument()
+  })
+
+  it('shows Remove roll when hasRoll is true (start cell)', () => {
+    renderMenu({ hasRoll: true, inRoll: false })
+    expect(screen.getByText('Remove roll')).toBeInTheDocument()
+  })
+
+  it('shows Add roll when neither hasRoll nor inRoll', () => {
+    renderMenu({ hasRoll: false, inRoll: false })
+    expect(screen.getByText('Add roll')).toBeInTheDocument()
   })
 })

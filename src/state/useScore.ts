@@ -232,11 +232,52 @@ export function useScore() {
     [updateCells],
   )
 
-  const removeRoll = useCallback(
+  const splitRollAtCell = useCallback(
     (lineIndex: number, measureId: string, laneId: string, cellIndex: number) => {
       updateCells(lineIndex, measureId, laneId, (cells) => {
-        const { roll: _, ...rest } = cells[cellIndex]
-        cells[cellIndex] = rest
+        let startIdx = -1
+        let length = 0
+        for (let i = 0; i < cells.length; i++) {
+          const r = cells[i].roll
+          if (r && i <= cellIndex && cellIndex < i + r.length) {
+            startIdx = i
+            length = r.length
+            break
+          }
+        }
+        if (startIdx === -1) return cells
+
+        const beforeLen = cellIndex - startIdx
+        const afterLen = length - beforeLen - 1
+
+        if (beforeLen > 0) {
+          cells[startIdx] = { ...cells[startIdx], roll: { length: beforeLen } }
+        } else {
+          const { roll: _, ...rest } = cells[startIdx]
+          cells[startIdx] = rest
+        }
+
+        if (afterLen > 0) {
+          cells[cellIndex + 1] = { ...cells[cellIndex + 1], roll: { length: afterLen } }
+        }
+
+        return cells
+      })
+    },
+    [updateCells],
+  )
+
+  const removeRollContaining = useCallback(
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number) => {
+      updateCells(lineIndex, measureId, laneId, (cells) => {
+        for (let i = 0; i < cells.length; i++) {
+          const r = cells[i].roll
+          if (r && i <= cellIndex && cellIndex < i + r.length) {
+            const { roll: _, ...rest } = cells[i]
+            cells[i] = rest
+            return cells
+          }
+        }
         return cells
       })
     },
@@ -452,7 +493,8 @@ export function useScore() {
     setCellLabel,
     setTriplet,
     setRoll,
-    removeRoll,
+    splitRollAtCell,
+    removeRollContaining,
     setFlam,
     setSectionLabel,
     setSectionLength,

@@ -304,4 +304,129 @@ describe('useScore', () => {
     act(() => result.current.setRoll(0, measureId, laneId, 3, 2))
     expect(result.current.score.lines[0][0].cells[laneId][3].roll).toEqual({ length: 2 })
   })
+
+  describe('splitRollAtCell', () => {
+    it('clears roll when called on a single-cell roll (length 1)', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setRoll(0, measureId, laneId, 0, 1))
+      act(() => result.current.splitRollAtCell(0, measureId, laneId, 0))
+
+      const cells = result.current.score.lines[0][0].cells[laneId]
+      expect(cells[0].roll).toBeUndefined()
+    })
+
+    it('clears start cell and shifts roll to next cell when called on start of multi-cell roll', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setRoll(0, measureId, laneId, 0, 3))
+      act(() => result.current.splitRollAtCell(0, measureId, laneId, 0))
+
+      const cells = result.current.score.lines[0][0].cells[laneId]
+      expect(cells[0].roll).toBeUndefined()
+      expect(cells[1].roll).toEqual({ length: 2 })
+    })
+
+    it('shortens the roll when called on the last cell of a multi-cell roll', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setRoll(0, measureId, laneId, 0, 3))
+      act(() => result.current.splitRollAtCell(0, measureId, laneId, 2))
+
+      const cells = result.current.score.lines[0][0].cells[laneId]
+      expect(cells[0].roll).toEqual({ length: 2 })
+      expect(cells[1].roll).toBeUndefined()
+      expect(cells[2].roll).toBeUndefined()
+    })
+
+    it('splits the roll into two when called on an interior cell', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setRoll(0, measureId, laneId, 0, 3))
+      act(() => result.current.splitRollAtCell(0, measureId, laneId, 1))
+
+      const cells = result.current.score.lines[0][0].cells[laneId]
+      expect(cells[0].roll).toEqual({ length: 1 })
+      expect(cells[1].roll).toBeUndefined()
+      expect(cells[2].roll).toEqual({ length: 1 })
+    })
+
+    it('is a no-op when called on a cell not covered by any roll', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setCellSymbol(0, measureId, laneId, 0, 'cross'))
+      const before = result.current.score.lines[0][0].cells[laneId][0]
+
+      act(() => result.current.splitRollAtCell(0, measureId, laneId, 0))
+
+      const after = result.current.score.lines[0][0].cells[laneId][0]
+      expect(after).toEqual(before)
+    })
+  })
+
+  describe('removeRollContaining', () => {
+    it('removes a single-cell roll when called on that cell', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setRoll(0, measureId, laneId, 0, 1))
+      act(() => result.current.removeRollContaining(0, measureId, laneId, 0))
+
+      expect(result.current.score.lines[0][0].cells[laneId][0].roll).toBeUndefined()
+    })
+
+    it('removes a multi-cell roll when called on the start cell', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setRoll(0, measureId, laneId, 0, 3))
+      act(() => result.current.removeRollContaining(0, measureId, laneId, 0))
+
+      expect(result.current.score.lines[0][0].cells[laneId][0].roll).toBeUndefined()
+    })
+
+    it('removes a multi-cell roll when called on an interior cell', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setRoll(0, measureId, laneId, 0, 3))
+      act(() => result.current.removeRollContaining(0, measureId, laneId, 1))
+
+      expect(result.current.score.lines[0][0].cells[laneId][0].roll).toBeUndefined()
+    })
+
+    it('removes a multi-cell roll when called on the last cell', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.setRoll(0, measureId, laneId, 0, 3))
+      act(() => result.current.removeRollContaining(0, measureId, laneId, 2))
+
+      expect(result.current.score.lines[0][0].cells[laneId][0].roll).toBeUndefined()
+    })
+
+    it('is a no-op when called on a cell not covered by any roll', () => {
+      const { result } = renderHook(() => useScore())
+      const measureId = result.current.score.lines[0][0].id
+      const laneId = result.current.score.lanes[0].id
+
+      act(() => result.current.removeRollContaining(0, measureId, laneId, 0))
+
+      expect(result.current.score.lines[0][0].cells[laneId][0].roll).toBeUndefined()
+    })
+  })
 })
