@@ -188,3 +188,48 @@ describe('buildNoteEvents — double symbols', () => {
     expect(events.length).toBeGreaterThan(2)
   })
 })
+
+describe('buildNoteEvents — flam', () => {
+  it('emits 2 events for a flam-cross cell (grace 30ms before, half velocity)', () => {
+    const lane = createLane('Snare')
+    const measure = createMeasure([lane.id], { beats: 1, subdivision: 1 })
+    measure.cells[lane.id] = [{ symbol: 'cross', flam: true }]
+
+    const score: Score = {
+      title: 'Test', author: '', tempo: 120, lanes: [lane], lines: [[measure]],
+    }
+    const events = buildNoteEvents(score, { [lane.id]: 38 }, 120)
+
+    expect(events).toHaveLength(2)
+    expect(events[0].time).toBeCloseTo(-0.030, 5)
+    expect(events[1].time).toBeCloseTo(0, 5)
+    expect(events[0].velocity).toBeCloseTo((127 / 127) * 0.5, 5)
+    expect(events[1].velocity).toBeCloseTo(127 / 127, 5)
+  })
+
+  it('emits 0 events when flam is set on an empty cell (no symbol)', () => {
+    const lane = createLane('Snare')
+    const measure = createMeasure([lane.id], { beats: 1, subdivision: 1 })
+    measure.cells[lane.id] = [{ symbol: null, flam: true }]
+
+    const score: Score = {
+      title: 'Test', author: '', tempo: 120, lanes: [lane], lines: [[measure]],
+    }
+    const events = buildNoteEvents(score, { [lane.id]: 38 }, 120)
+
+    expect(events).toHaveLength(0)
+  })
+
+  it('emits roll only when cell has both flam and roll', () => {
+    const lane = createLane('Snare')
+    const measure = createMeasure([lane.id], { beats: 1, subdivision: 1 })
+    measure.cells[lane.id] = [{ symbol: 'cross', flam: true, roll: { length: 1 } }]
+
+    const score: Score = {
+      title: 'Test', author: '', tempo: 120, lanes: [lane], lines: [[measure]],
+    }
+    const events = buildNoteEvents(score, { [lane.id]: 38 }, 120)
+
+    expect(events.length).toBeGreaterThan(2)
+  })
+})
