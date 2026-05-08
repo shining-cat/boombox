@@ -1,0 +1,8 @@
+.banner {
+  box-sizing: border-box;
+}
+
+.nameRow {
+  font-weight: 700;
+  text-transform: uppercase;
+}
