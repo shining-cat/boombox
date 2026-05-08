@@ -1,7 +1,7 @@
 [
   {
     "name": "3-2 Clave",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -18,7 +18,7 @@
   },
   {
     "name": "Afoxe",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -35,7 +35,7 @@
   },
   {
     "name": "Rumba",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -52,7 +52,7 @@
   },
   {
     "name": "Tambourim",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -69,7 +69,7 @@
   },
   {
     "name": "Samba Reggae",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -86,7 +86,7 @@
   },
   {
     "name": "Funk",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
