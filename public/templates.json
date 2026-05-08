@@ -1,7 +1,7 @@
 [
   {
     "name": "3-2 Clave",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -18,14 +18,25 @@
   },
   {
     "name": "Afoxe",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
         "subdivision": 4,
         "cells": [
-          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"},
-          {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      },
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"},
           {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
           {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null}
         ],
@@ -35,7 +46,7 @@
   },
   {
     "name": "Rumba",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -52,7 +63,7 @@
   },
   {
     "name": "Tambourim",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -69,7 +80,7 @@
   },
   {
     "name": "Samba Reggae",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -86,7 +97,7 @@
   },
   {
     "name": "Funk",
-    "instrument": "General",
+    "instrument": "Surdo",
     "measures": [
       {
         "beats": 4,
@@ -107,6 +118,74 @@
           {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"},
           {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
           {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "3-2 Clave",
+    "instrument": "Caixa",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "dot"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "3-2 Clave",
+    "instrument": "Repinique",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "dot"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "3-2 Clave",
+    "instrument": "Timbao",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "full-round"}, {"symbol": "full-round"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "full-round"}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Afoxe",
+    "instrument": "Caixa",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "cross"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "cross"},
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "cross"}, {"symbol": null, "roll": {"length": 2}}, {"symbol": "cross"}, {"symbol": "cross"}
         ],
         "tripletBeats": []
       }
