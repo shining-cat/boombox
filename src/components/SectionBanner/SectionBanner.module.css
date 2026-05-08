@@ -1,0 +1,97 @@
+.banner {
+  box-sizing: border-box;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 2px 6px;
+  font-size: 11px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.controlsRow {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.fieldLabel {
+  color: #666;
+}
+
+.fieldValue {
+  cursor: pointer;
+}
+
+.fieldEmpty {
+  color: #aaa;
+  cursor: pointer;
+}
+
+.bannerLocked {
+  opacity: 0.55;
+}
+
+.namePlaceholder {
+  color: #aaa;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.nameValue {
+  cursor: pointer;
+}
+
+.locked {
+  cursor: not-allowed;
+}
+
+.nameInput {
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px solid #888;
+  background: white;
+  padding: 1px 4px;
+  font-size: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.removeBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #888;
+  padding: 0 4px;
+  visibility: hidden;
+}
+
+.banner:hover .removeBtn {
+  visibility: visible;
+}
+
+.removeBtn:hover {
+  color: #c00;
+}
+
+.numInput {
+  width: 36px;
+  border: 1px solid #888;
+  background: white;
+  padding: 1px 4px;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: center;
+}

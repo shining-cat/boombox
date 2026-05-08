@@ -5,6 +5,7 @@ import { LaneHeader } from '../LaneHeader/LaneHeader'
 import { MeasureHeader } from '../MeasureHeader/MeasureHeader'
 import { Grid } from '../Grid/Grid'
 import { InstrumentPicker } from '../InstrumentPicker/InstrumentPicker'
+import { SectionBanner } from '../SectionBanner/SectionBanner'
 import styles from './Score.module.css'
 
 interface Section {
@@ -189,53 +190,6 @@ export function Score({
           }
         }
 
-        const handleSectionLabelEdit = (measureIndex: number) => {
-          const section = sections.find(
-            s => measureIndex >= s.startIndex && measureIndex < s.startIndex + s.length,
-          )
-          if (section) {
-            const label = window.prompt('Section label (empty to remove):', section.label)
-            if (label !== null) {
-              onSectionLabelChange(lineIndex, section.measureId, label)
-            }
-          } else {
-            const label = window.prompt('Section label:')
-            if (label) {
-              onSectionLabelChange(lineIndex, line[measureIndex].id, label)
-            }
-          }
-        }
-
-        const handleSectionLengthEdit = (section: Section) => {
-          const maxLen = line.length - section.startIndex
-          const input = window.prompt(
-            `Section length in measures (1-${maxLen}):`,
-            String(section.length),
-          )
-          if (input !== null) {
-            const len = parseInt(input, 10)
-            if (!isNaN(len) && len >= 1 && len <= maxLen) {
-              onSectionLengthChange(lineIndex, section.measureId, len)
-            }
-          }
-        }
-
-        const handleRepeatClick = (section: Section) => {
-          if (section.repeat) {
-            const input = window.prompt('Play count (0 to remove):', String(section.repeat.times))
-            if (input !== null) {
-              const times = parseInt(input, 10)
-              onRepeatChange(lineIndex, section.measureId, times > 0 ? times : null)
-            }
-          } else {
-            const input = window.prompt('Play count:', '2')
-            if (input !== null) {
-              const times = parseInt(input, 10)
-              if (times > 0) onRepeatChange(lineIndex, section.measureId, times)
-            }
-          }
-        }
-
         const measureSectionMap: (Section | null)[] = line.map((_, i) => {
           return sections.find(s => i >= s.startIndex && i < s.startIndex + s.length) ?? null
         })
@@ -302,52 +256,45 @@ export function Score({
                         line[mi].timeSignature.subdivision,
                       )
                     }
-
                     return (
                       <div
                         key={measure.id}
-                        className={styles.sectionBanner}
-                        style={{
-                          width: sectionWidth,
-                          marginLeft: hasInsertBtn ? insertBtnWidth : 0,
-                        }}
+                        style={{ marginLeft: hasInsertBtn ? insertBtnWidth : 0 }}
                       >
-                        <span
-                          className={styles.sectionLabel}
-                          onClick={() => handleSectionLabelEdit(index)}
-                          title="Edit section label"
-                        >
-                          {section.label}
-                        </span>
-                        <button
-                          className={styles.sectionLenBtn}
-                          onClick={() => handleSectionLengthEdit(section)}
-                          title="Set section length"
-                        >
-                          {section.length} {section.length === 1 ? 'measure' : 'measures'}
-                        </button>
-                        <button
-                          className={styles.repeatBtn}
-                          onClick={() => handleRepeatClick(section)}
-                          title="Set repeat"
-                        >
-                          {section.repeat ? `play ${section.repeat.times}×` : '—'}
-                        </button>
+                        <SectionBanner
+                          label={section.label}
+                          length={section.length}
+                          repeat={section.repeat ?? null}
+                          width={sectionWidth}
+                          onLabelChange={(label) =>
+                            onSectionLabelChange(lineIndex, section.measureId, label ?? '')
+                          }
+                          onLengthChange={(len) =>
+                            onSectionLengthChange(lineIndex, section.measureId, len)
+                          }
+                          onRepeatChange={(times) =>
+                            onRepeatChange(lineIndex, section.measureId, times)
+                          }
+                        />
                       </div>
                     )
                   } else if (!isInsideSection) {
                     return (
                       <div
                         key={measure.id}
-                        className={styles.sectionEmpty}
-                        style={{
-                          width: colWidth,
-                          marginLeft: hasInsertBtn ? insertBtnWidth : 0,
-                        }}
-                        onClick={() => handleSectionLabelEdit(index)}
-                        title="Add section"
+                        style={{ marginLeft: hasInsertBtn ? insertBtnWidth : 0 }}
                       >
-                        <span className={styles.sectionHint}>+ section</span>
+                        <SectionBanner
+                          label={null}
+                          length={1}
+                          repeat={null}
+                          width={colWidth}
+                          onLabelChange={(label) =>
+                            onSectionLabelChange(lineIndex, measure.id, label ?? '')
+                          }
+                          onLengthChange={() => { /* unreachable when locked */ }}
+                          onRepeatChange={() => { /* unreachable when locked */ }}
+                        />
                       </div>
                     )
                   }

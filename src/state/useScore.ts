@@ -247,9 +247,16 @@ export function useScore() {
     (lineIndex: number, measureId: string, label: string) => {
       dirtyUpdate((prev) => ({
         ...prev,
-        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) =>
-          m.id !== measureId ? m : { ...m, sectionLabel: label || undefined },
-        ),
+        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) => {
+          if (m.id !== measureId) return m
+          if (label) return { ...m, sectionLabel: label }
+          return {
+            ...m,
+            sectionLabel: undefined,
+            sectionLength: undefined,
+            repeat: undefined,
+          }
+        }),
       }))
     },
     [dirtyUpdate],
@@ -257,12 +264,31 @@ export function useScore() {
 
   const setSectionLength = useCallback(
     (lineIndex: number, measureId: string, length: number) => {
-      dirtyUpdate((prev) => ({
-        ...prev,
-        lines: mapMeasuresInLine(prev.lines, lineIndex, (m) =>
+      dirtyUpdate((prev) => {
+        const line = prev.lines[lineIndex]
+        const startIndex = line.findIndex((m) => m.id === measureId)
+        if (startIndex === -1) return prev
+
+        const remaining = line.length - startIndex
+        const measuresToAdd = Math.max(0, length - remaining)
+        const lastMeasure = line[line.length - 1]
+        const ts = lastMeasure.timeSignature
+        const laneIds = prev.lanes.map((l) => l.id)
+
+        const grownLine = [...line]
+        for (let i = 0; i < measuresToAdd; i++) {
+          grownLine.push(createMeasure(laneIds, ts))
+        }
+
+        const updatedLine = grownLine.map((m) =>
           m.id !== measureId ? m : { ...m, sectionLength: length },
-        ),
-      }))
+        )
+
+        return {
+          ...prev,
+          lines: prev.lines.map((l, i) => (i === lineIndex ? updatedLine : l)),
+        }
+      })
     },
     [dirtyUpdate],
   )

@@ -108,7 +108,7 @@
 }
 
 .sectionSpacer {
-  height: 28px;
+  height: 40px;
 }
 
 .headerSpacer {
@@ -126,84 +126,6 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  height: 28px;
-}
-
-.sectionBanner {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0 4px;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-  border-bottom: none;
-  border-radius: 6px 6px 0 0;
-  font-size: 11px;
-  box-sizing: border-box;
-}
-
-.sectionLabel {
-  font-weight: 700;
-  text-transform: uppercase;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 3px;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sectionLabel:hover {
-  background: #ddd;
-}
-
-.sectionLenBtn {
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 10px;
-  padding: 2px 4px;
-  border-radius: 3px;
-  color: #666;
-  white-space: nowrap;
-}
-
-.sectionLenBtn:hover {
-  background: #ddd;
-}
-
-.repeatBtn {
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 11px;
-  padding: 2px 4px;
-  border-radius: 3px;
-  white-space: nowrap;
-}
-
-.repeatBtn:hover {
-  background: #ddd;
-}
-
-.sectionEmpty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-sizing: border-box;
-}
-
-.sectionHint {
-  font-size: 10px;
-  color: #bbb;
-  white-space: nowrap;
-}
-
-.sectionEmpty:hover .sectionHint {
-  color: #888;
 }
 
 /* Measure columns row */
