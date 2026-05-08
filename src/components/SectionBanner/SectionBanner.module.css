@@ -25,3 +25,21 @@
   color: #aaa;
   cursor: pointer;
 }
+
+.bannerLocked {
+  opacity: 0.55;
+}
+
+.namePlaceholder {
+  color: #aaa;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.nameValue {
+  cursor: pointer;
+}
+
+.locked {
+  cursor: not-allowed;
+}

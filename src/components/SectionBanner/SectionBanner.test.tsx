@@ -39,3 +39,25 @@ describe('SectionBanner — idle render (named, no repeat)', () => {
     expect(screen.queryByText('4×')).not.toBeInTheDocument()
   })
 })
+
+describe('SectionBanner — idle render (unnamed)', () => {
+  const unnamedProps = { ...defaultProps, label: null, length: 1, repeat: null }
+
+  it('shows "+ name" placeholder when label is null', () => {
+    render(<SectionBanner {...unnamedProps} />)
+    expect(screen.getByText('+ name')).toBeInTheDocument()
+  })
+
+  it('applies locked class to length and repeat when unnamed', () => {
+    render(<SectionBanner {...unnamedProps} />)
+    const length = screen.getByText('1')
+    const repeat = screen.getByText('no repeat')
+    expect(length.className).toMatch(/locked/)
+    expect(repeat.className).toMatch(/locked/)
+  })
+
+  it('does not render the × remove button when unnamed', () => {
+    render(<SectionBanner {...unnamedProps} />)
+    expect(screen.queryByLabelText('Remove section name')).not.toBeInTheDocument()
+  })
+})
