@@ -1,3 +1,8 @@
+import type { CellSymbol } from './types'
+
+export function isDoubleSymbol(s: CellSymbol): boolean {
+  return s === 'double-cross' || s === 'double-full-round'
+}
 
 export interface PercussionInstrument {
   note: number
