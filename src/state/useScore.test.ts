@@ -184,6 +184,21 @@ describe('useScore', () => {
     expect(result.current.score.lines[0][0].sectionLength).toBe(2)
   })
 
+  it('setFlam sets and clears the flam flag on a cell', () => {
+    const { result } = renderHook(() => useScore())
+    const measureId = result.current.score.lines[0][0].id
+    const laneId = result.current.score.lanes[0].id
+
+    act(() => result.current.setCellSymbol(0, measureId, laneId, 0, 'cross'))
+    expect(result.current.score.lines[0][0].cells[laneId][0].flam).toBeUndefined()
+
+    act(() => result.current.setFlam(0, measureId, laneId, 0, true))
+    expect(result.current.score.lines[0][0].cells[laneId][0].flam).toBe(true)
+
+    act(() => result.current.setFlam(0, measureId, laneId, 0, false))
+    expect(result.current.score.lines[0][0].cells[laneId][0].flam).toBeUndefined()
+  })
+
   it('setRepeat sets repeat on a measure', () => {
     const { result } = renderHook(() => useScore())
     const measureId = result.current.score.lines[0][0].id

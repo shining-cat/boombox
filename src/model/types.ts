@@ -14,6 +14,7 @@ export const SYMBOL_CYCLE: CellSymbol[] = [null, 'cross', 'empty-round', 'full-r
 export interface Cell {
   symbol: CellSymbol
   label?: string
+  flam?: boolean
   roll?: { length: number }
 }
 
