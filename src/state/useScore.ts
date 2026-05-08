@@ -232,17 +232,6 @@ export function useScore() {
     [updateCells],
   )
 
-  const removeRoll = useCallback(
-    (lineIndex: number, measureId: string, laneId: string, cellIndex: number) => {
-      updateCells(lineIndex, measureId, laneId, (cells) => {
-        const { roll: _, ...rest } = cells[cellIndex]
-        cells[cellIndex] = rest
-        return cells
-      })
-    },
-    [updateCells],
-  )
-
   const splitRollAtCell = useCallback(
     (lineIndex: number, measureId: string, laneId: string, cellIndex: number) => {
       updateCells(lineIndex, measureId, laneId, (cells) => {
@@ -504,7 +493,6 @@ export function useScore() {
     setCellLabel,
     setTriplet,
     setRoll,
-    removeRoll,
     splitRollAtCell,
     removeRollContaining,
     setFlam,

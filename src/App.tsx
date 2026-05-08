@@ -38,7 +38,8 @@ function App() {
     setCellLabel,
     setTriplet,
     setRoll,
-    removeRoll,
+    splitRollAtCell,
+    removeRollContaining,
     setFlam,
     setSectionLabel,
     setSectionLength,
@@ -168,9 +169,9 @@ function App() {
 
   const handleRemoveRoll = useCallback(() => {
     if (!contextMenu) return
-    removeRoll(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex)
+    removeRollContaining(contextMenu.lineIndex, contextMenu.measureId, contextMenu.laneId, contextMenu.cellIndex)
     setContextMenu(null)
-  }, [contextMenu, removeRoll])
+  }, [contextMenu, removeRollContaining])
 
   const handleSetFlam = useCallback(() => {
     if (!contextMenu) return
@@ -243,6 +244,7 @@ function App() {
       <Score
         score={score}
         onCycleCell={cycleCell}
+        onSplitRoll={splitRollAtCell}
         onCellContextMenu={handleCellContextMenu}
         onLaneNameChange={(laneId, name) => updateLane(laneId, { name })}
         onLaneColorChange={(laneId, color) => updateLane(laneId, { color })}
@@ -284,6 +286,13 @@ function App() {
             y={contextMenu.y}
             hasTriplet={laneTriplets.includes(beatIndex)}
             hasRoll={!!cell?.roll}
+            inRoll={cells.some(
+              (c, ci) =>
+                c.roll &&
+                ci <= contextMenu.cellIndex &&
+                ci + c.roll.length > contextMenu.cellIndex &&
+                ci !== contextMenu.cellIndex,
+            )}
             hasFlam={!!cell?.flam}
             hasSymbol={!!cell?.symbol}
             onSetSymbol={handleSetSymbol}

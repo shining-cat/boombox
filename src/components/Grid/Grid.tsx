@@ -8,13 +8,14 @@ interface GridProps {
   showPulse?: boolean
   mutedLaneIds?: Set<string>
   onCycleCell: (laneId: string, cellIndex: number) => void
+  onSplitRoll: (laneId: string, cellIndex: number) => void
   onCellContextMenu: (laneId: string, cellIndex: number, e: React.MouseEvent) => void
 }
 
 const noop = () => {}
 const noopCtx = (e: React.MouseEvent) => { e.preventDefault() }
 
-export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onCellContextMenu }: GridProps) {
+export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onSplitRoll, onCellContextMenu }: GridProps) {
   const { beats, subdivision } = measure.timeSignature
   const tripletBeats = measure.tripletBeats ?? {}
 
@@ -67,7 +68,10 @@ export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onC
                       isTriplet={i === 1}
                       width={tripletCellWidth}
                       backgroundColor={lane.color}
-                      onClick={() => onCycleCell(lane.id, globalIdx)}
+                      onClick={() => {
+                        if (isInRoll || !!cell.roll) onSplitRoll(lane.id, globalIdx)
+                        else onCycleCell(lane.id, globalIdx)
+                      }}
                       onContextMenu={e => onCellContextMenu(lane.id, globalIdx, e)}
                     />
                   )
@@ -89,7 +93,10 @@ export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onC
                   isRoll={isInRoll || !!cell.roll}
                   isFlam={!!cell.flam}
                   backgroundColor={lane.color}
-                  onClick={() => onCycleCell(lane.id, globalIdx)}
+                  onClick={() => {
+                    if (isInRoll || !!cell.roll) onSplitRoll(lane.id, globalIdx)
+                    else onCycleCell(lane.id, globalIdx)
+                  }}
                   onContextMenu={e => onCellContextMenu(lane.id, globalIdx, e)}
                 />
               )

@@ -13,6 +13,7 @@ describe('Grid', () => {
         measure={measure}
         lanes={[lane]}
         onCycleCell={vi.fn()}
+        onSplitRoll={vi.fn()}
         onCellContextMenu={vi.fn()}
       />
     )
@@ -34,6 +35,7 @@ describe('Grid', () => {
         measure={measure}
         lanes={[lane1, lane2]}
         onCycleCell={vi.fn()}
+        onSplitRoll={vi.fn()}
         onCellContextMenu={vi.fn()}
       />
     )

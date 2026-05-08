@@ -165,14 +165,57 @@ export function Editor() {
     )
   }, [])
 
-  const removeRoll = useCallback((measureId: string, cellIndex: number) => {
+  const splitRollAtCell = useCallback((measureId: string, cellIndex: number) => {
     setMeasures(prev =>
       prev.map(m => {
         if (m.id !== measureId) return m
         const cells = [...(m.cells[LANE_ID] ?? [])]
-        const { roll: _, ...rest } = cells[cellIndex]
-        cells[cellIndex] = rest
+
+        let startIdx = -1
+        let length = 0
+        for (let i = 0; i < cells.length; i++) {
+          const r = cells[i].roll
+          if (r && i <= cellIndex && cellIndex < i + r.length) {
+            startIdx = i
+            length = r.length
+            break
+          }
+        }
+        if (startIdx === -1) return m
+
+        const beforeLen = cellIndex - startIdx
+        const afterLen = length - beforeLen - 1
+
+        if (beforeLen > 0) {
+          cells[startIdx] = { ...cells[startIdx], roll: { length: beforeLen } }
+        } else {
+          const { roll: _, ...rest } = cells[startIdx]
+          cells[startIdx] = rest
+        }
+
+        if (afterLen > 0) {
+          cells[cellIndex + 1] = { ...cells[cellIndex + 1], roll: { length: afterLen } }
+        }
+
         return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
+      }),
+    )
+  }, [])
+
+  const removeRollContaining = useCallback((measureId: string, cellIndex: number) => {
+    setMeasures(prev =>
+      prev.map(m => {
+        if (m.id !== measureId) return m
+        const cells = [...(m.cells[LANE_ID] ?? [])]
+        for (let i = 0; i < cells.length; i++) {
+          const r = cells[i].roll
+          if (r && i <= cellIndex && cellIndex < i + r.length) {
+            const { roll: _, ...rest } = cells[i]
+            cells[i] = rest
+            return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
+          }
+        }
+        return m
       }),
     )
   }, [])
@@ -254,9 +297,10 @@ export function Editor() {
 
   const handleRemoveRoll = useCallback(() => {
     if (!contextMenu) return
-    removeRoll(contextMenu.measureId, contextMenu.cellIndex)
+    removeRollContaining(contextMenu.measureId, contextMenu.cellIndex)
     setContextMenu(null)
-  }, [contextMenu, removeRoll])
+  }, [contextMenu, removeRollContaining])
+
 
   const handleSetFlam = useCallback(() => {
     if (!contextMenu) return
@@ -382,6 +426,7 @@ export function Editor() {
                   measure={measure}
                   lanes={[lane]}
                   onCycleCell={(_laneId, cellIndex) => cycleCell(measure.id, cellIndex)}
+                  onSplitRoll={(_laneId, cellIndex) => splitRollAtCell(measure.id, cellIndex)}
                   onCellContextMenu={(laneId, cellIndex, e) =>
                     handleCellContextMenu(laneId, cellIndex, e, measure.id)
                   }
@@ -406,6 +451,17 @@ export function Editor() {
           y={contextMenu.y}
           hasTriplet={contextLaneTriplets.includes(contextBeatIndex)}
           hasRoll={!!contextCell?.roll}
+          inRoll={
+            contextMenu && contextMeasure
+              ? (contextMeasure.cells[LANE_ID] ?? []).some(
+                  (c, ci) =>
+                    c.roll &&
+                    ci <= contextMenu.cellIndex &&
+                    ci + c.roll.length > contextMenu.cellIndex &&
+                    ci !== contextMenu.cellIndex,
+                )
+              : false
+          }
           hasFlam={!!contextCell?.flam}
           hasSymbol={!!contextCell?.symbol}
           onSetSymbol={handleSetSymbol}
