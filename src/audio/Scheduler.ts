@@ -1,6 +1,6 @@
 import type { Score } from '../model/types'
 import { flattenMeasures } from '../utils/scoreUtils'
-import { DEFAULT_SYMBOL_VELOCITIES, isDoubleSymbol } from '../model/midiMappings'
+import { DEFAULT_SYMBOL_VELOCITIES, isDoubleSymbol, shouldEmitFlam, FLAM_LEAD_SECONDS, FLAM_VELOCITY_RATIO } from '../model/midiMappings'
 
 export interface NoteEvent {
   time: number          // absolute time in seconds from start
@@ -66,26 +66,36 @@ export function buildNoteEvents(
                   measureIndex,
                 })
               }
-            } else if (isDoubleSymbol(cell.symbol)) {
-              events.push({
-                time: currentTime + cellTimeOffset,
-                note: gmNote,
-                velocity,
-                measureIndex,
-              })
-              events.push({
-                time: currentTime + cellTimeOffset + cellDuration / 2,
-                note: gmNote,
-                velocity,
-                measureIndex,
-              })
             } else {
-              events.push({
-                time: currentTime + cellTimeOffset,
-                note: gmNote,
-                velocity,
-                measureIndex,
-              })
+              if (shouldEmitFlam(cell)) {
+                events.push({
+                  time: currentTime + cellTimeOffset - FLAM_LEAD_SECONDS,
+                  note: gmNote,
+                  velocity: velocity * FLAM_VELOCITY_RATIO,
+                  measureIndex,
+                })
+              }
+              if (isDoubleSymbol(cell.symbol)) {
+                events.push({
+                  time: currentTime + cellTimeOffset,
+                  note: gmNote,
+                  velocity,
+                  measureIndex,
+                })
+                events.push({
+                  time: currentTime + cellTimeOffset + cellDuration / 2,
+                  note: gmNote,
+                  velocity,
+                  measureIndex,
+                })
+              } else {
+                events.push({
+                  time: currentTime + cellTimeOffset,
+                  note: gmNote,
+                  velocity,
+                  measureIndex,
+                })
+              }
             }
           }
 

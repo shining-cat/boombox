@@ -12,8 +12,12 @@ function renderMenu(overrides = {}) {
     onSetTriplet: vi.fn(),
     onSetRoll: vi.fn(),
     onRemoveRoll: vi.fn(),
+    onSetFlam: vi.fn(),
+    onRemoveFlam: vi.fn(),
     hasTriplet: false,
     hasRoll: false,
+    hasFlam: false,
+    hasSymbol: true,
     onOpenTemplates: vi.fn(),
     onClose: vi.fn(),
     ...overrides,
@@ -99,5 +103,35 @@ describe('ContextMenu', () => {
     const props = renderMenu()
     await user.click(screen.getByText('Add roll'))
     expect(props.onSetRoll).toHaveBeenCalled()
+  })
+
+  it('renders Add flam when hasFlam is false and hasSymbol is true', () => {
+    renderMenu({ hasFlam: false, hasSymbol: true })
+    expect(screen.getByText('Add flam')).toBeInTheDocument()
+  })
+
+  it('renders Remove flam when hasFlam is true', () => {
+    renderMenu({ hasFlam: true, hasSymbol: true })
+    expect(screen.getByText('Remove flam')).toBeInTheDocument()
+  })
+
+  it('does not render flam options when hasSymbol is false', () => {
+    renderMenu({ hasSymbol: false, hasFlam: false })
+    expect(screen.queryByText('Add flam')).not.toBeInTheDocument()
+    expect(screen.queryByText('Remove flam')).not.toBeInTheDocument()
+  })
+
+  it('calls onSetFlam when Add flam is clicked', async () => {
+    const user = userEvent.setup()
+    const props = renderMenu({ hasFlam: false, hasSymbol: true })
+    await user.click(screen.getByText('Add flam'))
+    expect(props.onSetFlam).toHaveBeenCalled()
+  })
+
+  it('calls onRemoveFlam when Remove flam is clicked', async () => {
+    const user = userEvent.setup()
+    const props = renderMenu({ hasFlam: true, hasSymbol: true })
+    await user.click(screen.getByText('Remove flam'))
+    expect(props.onRemoveFlam).toHaveBeenCalled()
   })
 })

@@ -1,7 +1,7 @@
 // @ts-expect-error midi-writer-js package.json exports don't resolve types correctly
 import MidiWriter from 'midi-writer-js'
 import type { Score } from '../model/types'
-import { isDoubleSymbol } from '../model/midiMappings'
+import { isDoubleSymbol, shouldEmitFlam, FLAM_VELOCITY_RATIO } from '../model/midiMappings'
 import { flattenMeasures } from './scoreUtils'
 
 interface MidiExportOptions {
@@ -91,6 +91,19 @@ export function generateMidi(score: Score, options: MidiExportOptions): Uint8Arr
               }))
             }
           } else if (isDoubleSymbol(cell.symbol)) {
+            if (shouldEmitFlam(cell)) {
+              // Approximate flam grace: short note before the double pair.
+              // Eats a small slice of the cell's nominal duration.
+              const graceVelocity = toMidiWriterVelocity(
+                (options.velocityMap[cell.symbol] ?? 90) * FLAM_VELOCITY_RATIO,
+              )
+              track.addEvent(new MidiWriter.NoteEvent({
+                pitch: [midiNote],
+                duration: '64',
+                velocity: graceVelocity,
+                channel: 10,
+              }))
+            }
             const velocity = toMidiWriterVelocity(options.velocityMap[cell.symbol] ?? 90)
             const halfDuration = halveDuration(duration)
             track.addEvent(new MidiWriter.NoteEvent({
@@ -106,6 +119,18 @@ export function generateMidi(score: Score, options: MidiExportOptions): Uint8Arr
               channel: 10,
             }))
           } else if (cell.symbol) {
+            if (shouldEmitFlam(cell)) {
+              // Approximate flam grace: short note before the main hit.
+              const graceVelocity = toMidiWriterVelocity(
+                (options.velocityMap[cell.symbol] ?? 90) * FLAM_VELOCITY_RATIO,
+              )
+              track.addEvent(new MidiWriter.NoteEvent({
+                pitch: [midiNote],
+                duration: '64',
+                velocity: graceVelocity,
+                channel: 10,
+              }))
+            }
             const velocity = toMidiWriterVelocity(options.velocityMap[cell.symbol] ?? 90)
             track.addEvent(new MidiWriter.NoteEvent({
               pitch: [midiNote],

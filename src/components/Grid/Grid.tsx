@@ -58,6 +58,7 @@ export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onC
                     label={cell.label}
                     isBeatStart={i === 0}
                     isRoll={!!cell.roll}
+                    isFlam={!!cell.flam}
                     isTriplet={i === 1}
                     width={tripletCellWidth}
                     backgroundColor={lane.color}
@@ -80,6 +81,7 @@ export function Grid({ measure, lanes, showPulse, mutedLaneIds, onCycleCell, onC
                   label={cell.label}
                   isBeatStart={i === 0}
                   isRoll={isInRoll || !!cell.roll}
+                  isFlam={!!cell.flam}
                   backgroundColor={lane.color}
                   onClick={() => onCycleCell(lane.id, globalIdx)}
                   onContextMenu={e => onCellContextMenu(lane.id, globalIdx, e)}

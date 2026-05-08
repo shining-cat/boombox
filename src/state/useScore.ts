@@ -243,6 +243,21 @@ export function useScore() {
     [updateCells],
   )
 
+  const setFlam = useCallback(
+    (lineIndex: number, measureId: string, laneId: string, cellIndex: number, flam: boolean) => {
+      updateCells(lineIndex, measureId, laneId, (cells) => {
+        if (flam) {
+          cells[cellIndex] = { ...cells[cellIndex], flam: true }
+        } else {
+          const { flam: _, ...rest } = cells[cellIndex]
+          cells[cellIndex] = rest
+        }
+        return cells
+      })
+    },
+    [updateCells],
+  )
+
   const setSectionLabel = useCallback(
     (lineIndex: number, measureId: string, label: string) => {
       dirtyUpdate((prev) => ({
@@ -438,6 +453,7 @@ export function useScore() {
     setTriplet,
     setRoll,
     removeRoll,
+    setFlam,
     setSectionLabel,
     setSectionLength,
     setRepeat,

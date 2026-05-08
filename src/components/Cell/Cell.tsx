@@ -17,6 +17,7 @@ interface CellProps {
   label?: string
   isBeatStart?: boolean
   isRoll?: boolean
+  isFlam?: boolean
   isTriplet?: boolean
   width?: number
   backgroundColor?: string
@@ -24,7 +25,7 @@ interface CellProps {
   onContextMenu: (e: React.MouseEvent) => void
 }
 
-export function Cell({ symbol, label, isBeatStart, isRoll, isTriplet, width, backgroundColor, onClick, onContextMenu }: CellProps) {
+export function Cell({ symbol, label, isBeatStart, isRoll, isFlam, isTriplet, width, backgroundColor, onClick, onContextMenu }: CellProps) {
   const classNames = [
     styles.cell,
     isBeatStart ? styles.beatStart : '',
@@ -46,7 +47,9 @@ export function Cell({ symbol, label, isBeatStart, isRoll, isTriplet, width, bac
       {isRoll ? (
         <span className={styles.roll}>≈</span>
       ) : symbol ? (
-        <span className={styles.symbol}>{SYMBOL_DISPLAY[symbol]}</span>
+        <span className={styles.symbol}>
+          {isFlam ? 'ʼ' : ''}{SYMBOL_DISPLAY[symbol]}
+        </span>
       ) : (
         <span className={styles.empty}>-</span>
       )}
