@@ -50,4 +50,21 @@ describe('Cell', () => {
     expect(screen.getByText('≈')).toBeInTheDocument()
     expect(screen.queryByText('✕')).not.toBeInTheDocument()
   })
+
+  it('renders flam grace mark before the base symbol when isFlam is true', () => {
+    render(<Cell symbol="cross" isFlam onClick={noop} onContextMenu={noopContext} />)
+    expect(screen.getByText('ʼ✕')).toBeInTheDocument()
+  })
+
+  it('does NOT render flam mark when isRoll is also true (roll wins)', () => {
+    render(<Cell symbol="cross" isFlam isRoll onClick={noop} onContextMenu={noopContext} />)
+    expect(screen.getByText('≈')).toBeInTheDocument()
+    expect(screen.queryByText(/ʼ/)).not.toBeInTheDocument()
+  })
+
+  it('does not render flam mark when isFlam is true but symbol is null', () => {
+    render(<Cell symbol={null} isFlam onClick={noop} onContextMenu={noopContext} />)
+    expect(screen.queryByText(/ʼ/)).not.toBeInTheDocument()
+    expect(screen.getByText('-')).toBeInTheDocument()
+  })
 })
