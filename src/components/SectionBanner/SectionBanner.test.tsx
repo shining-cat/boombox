@@ -101,4 +101,31 @@ describe('SectionBanner — name editing', () => {
     input.blur()
     expect(onLabelChange).toHaveBeenCalledWith('BRIDGE')
   })
+
+  it('committing empty name fires onLabelChange(null) — removes name', async () => {
+    const onLabelChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onLabelChange={onLabelChange} />)
+    await userEvent.click(screen.getByText('CHORUS'))
+    const input = screen.getByLabelText('Section name')
+    await userEvent.clear(input)
+    await userEvent.type(input, '{Enter}')
+    expect(onLabelChange).toHaveBeenCalledWith(null)
+  })
+
+  it('committing empty name on already-unnamed is a no-op', async () => {
+    const onLabelChange = vi.fn()
+    render(
+      <SectionBanner
+        {...defaultProps}
+        label={null}
+        length={1}
+        repeat={null}
+        onLabelChange={onLabelChange}
+      />,
+    )
+    await userEvent.click(screen.getByText('+ name'))
+    const input = screen.getByLabelText('Section name')
+    await userEvent.type(input, '{Enter}')
+    expect(onLabelChange).not.toHaveBeenCalled()
+  })
 })
