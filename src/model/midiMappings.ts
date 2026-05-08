@@ -1,6 +1,8 @@
 import type { CellSymbol } from './types'
 
-export function isDoubleSymbol(s: CellSymbol): boolean {
+export type DoubleSymbol = 'double-cross' | 'double-full-round'
+
+export function isDoubleSymbol(s: CellSymbol): s is DoubleSymbol {
   return s === 'double-cross' || s === 'double-full-round'
 }
 
