@@ -264,7 +264,10 @@ export function Editor() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${templateName || 'template'}.template.json`
+    const tSlug = slug(templateName) || 'template'
+    const iSlug = slug(instrumentName)
+    const stem = iSlug ? `${tSlug}-${iSlug}` : tSlug
+    a.download = `${stem}.template.json`
     a.click()
     URL.revokeObjectURL(url)
   }
