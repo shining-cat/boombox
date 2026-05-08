@@ -26,11 +26,27 @@ describe('ContextMenu', () => {
   it('renders all symbol options', () => {
     renderMenu()
     expect(screen.getByText('✕ Cross')).toBeInTheDocument()
+    expect(screen.getByText('✕✕ Double cross')).toBeInTheDocument()
     expect(screen.getByText('○ Empty round')).toBeInTheDocument()
     expect(screen.getByText('● Full round')).toBeInTheDocument()
+    expect(screen.getByText('●● Double full')).toBeInTheDocument()
     expect(screen.getByText('■ Square')).toBeInTheDocument()
     expect(screen.getByText('◆ Diamond')).toBeInTheDocument()
     expect(screen.getByText('Clear')).toBeInTheDocument()
+  })
+
+  it('calls onSetSymbol with "double-cross" when Double cross is clicked', async () => {
+    const user = userEvent.setup()
+    const props = renderMenu()
+    await user.click(screen.getByText('✕✕ Double cross'))
+    expect(props.onSetSymbol).toHaveBeenCalledWith('double-cross')
+  })
+
+  it('calls onSetSymbol with "double-full-round" when Double full is clicked', async () => {
+    const user = userEvent.setup()
+    const props = renderMenu()
+    await user.click(screen.getByText('●● Double full'))
+    expect(props.onSetSymbol).toHaveBeenCalledWith('double-full-round')
   })
 
   it('renders Add triplet, Add roll, and Add label options', () => {
