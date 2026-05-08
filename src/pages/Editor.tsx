@@ -283,6 +283,7 @@ export function Editor() {
         cells: (m.cells[LANE_ID] ?? []).map(c => {
           const cell: Record<string, unknown> = { symbol: c.symbol }
           if (c.label) cell.label = c.label
+          if (c.flam) cell.flam = true
           if (c.roll) cell.roll = { length: c.roll.length }
           return cell
         }),

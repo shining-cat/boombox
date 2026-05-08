@@ -3,7 +3,7 @@ import type { CellSymbol } from './types'
 export interface TemplateMeasure {
   beats: number
   subdivision: number
-  cells: { symbol: CellSymbol; label?: string; roll?: { length: number } }[]
+  cells: { symbol: CellSymbol; label?: string; flam?: boolean; roll?: { length: number } }[]
   tripletBeats: number[]
 }
 
