@@ -6,6 +6,17 @@ export function isDoubleSymbol(s: CellSymbol): s is DoubleSymbol {
   return s === 'double-cross' || s === 'double-full-round'
 }
 
+export const FLAM_LEAD_SECONDS = 0.030
+export const FLAM_VELOCITY_RATIO = 0.5
+
+export function shouldEmitFlam(cell: {
+  symbol: CellSymbol
+  flam?: boolean
+  roll?: { length: number }
+}): boolean {
+  return Boolean(cell.flam && cell.symbol && !cell.roll)
+}
+
 export interface PercussionInstrument {
   note: number
   name: string
