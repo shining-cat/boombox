@@ -269,3 +269,43 @@ describe('SectionBanner — repeat editing', () => {
     expect(onRepeatChange).not.toHaveBeenCalled()
   })
 })
+
+describe('SectionBanner — locked tooltip', () => {
+  it('length field has tooltip when unnamed', () => {
+    render(<SectionBanner {...defaultProps} label={null} length={1} />)
+    const length = screen.getByText('1')
+    expect(length).toHaveAttribute('title', 'Set a name to enable')
+  })
+
+  it('repeat field has tooltip when unnamed', () => {
+    render(<SectionBanner {...defaultProps} label={null} length={1} repeat={null} />)
+    const repeat = screen.getByText('no repeat')
+    expect(repeat).toHaveAttribute('title', 'Set a name to enable')
+  })
+
+  it('clicking locked length does not enter edit mode', async () => {
+    render(<SectionBanner {...defaultProps} label={null} length={1} />)
+    await userEvent.click(screen.getByText('1'))
+    expect(screen.queryByLabelText('Section length')).not.toBeInTheDocument()
+  })
+})
+
+describe('SectionBanner — tab order', () => {
+  it('idle name/length/repeat spans are focusable when not locked', async () => {
+    render(<SectionBanner {...defaultProps} />)
+    const name = screen.getByText('CHORUS')
+    const length = screen.getByText('3')
+    const repeat = screen.getByText('4×')
+    expect(name.tabIndex).toBeGreaterThanOrEqual(0)
+    expect(length.tabIndex).toBeGreaterThanOrEqual(0)
+    expect(repeat.tabIndex).toBeGreaterThanOrEqual(0)
+  })
+
+  it('locked length/repeat are NOT focusable', () => {
+    render(<SectionBanner {...defaultProps} label={null} length={1} repeat={null} />)
+    const length = screen.getByText('1')
+    const repeat = screen.getByText('no repeat')
+    expect(length.tabIndex).toBe(-1)
+    expect(repeat.tabIndex).toBe(-1)
+  })
+})

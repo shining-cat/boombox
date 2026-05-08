@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type KeyboardEvent } from 'react'
 import styles from './SectionBanner.module.css'
 
 export interface SectionBannerProps {
@@ -90,6 +90,13 @@ export function SectionBanner({
 
   const cancelRepeat = () => setRepeatEditing(false)
 
+  const handleSpanKey = (start: () => void) => (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      start()
+    }
+  }
+
   return (
     <div
       className={`${styles.banner} ${locked ? styles.bannerLocked : ''}`}
@@ -110,12 +117,24 @@ export function SectionBanner({
             }}
           />
         ) : locked ? (
-          <span className={styles.namePlaceholder} onClick={startNameEdit}>
+          <span
+            className={styles.namePlaceholder}
+            onClick={startNameEdit}
+            onKeyDown={handleSpanKey(startNameEdit)}
+            tabIndex={0}
+            role="button"
+          >
             + name
           </span>
         ) : (
           <>
-            <span className={styles.nameValue} onClick={startNameEdit}>
+            <span
+              className={styles.nameValue}
+              onClick={startNameEdit}
+              onKeyDown={handleSpanKey(startNameEdit)}
+              tabIndex={0}
+              role="button"
+            >
               {label}
             </span>
             <button
@@ -150,6 +169,11 @@ export function SectionBanner({
           <span
             className={`${styles.fieldValue} ${lockedClass}`}
             onClick={startLengthEdit}
+            onKeyDown={handleSpanKey(startLengthEdit)}
+            tabIndex={locked ? -1 : 0}
+            role="button"
+            title={locked ? 'Set a name to enable' : undefined}
+            aria-disabled={locked || undefined}
           >
             {length}
           </span>
@@ -174,6 +198,11 @@ export function SectionBanner({
           <span
             className={`${styles.fieldValue} ${lockedClass}`}
             onClick={startRepeatEdit}
+            onKeyDown={handleSpanKey(startRepeatEdit)}
+            tabIndex={locked ? -1 : 0}
+            role="button"
+            title={locked ? 'Set a name to enable' : undefined}
+            aria-disabled={locked || undefined}
           >
             {repeat.times}×
           </span>
@@ -181,6 +210,11 @@ export function SectionBanner({
           <span
             className={`${styles.fieldEmpty} ${lockedClass}`}
             onClick={startRepeatEdit}
+            onKeyDown={handleSpanKey(startRepeatEdit)}
+            tabIndex={locked ? -1 : 0}
+            role="button"
+            title={locked ? 'Set a name to enable' : undefined}
+            aria-disabled={locked || undefined}
           >
             no repeat
           </span>
