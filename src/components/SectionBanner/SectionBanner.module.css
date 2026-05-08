@@ -6,3 +6,22 @@
   font-weight: 700;
   text-transform: uppercase;
 }
+
+.controlsRow {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.fieldLabel {
+  color: #666;
+}
+
+.fieldValue {
+  cursor: pointer;
+}
+
+.fieldEmpty {
+  color: #aaa;
+  cursor: pointer;
+}

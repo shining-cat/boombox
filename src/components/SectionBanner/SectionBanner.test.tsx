@@ -18,4 +18,16 @@ describe('SectionBanner — idle render (named with repeat)', () => {
     render(<SectionBanner {...defaultProps} />)
     expect(screen.getByText('CHORUS')).toBeInTheDocument()
   })
+
+  it('renders the length field with value', () => {
+    render(<SectionBanner {...defaultProps} />)
+    expect(screen.getByText('Length:')).toBeInTheDocument()
+    expect(screen.getByText('3')).toBeInTheDocument()
+  })
+
+  it('renders the repeat field with value (N×)', () => {
+    render(<SectionBanner {...defaultProps} />)
+    expect(screen.getByText('Repeat:')).toBeInTheDocument()
+    expect(screen.getByText('4×')).toBeInTheDocument()
+  })
 })
