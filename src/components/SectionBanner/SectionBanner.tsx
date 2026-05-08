@@ -16,8 +16,10 @@ export function SectionBanner({
   label,
   length,
   repeat,
+  maxLength,
   width,
   onLabelChange,
+  onLengthChange,
 }: SectionBannerProps) {
   const locked = label === null
   const lockedClass = locked ? styles.locked : ''
@@ -40,6 +42,25 @@ export function SectionBanner({
   const cancelName = () => {
     setNameEditing(false)
   }
+
+  const [lengthEditing, setLengthEditing] = useState(false)
+  const [lengthDraft, setLengthDraft] = useState('')
+
+  const startLengthEdit = () => {
+    if (locked) return
+    setLengthDraft(String(length))
+    setLengthEditing(true)
+  }
+
+  const commitLength = () => {
+    setLengthEditing(false)
+    const parsed = parseInt(lengthDraft, 10)
+    if (isNaN(parsed)) return
+    const clamped = Math.max(1, Math.min(parsed, maxLength))
+    if (clamped !== length) onLengthChange(clamped)
+  }
+
+  const cancelLength = () => setLengthEditing(false)
 
   return (
     <div
@@ -82,7 +103,29 @@ export function SectionBanner({
       </div>
       <div className={styles.controlsRow}>
         <span className={styles.fieldLabel}>Length:</span>
-        <span className={`${styles.fieldValue} ${lockedClass}`}>{length}</span>
+        {lengthEditing ? (
+          <input
+            aria-label="Section length"
+            type="text"
+            inputMode="numeric"
+            className={styles.numInput}
+            value={lengthDraft}
+            autoFocus
+            onChange={(e) => setLengthDraft(e.target.value)}
+            onBlur={commitLength}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') commitLength()
+              else if (e.key === 'Escape') cancelLength()
+            }}
+          />
+        ) : (
+          <span
+            className={`${styles.fieldValue} ${lockedClass}`}
+            onClick={startLengthEdit}
+          >
+            {length}
+          </span>
+        )}
         <span className={styles.fieldLabel}>Repeat:</span>
         {repeat ? (
           <span className={`${styles.fieldValue} ${lockedClass}`}>{repeat.times}×</span>

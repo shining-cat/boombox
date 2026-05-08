@@ -143,3 +143,63 @@ describe('SectionBanner — × remove button', () => {
     expect(onLabelChange).toHaveBeenCalledWith(null)
   })
 })
+
+describe('SectionBanner — length editing', () => {
+  it('clicking the length value turns it into a numeric input', async () => {
+    render(<SectionBanner {...defaultProps} />)
+    await userEvent.click(screen.getByText('3'))
+    const input = screen.getByLabelText('Section length') as HTMLInputElement
+    expect(input.value).toBe('3')
+  })
+
+  it('Enter commits a valid length', async () => {
+    const onLengthChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onLengthChange={onLengthChange} />)
+    await userEvent.click(screen.getByText('3'))
+    const input = screen.getByLabelText('Section length')
+    await userEvent.clear(input)
+    await userEvent.type(input, '5{Enter}')
+    expect(onLengthChange).toHaveBeenCalledWith(5)
+  })
+
+  it('Esc cancels (no callback)', async () => {
+    const onLengthChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onLengthChange={onLengthChange} />)
+    await userEvent.click(screen.getByText('3'))
+    const input = screen.getByLabelText('Section length')
+    await userEvent.clear(input)
+    await userEvent.type(input, '5{Escape}')
+    expect(onLengthChange).not.toHaveBeenCalled()
+  })
+
+  it('clamps length to maxLength when input exceeds it', async () => {
+    const onLengthChange = vi.fn()
+    render(
+      <SectionBanner {...defaultProps} maxLength={5} onLengthChange={onLengthChange} />,
+    )
+    await userEvent.click(screen.getByText('3'))
+    const input = screen.getByLabelText('Section length')
+    await userEvent.clear(input)
+    await userEvent.type(input, '99{Enter}')
+    expect(onLengthChange).toHaveBeenCalledWith(5)
+  })
+
+  it('clamps length to 1 when input is 0 or negative', async () => {
+    const onLengthChange = vi.fn()
+    render(<SectionBanner {...defaultProps} onLengthChange={onLengthChange} />)
+    await userEvent.click(screen.getByText('3'))
+    const input = screen.getByLabelText('Section length')
+    await userEvent.clear(input)
+    await userEvent.type(input, '0{Enter}')
+    expect(onLengthChange).toHaveBeenCalledWith(1)
+  })
+
+  it('does not fire callback if length unchanged after clamp', async () => {
+    const onLengthChange = vi.fn()
+    render(<SectionBanner {...defaultProps} length={3} onLengthChange={onLengthChange} />)
+    await userEvent.click(screen.getByText('3'))
+    const input = screen.getByLabelText('Section length')
+    await userEvent.type(input, '{Enter}')
+    expect(onLengthChange).not.toHaveBeenCalled()
+  })
+})
