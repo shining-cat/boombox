@@ -14,8 +14,10 @@ describe('Cell', () => {
 
   it.each([
     ['cross', '✕'],
+    ['double-cross', '✕✕'],
     ['empty-round', '○'],
     ['full-round', '●'],
+    ['double-full-round', '●●'],
     ['square', '■'],
     ['diamond', '◆'],
   ] as const)('renders %s as %s', (symbol, expected) => {

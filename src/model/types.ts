@@ -1,4 +1,13 @@
-export type CellSymbol = 'cross' | 'empty-round' | 'full-round' | 'square' | 'diamond' | 'dot' | null
+export type CellSymbol =
+  | 'cross'
+  | 'double-cross'
+  | 'empty-round'
+  | 'full-round'
+  | 'double-full-round'
+  | 'square'
+  | 'diamond'
+  | 'dot'
+  | null
 
 export const SYMBOL_CYCLE: CellSymbol[] = [null, 'cross', 'empty-round', 'full-round', 'square', 'diamond', 'dot']
 
