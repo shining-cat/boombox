@@ -17,4 +17,7 @@
 .symbol { color: #333; }
 .triZone { height: 8px; font-size: 7px; font-weight: 700; color: #c60; line-height: 8px; }
 .roll { font-size: 14px; color: #333; letter-spacing: -2px; font-weight: 700; }
+.combined { position: relative; display: inline-block; line-height: 1; }
+.combinedCross { font-size: 1.2em; line-height: 1; }
+.combinedRound { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.7em; line-height: 1; }
 .labelZone { height: 8px; font-size: 7px; color: #666; white-space: nowrap; line-height: 8px; }
