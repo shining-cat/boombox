@@ -47,15 +47,17 @@ export default function TemplatePopup({
       list.push(t)
       map.set(t.name, list)
     }
-    return Array.from(map.entries()).map(([name, temps]) => {
-      // Sort matching instruments to the top
-      const sorted = [...temps].sort((a, b) => {
-        const aMatch = matchesLane(a.instrument, laneName) ? 0 : 1
-        const bMatch = matchesLane(b.instrument, laneName) ? 0 : 1
-        return aMatch - bMatch
+    return Array.from(map.entries())
+      .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+      .map(([name, temps]) => {
+        // Sort matching instruments to the top
+        const sorted = [...temps].sort((a, b) => {
+          const aMatch = matchesLane(a.instrument, laneName) ? 0 : 1
+          const bMatch = matchesLane(b.instrument, laneName) ? 0 : 1
+          return aMatch - bMatch
+        })
+        return { name, templates: sorted }
       })
-      return { name, templates: sorted }
-    })
   }, [templates, laneName])
 
   function toggleGroup(name: string) {
