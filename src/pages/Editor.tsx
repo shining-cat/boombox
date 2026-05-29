@@ -1,13 +1,17 @@
-import { useCallback, useState } from 'react'
-import { createCell, createMeasure } from '../model/factory'
-import { SYMBOL_CYCLE } from '../model/types'
-import type { CellSymbol, Measure, Lane, TimeSignature } from '../model/types'
+import { useCallback, useEffect, useState } from 'react'
+import { useScore } from '../state/useScore'
+import { useTransport } from '../audio/useTransport'
+import { loadTemplates } from '../model/templates'
+import type { CellSymbol, TimeSignature } from '../model/types'
+import type { RhythmTemplate } from '../model/templates'
 import { Grid } from '../components/Grid/Grid'
 import { MeasureHeader } from '../components/MeasureHeader/MeasureHeader'
 import { ContextMenu } from '../components/ContextMenu/ContextMenu'
+import { PlaybackControls } from '../components/PlaybackControls/PlaybackControls'
+import TemplatePopup from '../components/TemplatePopup/TemplatePopup'
 import styles from './Editor.module.css'
 
-const LANE_ID = 'editor-lane'
+const LINE_INDEX = 0
 
 export function slug(s: string): string {
   return s
@@ -23,222 +27,90 @@ interface ContextMenuState {
   cellIndex: number
 }
 
+interface TemplatePopupState {
+  measureIndex: number
+  beats: number
+  subdivision: number
+}
+
 export function Editor() {
+  const {
+    score,
+    cycleCell,
+    setCellSymbol,
+    setCellLabel,
+    setTriplet,
+    setRoll,
+    splitRollAtCell,
+    removeRollContaining,
+    setFlam,
+    setTimeSignature,
+    addMeasure,
+    insertMeasure,
+    removeMeasure,
+    applyTemplate,
+    updateLane,
+  } = useScore()
+
+  // Single hardcoded lane; id is stable for the component's lifetime.
+  const laneId = score.lanes[0].id
+
   const [templateName, setTemplateName] = useState('')
   const [instrumentName, setInstrumentName] = useState('')
-  const [measures, setMeasures] = useState<Measure[]>(() => [
-    createMeasure([LANE_ID], { beats: 4, subdivision: 4 }),
-  ])
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
+  const [templates, setTemplates] = useState<RhythmTemplate[]>([])
+  const [templatePopup, setTemplatePopup] = useState<TemplatePopupState | null>(null)
 
-  const lane: Lane = { id: LANE_ID, name: instrumentName || 'Instrument', color: '#BAE1FF' }
+  const transport = useTransport(score, false)
 
-  // --- Measure management ---
-
-  const addMeasure = useCallback(() => {
-    setMeasures(prev => {
-      const last = prev[prev.length - 1]
-      return [...prev, createMeasure([LANE_ID], last.timeSignature)]
-    })
+  useEffect(() => {
+    loadTemplates().then(setTemplates).catch(() => {})
   }, [])
 
-  const insertMeasure = useCallback((index: number) => {
-    setMeasures(prev => {
-      const ref = prev[Math.max(0, index - 1)]
-      const newM = createMeasure([LANE_ID], ref.timeSignature)
-      const next = [...prev]
-      next.splice(index, 0, newM)
-      return next
-    })
-  }, [])
+  // Sync instrument name to the score lane so autoDetectInstrument picks the right GM note.
+  useEffect(() => {
+    if (instrumentName) {
+      updateLane(laneId, { name: instrumentName })
+    }
+  }, [instrumentName, laneId, updateLane])
 
-  const removeMeasure = useCallback((measureId: string) => {
-    setMeasures(prev => {
-      if (prev.length <= 1) return prev
-      return prev.filter(m => m.id !== measureId)
-    })
-  }, [])
+  const measures = score.lines[LINE_INDEX]
+  const lane = score.lanes[0]
 
-  const setTimeSignature = useCallback((measureId: string, ts: TimeSignature) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const totalCells = ts.beats * ts.subdivision
-        return {
-          ...m,
-          timeSignature: ts,
-          cells: { [LANE_ID]: Array.from({ length: totalCells }, () => createCell()) },
-          tripletBeats: undefined,
-        }
-      }),
-    )
-  }, [])
+  // --- Measure wrappers ---
 
-  // --- Cell editing ---
+  const handleAddMeasure = useCallback(() => addMeasure(LINE_INDEX), [addMeasure])
 
-  const cycleCell = useCallback((measureId: string, cellIndex: number) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const cells = [...(m.cells[LANE_ID] ?? [])]
-        const current = cells[cellIndex]?.symbol ?? null
-        const idx = SYMBOL_CYCLE.indexOf(current)
-        const next = SYMBOL_CYCLE[(idx + 1) % SYMBOL_CYCLE.length]
-        cells[cellIndex] = { ...cells[cellIndex], symbol: next }
-        return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
-      }),
-    )
-  }, [])
+  const handleInsertMeasure = useCallback(
+    (index: number) => insertMeasure(LINE_INDEX, index),
+    [insertMeasure],
+  )
 
-  const setCellSymbol = useCallback((measureId: string, cellIndex: number, symbol: CellSymbol) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const cells = [...(m.cells[LANE_ID] ?? [])]
-        cells[cellIndex] = { ...cells[cellIndex], symbol }
-        return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
-      }),
-    )
-  }, [])
+  const handleRemoveMeasure = useCallback(
+    (measureId: string) => removeMeasure(LINE_INDEX, measureId),
+    [removeMeasure],
+  )
 
-  const setCellLabel = useCallback((measureId: string, cellIndex: number, label: string) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const cells = [...(m.cells[LANE_ID] ?? [])]
-        cells[cellIndex] = { ...cells[cellIndex], label: label || undefined }
-        return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
-      }),
-    )
-  }, [])
+  const handleSetTimeSignature = useCallback(
+    (measureId: string, ts: TimeSignature) => setTimeSignature(LINE_INDEX, measureId, ts),
+    [setTimeSignature],
+  )
 
-  // --- Triplet ---
+  // --- Cell wrappers ---
 
-  const setTriplet = useCallback((measureId: string, beatIndex: number) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const laneTriplets = m.tripletBeats?.[LANE_ID] ?? []
-        const { beats, subdivision } = m.timeSignature
-        const hasTriplet = laneTriplets.includes(beatIndex)
-        const newTriplets = hasTriplet
-          ? laneTriplets.filter(b => b !== beatIndex)
-          : [...laneTriplets, beatIndex]
+  const handleCycleCell = useCallback(
+    (measureId: string, cellIndex: number) =>
+      cycleCell(LINE_INDEX, measureId, laneId, cellIndex),
+    [cycleCell, laneId],
+  )
 
-        // Rebuild cells for this lane
-        const oldCells = m.cells[LANE_ID] ?? []
-        const oldTriplets = laneTriplets
-        const newCells: typeof oldCells = []
+  const handleSplitRoll = useCallback(
+    (measureId: string, cellIndex: number) =>
+      splitRollAtCell(LINE_INDEX, measureId, laneId, cellIndex),
+    [splitRollAtCell, laneId],
+  )
 
-        // Gather cells per beat from old layout
-        let oldOffset = 0
-        for (let b = 0; b < beats; b++) {
-          const oldBeatSize = oldTriplets.includes(b) ? 3 : subdivision
-          const newBeatSize = newTriplets.includes(b) ? 3 : subdivision
-          const oldBeatCells = oldCells.slice(oldOffset, oldOffset + oldBeatSize)
-          // Map old cells to new size
-          for (let i = 0; i < newBeatSize; i++) {
-            newCells.push(i < oldBeatCells.length ? oldBeatCells[i] : createCell())
-          }
-          oldOffset += oldBeatSize
-        }
-
-        return {
-          ...m,
-          cells: { ...m.cells, [LANE_ID]: newCells },
-          tripletBeats: { ...m.tripletBeats, [LANE_ID]: newTriplets },
-        }
-      }),
-    )
-  }, [])
-
-  // --- Roll ---
-
-  const setRoll = useCallback((measureId: string, cellIndex: number, length: number) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const cells = [...(m.cells[LANE_ID] ?? [])]
-        cells[cellIndex] = { ...cells[cellIndex], roll: { length } }
-        return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
-      }),
-    )
-  }, [])
-
-  const splitRollAtCell = useCallback((measureId: string, cellIndex: number) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const cells = [...(m.cells[LANE_ID] ?? [])]
-
-        let startIdx = -1
-        let length = 0
-        for (let i = 0; i < cells.length; i++) {
-          const r = cells[i].roll
-          if (r && i <= cellIndex && cellIndex < i + r.length) {
-            startIdx = i
-            length = r.length
-            break
-          }
-        }
-        if (startIdx === -1) return m
-
-        const beforeLen = cellIndex - startIdx
-        const afterLen = length - beforeLen - 1
-
-        if (beforeLen > 0) {
-          cells[startIdx] = { ...cells[startIdx], roll: { length: beforeLen } }
-        } else {
-          const { roll: _, ...rest } = cells[startIdx]
-          cells[startIdx] = rest
-        }
-
-        if (afterLen > 0) {
-          cells[cellIndex + 1] = { ...cells[cellIndex + 1], roll: { length: afterLen } }
-        }
-
-        return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
-      }),
-    )
-  }, [])
-
-  const removeRollContaining = useCallback((measureId: string, cellIndex: number) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const cells = [...(m.cells[LANE_ID] ?? [])]
-        for (let i = 0; i < cells.length; i++) {
-          const r = cells[i].roll
-          if (r && i <= cellIndex && cellIndex < i + r.length) {
-            const { roll: _, ...rest } = cells[i]
-            cells[i] = rest
-            return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
-          }
-        }
-        return m
-      }),
-    )
-  }, [])
-
-  // --- Flam ---
-
-  const setFlam = useCallback((measureId: string, cellIndex: number, flam: boolean) => {
-    setMeasures(prev =>
-      prev.map(m => {
-        if (m.id !== measureId) return m
-        const cells = [...(m.cells[LANE_ID] ?? [])]
-        if (flam) {
-          cells[cellIndex] = { ...cells[cellIndex], flam: true }
-        } else {
-          const { flam: _, ...rest } = cells[cellIndex]
-          cells[cellIndex] = rest
-        }
-        return { ...m, cells: { ...m.cells, [LANE_ID]: cells } }
-      }),
-    )
-  }, [])
-
-  // --- Context menu handlers ---
+  // --- Context menu ---
 
   const handleCellContextMenu = useCallback(
     (_laneId: string, cellIndex: number, e: React.MouseEvent, measureId: string) => {
@@ -251,27 +123,27 @@ export function Editor() {
   const handleSetSymbol = useCallback(
     (symbol: CellSymbol) => {
       if (!contextMenu) return
-      setCellSymbol(contextMenu.measureId, contextMenu.cellIndex, symbol)
+      setCellSymbol(LINE_INDEX, contextMenu.measureId, laneId, contextMenu.cellIndex, symbol)
       setContextMenu(null)
     },
-    [contextMenu, setCellSymbol],
+    [contextMenu, setCellSymbol, laneId],
   )
 
   const handleSetLabel = useCallback(() => {
     if (!contextMenu) return
     const label = window.prompt('Cell label:')
     if (label !== null) {
-      setCellLabel(contextMenu.measureId, contextMenu.cellIndex, label)
+      setCellLabel(LINE_INDEX, contextMenu.measureId, laneId, contextMenu.cellIndex, label)
     }
     setContextMenu(null)
-  }, [contextMenu, setCellLabel])
+  }, [contextMenu, setCellLabel, laneId])
 
   const handleSetTriplet = useCallback(() => {
     if (!contextMenu) return
-    const measure = measures.find(m => m.id === contextMenu.measureId)
+    const measure = measures.find((m) => m.id === contextMenu.measureId)
     if (!measure) return
     const { subdivision, beats } = measure.timeSignature
-    const laneTriplets = measure.tripletBeats?.[LANE_ID] ?? []
+    const laneTriplets = measure.tripletBeats?.[laneId] ?? []
     let pos = 0
     let beatIndex = 0
     for (let b = 0; b < beats; b++) {
@@ -279,9 +151,9 @@ export function Editor() {
       if (pos + beatSize > contextMenu.cellIndex) { beatIndex = b; break }
       pos += beatSize
     }
-    setTriplet(contextMenu.measureId, beatIndex)
+    setTriplet(LINE_INDEX, contextMenu.measureId, laneId, beatIndex)
     setContextMenu(null)
-  }, [contextMenu, measures, setTriplet])
+  }, [contextMenu, measures, setTriplet, laneId])
 
   const handleSetRoll = useCallback(() => {
     if (!contextMenu) return
@@ -289,30 +161,53 @@ export function Editor() {
     if (lengthStr !== null) {
       const length = parseInt(lengthStr, 10)
       if (!isNaN(length) && length > 0) {
-        setRoll(contextMenu.measureId, contextMenu.cellIndex, length)
+        setRoll(LINE_INDEX, contextMenu.measureId, laneId, contextMenu.cellIndex, length)
       }
     }
     setContextMenu(null)
-  }, [contextMenu, setRoll])
+  }, [contextMenu, setRoll, laneId])
 
   const handleRemoveRoll = useCallback(() => {
     if (!contextMenu) return
-    removeRollContaining(contextMenu.measureId, contextMenu.cellIndex)
+    removeRollContaining(LINE_INDEX, contextMenu.measureId, laneId, contextMenu.cellIndex)
     setContextMenu(null)
-  }, [contextMenu, removeRollContaining])
-
+  }, [contextMenu, removeRollContaining, laneId])
 
   const handleSetFlam = useCallback(() => {
     if (!contextMenu) return
-    setFlam(contextMenu.measureId, contextMenu.cellIndex, true)
+    setFlam(LINE_INDEX, contextMenu.measureId, laneId, contextMenu.cellIndex, true)
     setContextMenu(null)
-  }, [contextMenu, setFlam])
+  }, [contextMenu, setFlam, laneId])
 
   const handleRemoveFlam = useCallback(() => {
     if (!contextMenu) return
-    setFlam(contextMenu.measureId, contextMenu.cellIndex, false)
+    setFlam(LINE_INDEX, contextMenu.measureId, laneId, contextMenu.cellIndex, false)
     setContextMenu(null)
-  }, [contextMenu, setFlam])
+  }, [contextMenu, setFlam, laneId])
+
+  // --- Template insert ---
+
+  const handleOpenTemplates = useCallback(() => {
+    if (!contextMenu) return
+    const measureIndex = measures.findIndex((m) => m.id === contextMenu.measureId)
+    if (measureIndex === -1) return
+    const measure = measures[measureIndex]
+    setContextMenu(null)
+    setTemplatePopup({
+      measureIndex,
+      beats: measure.timeSignature.beats,
+      subdivision: measure.timeSignature.subdivision,
+    })
+  }, [contextMenu, measures])
+
+  const handleApplyTemplate = useCallback(
+    (template: RhythmTemplate) => {
+      if (!templatePopup) return
+      applyTemplate(LINE_INDEX, templatePopup.measureIndex, laneId, template)
+      setTemplatePopup(null)
+    },
+    [templatePopup, applyTemplate, laneId],
+  )
 
   // --- Export ---
 
@@ -321,17 +216,17 @@ export function Editor() {
       _info: 'Boombox template file. Send this to the project maintainer to include it in the app.',
       name: templateName,
       instrument: instrumentName,
-      measures: measures.map(m => ({
+      measures: measures.map((m) => ({
         beats: m.timeSignature.beats,
         subdivision: m.timeSignature.subdivision,
-        cells: (m.cells[LANE_ID] ?? []).map(c => {
+        cells: (m.cells[laneId] ?? []).map((c) => {
           const cell: Record<string, unknown> = { symbol: c.symbol }
           if (c.label) cell.label = c.label
           if (c.flam) cell.flam = true
           if (c.roll) cell.roll = { length: c.roll.length }
           return cell
         }),
-        tripletBeats: m.tripletBeats?.[LANE_ID] ?? [],
+        tripletBeats: m.tripletBeats?.[laneId] ?? [],
       })),
     }
     const json = JSON.stringify(template, null, 2)
@@ -347,13 +242,14 @@ export function Editor() {
     URL.revokeObjectURL(url)
   }
 
-  // --- Compute context menu state for ContextMenu props ---
+  // --- Derived state for ContextMenu props ---
+
   const contextMeasure = contextMenu
-    ? measures.find(m => m.id === contextMenu.measureId)
+    ? measures.find((m) => m.id === contextMenu.measureId)
     : null
-  const contextLaneTriplets = contextMeasure?.tripletBeats?.[LANE_ID] ?? []
+  const contextLaneTriplets = contextMeasure?.tripletBeats?.[laneId] ?? []
   const contextCell = contextMeasure
-    ? (contextMeasure.cells[LANE_ID] ?? [])[contextMenu!.cellIndex]
+    ? (contextMeasure.cells[laneId] ?? [])[contextMenu!.cellIndex]
     : null
 
   let contextBeatIndex = 0
@@ -386,6 +282,17 @@ export function Editor() {
           placeholder="Instrument name"
           aria-label="Instrument name"
         />
+        <PlaybackControls
+          state={transport.state}
+          tempo={transport.tempo}
+          looping={transport.looping}
+          onPlay={transport.play}
+          onPause={transport.pause}
+          onResume={transport.resume}
+          onStop={transport.stop}
+          onTempoChange={transport.setTempo}
+          onToggleLoop={transport.toggleLoop}
+        />
         <div className={styles.spacer} />
         <button className={styles.exportBtn} onClick={handleExport}>
           Export
@@ -402,7 +309,7 @@ export function Editor() {
               {index > 0 && (
                 <button
                   className={styles.insertBtn}
-                  onClick={() => insertMeasure(index)}
+                  onClick={() => handleInsertMeasure(index)}
                   title="Insert measure"
                 >
                   +
@@ -414,10 +321,10 @@ export function Editor() {
                   totalMeasures={measures.length}
                   beats={measure.timeSignature.beats}
                   subdivision={measure.timeSignature.subdivision}
-                  onTimeSignatureChange={ts => setTimeSignature(measure.id, ts)}
+                  onTimeSignatureChange={ts => handleSetTimeSignature(measure.id, ts)}
                   onRemove={() => {
                     if (window.confirm(`Delete measure ${index + 1}, confirm?`)) {
-                      removeMeasure(measure.id)
+                      handleRemoveMeasure(measure.id)
                     }
                   }}
                   canRemove={measures.length > 1}
@@ -425,10 +332,10 @@ export function Editor() {
                 <Grid
                   measure={measure}
                   lanes={[lane]}
-                  onCycleCell={(_laneId, cellIndex) => cycleCell(measure.id, cellIndex)}
-                  onSplitRoll={(_laneId, cellIndex) => splitRollAtCell(measure.id, cellIndex)}
-                  onCellContextMenu={(laneId, cellIndex, e) =>
-                    handleCellContextMenu(laneId, cellIndex, e, measure.id)
+                  onCycleCell={(_laneId, cellIndex) => handleCycleCell(measure.id, cellIndex)}
+                  onSplitRoll={(_laneId, cellIndex) => handleSplitRoll(measure.id, cellIndex)}
+                  onCellContextMenu={(laneIdArg, cellIndex, e) =>
+                    handleCellContextMenu(laneIdArg, cellIndex, e, measure.id)
                   }
                 />
               </div>
@@ -437,7 +344,7 @@ export function Editor() {
 
           <button
             className={styles.addMeasureBtn}
-            onClick={addMeasure}
+            onClick={handleAddMeasure}
             title="Add a measure"
           >
             + Measure
@@ -452,8 +359,8 @@ export function Editor() {
           hasTriplet={contextLaneTriplets.includes(contextBeatIndex)}
           hasRoll={!!contextCell?.roll}
           inRoll={
-            contextMenu && contextMeasure
-              ? (contextMeasure.cells[LANE_ID] ?? []).some(
+            contextMeasure
+              ? (contextMeasure.cells[laneId] ?? []).some(
                   (c, ci) =>
                     c.roll &&
                     ci <= contextMenu.cellIndex &&
@@ -471,8 +378,19 @@ export function Editor() {
           onRemoveRoll={handleRemoveRoll}
           onSetFlam={handleSetFlam}
           onRemoveFlam={handleRemoveFlam}
-          onOpenTemplates={() => {}}
+          onOpenTemplates={handleOpenTemplates}
           onClose={() => setContextMenu(null)}
+        />
+      )}
+
+      {templatePopup && (
+        <TemplatePopup
+          templates={templates}
+          laneName={instrumentName}
+          targetBeats={templatePopup.beats}
+          targetSubdivision={templatePopup.subdivision}
+          onSelect={handleApplyTemplate}
+          onClose={() => setTemplatePopup(null)}
         />
       )}
     </div>
