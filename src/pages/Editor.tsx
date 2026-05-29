@@ -67,6 +67,11 @@ export function Editor() {
     loadTemplates().then(setTemplates).catch(() => {})
   }, [])
 
+  // Visually distinguish the template creator from the main editor.
+  useEffect(() => {
+    updateLane(laneId, { color: '#BAE1FF' })
+  }, [laneId, updateLane])
+
   // Sync instrument name to the score lane so autoDetectInstrument picks the right GM note.
   useEffect(() => {
     if (instrumentName) {
