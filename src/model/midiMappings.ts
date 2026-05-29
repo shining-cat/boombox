@@ -41,6 +41,7 @@ export const DEFAULT_SYMBOL_VELOCITIES: Record<string, number> = {
   'double-cross': 127,
   'full-round': 110,
   'double-full-round': 110,
+  'cross-circle': 127,
   square: 90,
   diamond: 90,
   'empty-round': 60,

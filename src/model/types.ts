@@ -4,6 +4,7 @@ export type CellSymbol =
   | 'empty-round'
   | 'full-round'
   | 'double-full-round'
+  | 'cross-circle'
   | 'square'
   | 'diamond'
   | 'dot'

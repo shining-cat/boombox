@@ -48,7 +48,15 @@ export function Cell({ symbol, label, isBeatStart, isRoll, isFlam, isTriplet, wi
         <span className={styles.roll}>≈</span>
       ) : symbol ? (
         <span className={styles.symbol}>
-          {isFlam ? 'ʼ' : ''}{SYMBOL_DISPLAY[symbol]}
+          {isFlam ? 'ʼ' : ''}
+          {symbol === 'cross-circle' ? (
+            <span className={styles.combined}>
+              <span className={styles.combinedCross}>✕</span>
+              <span className={styles.combinedRound}>●</span>
+            </span>
+          ) : (
+            SYMBOL_DISPLAY[symbol]
+          )}
         </span>
       ) : (
         <span className={styles.empty}>-</span>
