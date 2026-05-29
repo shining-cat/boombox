@@ -81,11 +81,7 @@ export default function TemplatePopup({
   }
 
   function handleGroupClick(group: TemplateGroup) {
-    if (group.templates.length === 1) {
-      handleSelect(group.templates[0])
-    } else {
-      toggleGroup(group.name)
-    }
+    toggleGroup(group.name)
   }
 
   // Check if any template in a group has a mismatch
@@ -108,7 +104,6 @@ export default function TemplatePopup({
         <div className={styles.content}>
           {groups.map((group) => {
             const expanded = expandedGroups.has(group.name)
-            const isSingle = group.templates.length === 1
             const groupMismatch = groupHasMismatch(group)
 
             return (
@@ -117,11 +112,9 @@ export default function TemplatePopup({
                   className={`${styles.groupHeader} ${groupMismatch ? styles.mismatch : ''}`}
                   onClick={() => handleGroupClick(group)}
                 >
-                  {!isSingle && (
-                    <span className={styles.groupArrow}>
-                      {expanded ? '\u25BE' : '\u25B8'}
-                    </span>
-                  )}
+                  <span className={styles.groupArrow}>
+                    {expanded ? '\u25BE' : '\u25B8'}
+                  </span>
                   <span className={styles.groupName}>{group.name}</span>
                   <span className={styles.groupCount}>
                     ({group.templates.length}{' '}
@@ -140,7 +133,7 @@ export default function TemplatePopup({
                   )}
                 </button>
 
-                {!isSingle && expanded && (
+                {expanded && (
                   <ul className={styles.instrumentList}>
                     {group.templates.map((template) => {
                       const isMatch = matchesLane(template.instrument, laneName)
