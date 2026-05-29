@@ -45,41 +45,7 @@
     ]
   },
   {
-    "name": "Rumba",
-    "instrument": "Surdo",
-    "measures": [
-      {
-        "beats": 4,
-        "subdivision": 4,
-        "cells": [
-          {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"},
-          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"},
-          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
-          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null}
-        ],
-        "tripletBeats": []
-      }
-    ]
-  },
-  {
-    "name": "Tambourim",
-    "instrument": "Surdo",
-    "measures": [
-      {
-        "beats": 4,
-        "subdivision": 4,
-        "cells": [
-          {"symbol": null}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"},
-          {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null},
-          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
-          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"}
-        ],
-        "tripletBeats": []
-      }
-    ]
-  },
-  {
-    "name": "Samba Reggae",
+    "name": "Samba Reggae 1",
     "instrument": "Surdo",
     "measures": [
       {
