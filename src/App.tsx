@@ -10,9 +10,13 @@ import { downloadScore, openScoreFile } from './utils/fileIO'
 import { createScore } from './model/factory'
 import { exportToPdf, exportToPng } from './utils/export'
 import { loadTemplates } from './model/templates'
-import type { CellSymbol } from './model/types'
+import type { CellSymbol, Score as ScoreModel } from './model/types'
 import type { RhythmTemplate } from './model/templates'
 import './App.css'
+
+interface AppProps {
+  initialScore?: ScoreModel
+}
 
 interface ContextMenuState {
   x: number
@@ -23,7 +27,7 @@ interface ContextMenuState {
   cellIndex: number
 }
 
-function App() {
+function App({ initialScore }: AppProps = {}) {
   const {
     score,
     isDirty,
@@ -78,6 +82,10 @@ function App() {
   useEffect(() => {
     loadTemplates().then(setTemplates).catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (initialScore) loadScore(initialScore)
+  }, [initialScore, loadScore])
 
   const handleSave = useCallback(() => {
     downloadScore(score)
