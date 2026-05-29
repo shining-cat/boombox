@@ -19,7 +19,7 @@ You build your score by clicking cells on a grid, where each row is an instrumen
 - **Sections and repeats** to structure your score (intro 2x, verse 4x, etc.) — every measure has an editable banner, named sections unlock length and repeat-count controls
 - **Triplets, rolls, and flams** (grace note + main hit) for percussion ornaments
 - **Repinique double-strokes** — `✕✕` and `●●` symbols for two equal hits inside one cell
-- **Rhythm templates** — preset patterns (Clave, Son, Afoxe, Rumba, etc.) you can insert into any measure
+- **Rhythm templates** — preset patterns (Clave, Afoxe, Samba Reggae, Bondan, etc.) you can insert into any measure
 - **Playable pulse lane** — a metronome lane with its own GM sound, useful for practice
 - **Playback** with per-lane mute, tempo control (40-300 BPM), loop toggle, and live measure highlighting
 - **Export** to PDF, PNG, or MIDI (experimental)
@@ -38,6 +38,14 @@ For the full guide, click **Help** in the toolbar.
 ## Rhythm templates
 
 Boombox comes with a library of preset rhythm patterns. You can also create your own using the [template editor](https://shining-cat.github.io/boombox/#/editor), then submit them to eventually be included inside the tool's library.
+
+### Submitting a template
+
+When you click **Export** in the template editor, you get a file named `{template-slug}-{instrument-slug}.template.json` derived from the Template name and Instrument name fields. The JSON inside the file also carries those fields, but **the filename is the source of truth** — that's what the maintainer uses to identify your template when adding it to the library.
+
+If you later rename the file (e.g. to organise a batch), the `name` and `instrument` fields inside the JSON may end up out of sync with the filename. That's fine: just make sure the filename clearly describes the template + instrument, in the same `template-slug-instrument-slug` shape the export produces.
+
+Submit templates by opening an issue or pull request on the [GitHub repo](https://github.com/shining-cat/boombox).
 
 ## License
 

@@ -159,7 +159,7 @@ export function Toolbar({
                 <h3>Rhythm Templates</h3>
                 <ul>
                   <li>Right-click a cell → Insert a template</li>
-                  <li>Preset patterns (Clave, Afoxe, Rumba, etc.) fill from the clicked cell onward</li>
+                  <li>Preset patterns (Clave, Afoxe, Samba Reggae, Bondan, etc.) fill from the clicked cell onward</li>
                 </ul>
               </section>
 
