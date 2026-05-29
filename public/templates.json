@@ -156,5 +156,344 @@
         "tripletBeats": []
       }
     ]
+  },
+  {
+    "name": "3-2 Clave Rhythm",
+    "instrument": "Surdo",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      },
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      },
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Afoxe",
+    "instrument": "Repinique",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "double-cross"}, {"symbol": "cross"}, {"symbol": null}, {"symbol": "cross"},
+          {"symbol": null}, {"symbol": "double-cross"}, {"symbol": "cross"}, {"symbol": null},
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": "cross"}, {"symbol": null},
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": "cross"}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      },
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "double-cross"}, {"symbol": "cross"}, {"symbol": null}, {"symbol": "cross"},
+          {"symbol": null}, {"symbol": "double-cross"}, {"symbol": "cross"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Afoxe",
+    "instrument": "Timbao",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": null}, {"symbol": "cross"},
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": "empty-round"}, {"symbol": "empty-round"},
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": null}, {"symbol": "cross"},
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": "empty-round"}, {"symbol": "empty-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Bondan",
+    "instrument": "Caixa",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "dot"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Bondan",
+    "instrument": "Repinique",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": null}, {"symbol": "cross"},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": "cross"},
+          {"symbol": null}, {"symbol": null}, {"symbol": "cross"}, {"symbol": null},
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": null}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Bondan",
+    "instrument": "Timbao",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "cross"}, {"symbol": "cross"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Bossa Clave",
+    "instrument": "Caixa",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Bossa Clave",
+    "instrument": "Repinique",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "dot"}, {"symbol": "dot"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Rumba Clave",
+    "instrument": "Surdo",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": null}, {"symbol": null}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae 1",
+    "instrument": "Caixa",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "dot"},
+          {"symbol": "dot"}, {"symbol": "dot"}, {"symbol": null, "roll": {"length": 1}}, {"symbol": "dot"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae 1",
+    "instrument": "Timbao",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "empty-round"}, {"symbol": "empty-round"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "full-round"}, {"symbol": "cross"}, {"symbol": "cross"}, {"symbol": "empty-round"},
+          {"symbol": "empty-round"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "cross"},
+          {"symbol": "full-round"}, {"symbol": "cross"}, {"symbol": "cross"}, {"symbol": "empty-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae 2",
+    "instrument": "Surdo",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae 2",
+    "instrument": "Timbao",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "empty-round"}, {"symbol": "empty-round"}, {"symbol": "dot"}, {"symbol": "cross"},
+          {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "cross"}, {"symbol": "empty-round"},
+          {"symbol": "empty-round"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "cross"},
+          {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "cross"}, {"symbol": "empty-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae 3",
+    "instrument": "Surdo",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": "full-round"},
+          {"symbol": "full-round"}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae 3",
+    "instrument": "Timbao",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "dot"}, {"symbol": "cross"}, {"symbol": "cross"},
+          {"symbol": "full-round"}, {"symbol": "dot"}, {"symbol": "empty-round"}, {"symbol": "empty-round"},
+          {"symbol": "full-round"}, {"symbol": "cross"}, {"symbol": "empty-round"}, {"symbol": "empty-round"},
+          {"symbol": "full-round"}, {"symbol": "cross"}, {"symbol": "cross"}, {"symbol": "cross"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae 4 (part 1)",
+    "instrument": "Surdo",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Samba Reggae 4 (part 2)",
+    "instrument": "Surdo",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": null}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": "full-round"}, {"symbol": null},
+          {"symbol": null}, {"symbol": null}, {"symbol": null}, {"symbol": null},
+          {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "full-round"}, {"symbol": "full-round"}
+        ],
+        "tripletBeats": []
+      }
+    ]
+  },
+  {
+    "name": "Tambourim Clave",
+    "instrument": "Repinique",
+    "measures": [
+      {
+        "beats": 4,
+        "subdivision": 4,
+        "cells": [
+          {"symbol": null}, {"symbol": "cross"}, {"symbol": null}, {"symbol": "cross"},
+          {"symbol": null}, {"symbol": "cross"}, {"symbol": "cross"}, {"symbol": null},
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": "cross"}, {"symbol": null},
+          {"symbol": "cross"}, {"symbol": null}, {"symbol": "cross"}, {"symbol": "cross"}
+        ],
+        "tripletBeats": []
+      }
+    ]
   }
 ]
